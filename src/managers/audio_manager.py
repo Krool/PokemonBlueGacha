@@ -81,42 +81,36 @@ class AudioManager:
             name: Name of sound to play
         """
         if not self.enabled:
+            print(f"  [AUDIO] Audio disabled, skipping sound: {name}")
             return
         
         # Check if user has interacted (required for web)
         if IS_WEB and not self.user_interacted:
-            print(f"  ⏸ Sound '{name}' queued (waiting for user interaction)")
+            print(f"  [AUDIO] ⏸ Sound '{name}' queued (waiting for user interaction)")
             return
             
         if name not in self.sounds:
-            print(f"Warning: Sound '{name}' not loaded (available: {list(self.sounds.keys())})")
+            print(f"  [AUDIO] Warning: Sound '{name}' not loaded (available: {list(self.sounds.keys())})")
             return
         
         try:
             # Use pre-loaded sound for both desktop and web
-            # On web, find a free channel to ensure sounds don't interrupt each other
             if IS_WEB:
-                # Find first available channel (skip channel 0, reserved for special effects)
-                channel = None
-                for ch_idx in range(1, pygame.mixer.get_num_channels()):
-                    ch = pygame.mixer.Channel(ch_idx)
-                    if not ch.get_busy():
-                        channel = ch
-                        break
-                
+                # On web, use simpler approach - just call play() and let pygame handle channels
+                # The multiple channels (16) are set up during init to support concurrent playback
+                sound = self.sounds[name]
+                sound.set_volume(self.sfx_volume)  # Ensure volume is set
+                channel = sound.play()
                 if channel:
-                    channel.play(self.sounds[name])
-                    print(f"  [AUDIO] Playing sound: {name} on channel {ch_idx}")
+                    print(f"  [AUDIO] ✓ Playing sound: {name} on channel {channel}")
                 else:
-                    # All channels busy, just play anyway (will use first available)
-                    self.sounds[name].play()
-                    print(f"  [AUDIO] Playing sound: {name} (all channels busy)")
+                    print(f"  [AUDIO] ✗ Failed to play sound: {name} (no channel available)")
             else:
                 # Desktop: simpler playback
                 self.sounds[name].play()
                 print(f"  [AUDIO] Playing sound: {name}")
         except Exception as e:
-            print(f"Error playing sound {name}: {e}")
+            print(f"  [AUDIO] Error playing sound {name}: {e}")
             import traceback
             traceback.print_exc()
     
