@@ -422,6 +422,12 @@ class GachaBuyState(GameState):
     
     def handle_events(self, events):
         """Handle input events"""
+        # Enable audio on any user interaction (for web browser autoplay policy)
+        for event in events:
+            if event.type in (pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
+                self.audio_manager.enable_audio_after_interaction()
+                break
+        
         # Handle info popup first if visible
         if self.info_popup is not None and self.info_popup.is_showing():
             self.info_popup.update()

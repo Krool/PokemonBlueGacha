@@ -107,6 +107,12 @@ class GachaAnimationState(GameState):
     
     def handle_events(self, events):
         """Handle input events"""
+        # Enable audio on any user interaction (for web browser autoplay policy)
+        for event in events:
+            if event.type in (pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
+                self.audio_manager.enable_audio_after_interaction()
+                break
+        
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:

@@ -33,7 +33,7 @@ class Game:
         
         # Initialize pygame
         pygame.init()
-        pygame.mixer.init()
+        # Note: pygame.mixer will be initialized by AudioManager with proper settings
         
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Pokémon Blue Gacha")

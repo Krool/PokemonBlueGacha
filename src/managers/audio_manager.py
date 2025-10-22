@@ -20,6 +20,8 @@ class AudioManager:
         self.sound_paths = {}  # Store paths for web playback
         self.background_tracks: List[str] = []  # List of available background music tracks
         self.sfx_channels = []  # Additional channels for sound effects on web
+        self.user_interacted = False  # Track if user has interacted (for web autoplay)
+        self.pending_music = None  # Store music to play after user interaction
         
         # Try to initialize pygame mixer with web-compatible settings
         try:
@@ -32,6 +34,7 @@ class AudioManager:
                 if IS_WEB:
                     pygame.mixer.set_num_channels(8)
                     print("  Set up 8 audio channels for web compatibility")
+                    print("  Note: Audio may require user interaction to start (browser policy)")
         except Exception as e:
             print(f"Audio initialization failed: {e}")
             self.enabled = False
@@ -95,6 +98,21 @@ class AudioManager:
         except Exception as e:
             print(f"Error playing sound {name}: {e}")
     
+    def enable_audio_after_interaction(self):
+        """
+        Call this after first user interaction to enable audio on web.
+        Required for browser autoplay policies.
+        """
+        if IS_WEB and not self.user_interacted:
+            self.user_interacted = True
+            print("✓ User interaction detected - audio enabled")
+            
+            # If there's pending music, play it now
+            if self.pending_music:
+                print(f"  Playing pending music: {os.path.basename(self.pending_music)}")
+                self.play_music(self.pending_music)
+                self.pending_music = None
+    
     def play_music(self, path: str, loops: int = -1):
         """
         Play background music
@@ -108,6 +126,12 @@ class AudioManager:
         
         if not os.path.exists(path):
             print(f"Warning: Music file not found: {path}")
+            return
+        
+        # On web, if user hasn't interacted yet, store music to play later
+        if IS_WEB and not self.user_interacted:
+            self.pending_music = path
+            print(f"⏸ Music queued (waiting for user interaction): {os.path.basename(path)}")
             return
         
         try:
@@ -146,7 +170,10 @@ class AudioManager:
         # Pick a random track
         track = random.choice(available_tracks)
         self.play_music(track)
-        print(f"🎵 Playing random background music: {os.path.basename(track)}")
+        
+        # Only print playing message if not queued (already printed in play_music)
+        if not IS_WEB or self.user_interacted:
+            print(f"🎵 Playing random background music: {os.path.basename(track)}")
     
     def load_background_music_tracks(self, sounds_path: str):
         """

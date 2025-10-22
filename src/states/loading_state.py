@@ -43,6 +43,10 @@ class LoadingState(GameState):
     def handle_events(self, events):
         """Handle events during loading"""
         for event in events:
+            # Enable audio on any user interaction (for web browser autoplay policy)
+            if event.type in (pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
+                self.audio_manager.enable_audio_after_interaction()
+            
             if event.type == pygame.KEYDOWN and self.loading_complete:
                 # Skip to inventory if loading is done
                 self.state_manager.change_state('inventory')
