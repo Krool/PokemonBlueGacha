@@ -103,19 +103,20 @@ class AudioManager:
             sound = self.sounds[name]
             
             if IS_WEB:
-                # Check cooldown - require 200ms between sound effects (unless priority)
+                # Check cooldown - require 200ms between sound effects
                 current_time = time.time()
-                if not priority and current_time - self.last_sfx_time < 0.2:
+                if current_time - self.last_sfx_time < 0.2:
                     # Too soon after last sound - skip to avoid browser conflicts
                     return
                 
-                # On web, check if pygame.mixer.music is busy (unless priority)
-                # If it is, skip sound to avoid "interrupted" errors
-                if not priority:
+                # On web, check if background music is playing
+                # If it is, skip sound effects to keep music playing
+                # (pygame.mixer.music is a single channel on web - can't play both simultaneously)
+                if self.current_music is not None:
                     try:
                         is_busy = pygame.mixer.music.get_busy()
                         if is_busy:
-                            # Music is currently playing/loading - skip sound effect
+                            # Background music is playing - skip sound effect to preserve music
                             return
                     except:
                         # If get_busy fails, assume it's safe to play
@@ -125,13 +126,7 @@ class AudioManager:
                 sound_path = sound  # It's actually a path, not a Sound object
                 
                 try:
-                    # Priority sounds should stop any currently playing sound
-                    if priority:
-                        try:
-                            pygame.mixer.music.stop()
-                        except:
-                            pass
-                    
+                    # Load and play sound effect (will interrupt music if playing)
                     pygame.mixer.music.load(sound_path)
                     pygame.mixer.music.set_volume(self.sfx_volume)
                     pygame.mixer.music.play()
