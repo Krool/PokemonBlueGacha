@@ -117,7 +117,8 @@ class GachaOutcomeState(GameState):
             bg_color=(0, 150, 0),
             hover_color=(0, 200, 0),
             callback=self._roll_same,
-            audio_manager=self.audio_manager
+            audio_manager=self.audio_manager,
+            play_click_sound=False  # Skip click - roll sound plays immediately
         )
         self.roll_same_cost = roll_cost
     
