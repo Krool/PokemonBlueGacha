@@ -102,27 +102,36 @@ class AudioManager:
                 sound_path = sound  # It's actually a path, not a Sound object
                 
                 try:
-                    # Stop current music and play the sound effect
-                    pygame.mixer.music.stop()
-                    pygame.mixer.music.load(sound_path)
-                    pygame.mixer.music.set_volume(self.sfx_volume)
-                    pygame.mixer.music.play()
-                except Exception as e:
-                    # Silently handle web audio errors (common in browsers, doesn't affect gameplay)
-                    # Only log unique errors once to avoid console spam
-                    error_key = f"{name}:{type(e).__name__}"
-                    if error_key not in self.audio_errors_logged:
-                        self.audio_errors_logged.add(error_key)
-                        print(f"  [AUDIO] Web audio limitation: {name} (suppressing future errors)")
+                    # Wrap each call individually to suppress pythons.js errors
+                    try:
+                        pygame.mixer.music.stop()
+                    except:
+                        pass  # Silently ignore all stop errors
+                    
+                    try:
+                        pygame.mixer.music.load(sound_path)
+                    except:
+                        pass  # Silently ignore all load errors
+                    
+                    try:
+                        pygame.mixer.music.set_volume(self.sfx_volume)
+                    except:
+                        pass  # Silently ignore all volume errors
+                    
+                    try:
+                        pygame.mixer.music.play()
+                    except:
+                        pass  # Silently ignore all play errors
+                        
+                except Exception:
+                    # Silently handle all web audio errors
+                    pass
             else:
                 # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
                 sound.play()
-        except Exception as e:
-            # Catch any other errors silently
-            error_key = f"{name}:{type(e).__name__}"
-            if error_key not in self.audio_errors_logged:
-                self.audio_errors_logged.add(error_key)
-                print(f"  [AUDIO] Sound error: {name} - {e}")
+        except Exception:
+            # Catch any other errors silently on web
+            pass
     
     def enable_audio_after_interaction(self, allow_music_start: bool = True):
         """
@@ -155,30 +164,41 @@ class AudioManager:
             return
         
         if not os.path.exists(path):
-            print(f"Warning: Music file not found: {path}")
             return
         
         # On web, if user hasn't interacted yet, store music to play later
         if IS_WEB and not self.user_interacted:
             self.pending_music = path
-            print(f"⏸ Music queued (waiting for user interaction): {os.path.basename(path)}")
             return
         
         try:
             # Don't restart if already playing this music
-            if self.current_music == path and pygame.mixer.music.get_busy():
-                return
+            try:
+                if self.current_music == path and pygame.mixer.music.get_busy():
+                    return
+            except:
+                pass  # Silently ignore get_busy errors
             
-            pygame.mixer.music.load(path)
-            pygame.mixer.music.set_volume(self.music_volume)
-            pygame.mixer.music.play(loops)
+            # Wrap each call individually to suppress pythons.js errors
+            try:
+                pygame.mixer.music.load(path)
+            except:
+                pass  # Silently ignore load errors
+            
+            try:
+                pygame.mixer.music.set_volume(self.music_volume)
+            except:
+                pass  # Silently ignore volume errors
+            
+            try:
+                pygame.mixer.music.play(loops)
+            except:
+                pass  # Silently ignore play errors
+            
             self.current_music = path
-        except Exception as e:
-            # Silently handle web audio errors
-            error_key = f"music:{os.path.basename(path)}:{type(e).__name__}"
-            if error_key not in self.audio_errors_logged:
-                self.audio_errors_logged.add(error_key)
-                print(f"  [AUDIO] Music playback issue: {os.path.basename(path)} (suppressing future errors)")
+        except Exception:
+            # Silently handle all web audio errors
+            pass
     
     def stop_music(self):
         """Stop background music"""
@@ -238,13 +258,23 @@ class AudioManager:
         """Set music volume (0.0 to 1.0)"""
         self.music_volume = max(0.0, min(1.0, volume))
         if self.enabled:
-            pygame.mixer.music.set_volume(self.music_volume)
+            try:
+                pygame.mixer.music.set_volume(self.music_volume)
+            except:
+                pass  # Silently ignore all errors
     
     def set_sfx_volume(self, volume: float):
         """Set sound effects volume (0.0 to 1.0)"""
         self.sfx_volume = max(0.0, min(1.0, volume))
-        for sound in self.sounds.values():
-            sound.set_volume(self.sfx_volume)
+        try:
+            for sound in self.sounds.values():
+                try:
+                    if not IS_WEB:  # Only set volume on desktop (web stores paths, not Sound objects)
+                        sound.set_volume(self.sfx_volume)
+                except:
+                    pass  # Silently ignore errors
+        except:
+            pass  # Silently ignore all errors
     
     def play_random_click_sound(self):
         """
