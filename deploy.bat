@@ -22,19 +22,31 @@ if %errorlevel% neq 0 (
 echo ✅ Build complete!
 echo.
 
+REM Check if build files exist
+if not exist "src\build\web\index.html" (
+    echo ❌ Build files not found!
+    pause
+    exit /b 1
+)
+
 REM Switch to gh-pages
 echo 🌿 Switching to gh-pages branch...
-git checkout gh-pages
+git checkout gh-pages 2>nul
 if %errorlevel% neq 0 (
     echo Creating new gh-pages branch...
     git checkout -b gh-pages
+    if %errorlevel% neq 0 (
+        echo ❌ Failed to switch to gh-pages branch!
+        pause
+        exit /b 1
+    )
 )
 
-REM Copy build files (using copy command for individual files)
+REM Copy build files using PowerShell
 echo 📋 Copying build files...
-copy /Y src\build\web\favicon.png . >nul 2>&1
-copy /Y src\build\web\index.html . >nul 2>&1
-copy /Y src\build\web\src.apk . >nul 2>&1
+powershell -Command "Copy-Item -Path 'src\build\web\favicon.png' -Destination '.' -Force" 2>nul
+powershell -Command "Copy-Item -Path 'src\build\web\index.html' -Destination '.' -Force"
+powershell -Command "Copy-Item -Path 'src\build\web\src.apk' -Destination '.' -Force"
 
 if not exist index.html (
     echo ❌ Failed to copy files!
@@ -47,16 +59,22 @@ echo ✅ Files copied successfully
 echo.
 
 REM Commit and push
-echo 💾 Committing and pushing changes...
+echo 💾 Committing changes...
 git add favicon.png index.html src.apk
-git commit -m "Deploy: %date% %time%" || echo (No changes to commit)
-git push -u origin gh-pages
+git commit -m "Deploy: %date% %time%"
 
-if %errorlevel% neq 0 (
-    echo ❌ Push failed!
-    git checkout %CURRENT_BRANCH%
-    pause
-    exit /b 1
+if %errorlevel% equ 0 (
+    echo 🚢 Pushing to GitHub...
+    git push origin gh-pages
+    
+    if %errorlevel% neq 0 (
+        echo ❌ Push failed!
+        git checkout %CURRENT_BRANCH%
+        pause
+        exit /b 1
+    )
+) else (
+    echo ℹ️  No changes to commit
 )
 
 REM Return to original branch

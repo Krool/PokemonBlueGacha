@@ -1,7 +1,14 @@
 #!/bin/bash
 # Quick deployment script for GitHub Pages
 
+set -e  # Exit on error
+
 echo "🚀 Deploying Pokémon Blue Gacha to GitHub Pages..."
+echo ""
+
+# Save current branch
+CURRENT_BRANCH=$(git branch --show-current)
+echo "Current branch: $CURRENT_BRANCH"
 echo ""
 
 # Build for web
@@ -16,28 +23,46 @@ fi
 echo "✅ Build complete!"
 echo ""
 
-# Save current branch
-CURRENT_BRANCH=$(git branch --show-current)
+# Check if build files exist
+if [ ! -f "src/build/web/index.html" ]; then
+    echo "❌ Build files not found!"
+    exit 1
+fi
 
 # Switch to gh-pages
 echo "🌿 Switching to gh-pages branch..."
-git checkout gh-pages || git checkout -b gh-pages
+if git rev-parse --verify gh-pages >/dev/null 2>&1; then
+    git checkout gh-pages
+else
+    echo "Creating new gh-pages branch..."
+    git checkout -b gh-pages
+fi
 
 # Copy build files
 echo "📋 Copying build files..."
-cp -r src/build/web/* .
+cp src/build/web/favicon.png . 2>/dev/null || true
+cp src/build/web/index.html .
+cp src/build/web/src.apk .
 
-# Clean up
-rm -rf src/build
+if [ ! -f "index.html" ]; then
+    echo "❌ Failed to copy files!"
+    git checkout $CURRENT_BRANCH
+    exit 1
+fi
+
+echo "✅ Files copied successfully"
+echo ""
 
 # Commit
 echo "💾 Committing changes..."
-git add .
-git commit -m "Deploy: $(date '+%Y-%m-%d %H:%M:%S')"
-
-# Push
-echo "🚢 Pushing to GitHub..."
-git push -u origin gh-pages
+git add favicon.png index.html src.apk
+if git commit -m "Deploy: $(date '+%Y-%m-%d %H:%M:%S')"; then
+    # Push
+    echo "🚢 Pushing to GitHub..."
+    git push origin gh-pages
+else
+    echo "ℹ️  No changes to commit"
+fi
 
 # Return to original branch
 echo "🔙 Returning to $CURRENT_BRANCH branch..."
@@ -46,8 +71,6 @@ git checkout $CURRENT_BRANCH
 echo ""
 echo "✅ Deployment complete!"
 echo "🌐 Your game will be live in 2-5 minutes at:"
-echo "   https://$(git config --get remote.origin.url | sed 's/.*github.com[:/]\(.*\)\.git/\1/' | sed 's/\//\.github\.io\//')/"
+echo "   https://krool.github.io/PokemonBlueGacha/"
 echo ""
-echo "💡 Check deployment status:"
-echo "   https://github.com/$(git config --get remote.origin.url | sed 's/.*github.com[:/]\(.*\)\.git/\1/')/deployments"
 
