@@ -4,6 +4,7 @@ Audio management for music and sound effects
 import pygame
 import os
 import random
+import time
 from typing import Optional, List
 from config import IS_WEB
 
@@ -23,6 +24,7 @@ class AudioManager:
         self.user_interacted = False  # Track if user has interacted (for web autoplay)
         self.pending_music = None  # Store music to play after user interaction
         self.audio_errors_logged = set()  # Track logged errors to avoid spam
+        self.last_sfx_time = 0  # Track last sound effect play time (for web cooldown)
         
         # Try to initialize pygame mixer with web-compatible settings
         try:
@@ -84,6 +86,7 @@ class AudioManager:
             name: Name of sound to play
         
         Note: On web, sound effects can only play when music channel is idle
+        and requires 200ms cooldown between plays
         """
         if not self.enabled:
             return
@@ -99,6 +102,12 @@ class AudioManager:
             sound = self.sounds[name]
             
             if IS_WEB:
+                # Check cooldown - require 200ms between sound effects
+                current_time = time.time()
+                if current_time - self.last_sfx_time < 0.2:
+                    # Too soon after last sound - skip to avoid browser conflicts
+                    return
+                
                 # On web, check if pygame.mixer.music is busy
                 # If it is, skip sound to avoid "interrupted" errors
                 try:
@@ -117,6 +126,7 @@ class AudioManager:
                     pygame.mixer.music.load(sound_path)
                     pygame.mixer.music.set_volume(self.sfx_volume)
                     pygame.mixer.music.play()
+                    self.last_sfx_time = current_time  # Update last play time
                 except:
                     pass  # Silently ignore all errors
             else:
