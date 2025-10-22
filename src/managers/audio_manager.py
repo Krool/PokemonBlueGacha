@@ -76,20 +76,25 @@ class AudioManager:
             return
         
         try:
-            # Store path for reference
+            # Store path for reference (on web, we'll use pygame.mixer.music to play these)
             self.sound_paths[name] = path
             
-            # Load as Sound for both desktop and web
-            # Pygbag handles loading files properly on web
-            sound = pygame.mixer.Sound(path)
-            sound.set_volume(self.sfx_volume)
-            self.sounds[name] = sound
-            
-            msg = f"  [OK] Loaded sound: {name} from {os.path.basename(path)}"
-            print(msg)
             if IS_WEB:
+                # On web, pygame.mixer.Sound() doesn't work (throws "Surface doesn't have a colorkey" error)
+                # Instead, store the path and we'll use pygame.mixer.music to play it later
+                # This means only one sound effect can play at a time on web, but at least it works
+                self.sounds[name] = path  # Store path instead of Sound object
+                msg = f"  [OK] Registered sound for web: {name} from {os.path.basename(path)}"
+                print(msg)
                 import platform
                 platform.window.console.log(msg)
+            else:
+                # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
+                sound = pygame.mixer.Sound(path)
+                sound.set_volume(self.sfx_volume)
+                self.sounds[name] = sound
+                msg = f"  [OK] Loaded sound: {name} from {os.path.basename(path)}"
+                print(msg)
         except Exception as e:
             msg = f"  [ERROR] Error loading sound {name} from {path}: {e}"
             print(msg)
@@ -142,46 +147,30 @@ class AudioManager:
             sound = self.sounds[name]
             
             if IS_WEB:
-                # On web, find an available channel and play on it explicitly
-                # This is more reliable than sound.play() which can fail silently
+                # On web, pygame.mixer.Sound() doesn't work, so self.sounds[name] is actually a file path
+                # Use pygame.mixer.music to play sound effects (will interrupt background music briefly)
                 import platform
-                platform.window.console.log(f"  [AUDIO-WEB] Attempting to play sound: {name}")
-                platform.window.console.log(f"  [AUDIO-WEB] Sound object: {sound}")
-                platform.window.console.log(f"  [AUDIO-WEB] User interacted: {self.user_interacted}")
-                platform.window.console.log(f"  [AUDIO-WEB] Audio enabled: {self.enabled}")
-                platform.window.console.log(f"  [AUDIO-WEB] SFX volume: {self.sfx_volume}")
-                platform.window.console.log(f"  [AUDIO-WEB] Total channels: {pygame.mixer.get_num_channels()}")
-                print(f"  [AUDIO-WEB] Attempting to play sound: {name}")
-                print(f"  [AUDIO-WEB] Sound object: {sound}")
-                print(f"  [AUDIO-WEB] User interacted: {self.user_interacted}")
-                print(f"  [AUDIO-WEB] Audio enabled: {self.enabled}")
-                print(f"  [AUDIO-WEB] SFX volume: {self.sfx_volume}")
-                print(f"  [AUDIO-WEB] Total channels: {pygame.mixer.get_num_channels()}")
+                sound_path = sound  # It's actually a path, not a Sound object
+                platform.window.console.log(f"  [AUDIO-WEB] Playing sound effect using mixer.music: {name}")
+                platform.window.console.log(f"  [AUDIO-WEB] Sound path: {sound_path}")
                 
-                channel_found = False
-                for i in range(pygame.mixer.get_num_channels()):
-                    channel = pygame.mixer.Channel(i)
-                    busy = channel.get_busy()
-                    print(f"  [AUDIO-WEB] Channel {i} busy: {busy}")
-                    if not busy:
-                        print(f"  [AUDIO-WEB] Using channel {i} for sound: {name}")
-                        channel.set_volume(self.sfx_volume)
-                        result = channel.play(sound)
-                        print(f"  [AUDIO-WEB] channel.play() returned: {result}")
-                        channel_found = True
-                        print(f"  [AUDIO-WEB] SUCCESS: Playing sound: {name} on channel {i}")
-                        break
-                
-                if not channel_found:
-                    # Force play on channel 0 if all busy
-                    print(f"  [AUDIO-WEB] All channels busy, forcing on channel 0")
-                    channel = pygame.mixer.Channel(0)
-                    channel.set_volume(self.sfx_volume)
-                    result = channel.play(sound)
-                    print(f"  [AUDIO-WEB] channel.play() on channel 0 returned: {result}")
-                    print(f"  [AUDIO-WEB] [WARN] Playing sound: {name} on channel 0 (all channels busy)")
+                try:
+                    # Stop current music
+                    pygame.mixer.music.stop()
+                    # Load and play the sound effect
+                    pygame.mixer.music.load(sound_path)
+                    pygame.mixer.music.set_volume(self.sfx_volume)
+                    pygame.mixer.music.play()
+                    
+                    msg = f"  [AUDIO-WEB] Playing sound effect: {name}"
+                    print(msg)
+                    platform.window.console.log(msg)
+                except Exception as e:
+                    msg = f"  [AUDIO-WEB] Error playing sound with mixer.music: {e}"
+                    print(msg)
+                    platform.window.console.log(msg)
             else:
-                # Desktop: simpler playback
+                # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
                 sound.play()
                 print(f"  [AUDIO] Playing sound: {name}")
         except Exception as e:
