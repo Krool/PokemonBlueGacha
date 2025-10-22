@@ -58,11 +58,21 @@ class AudioManager:
             path: Path to sound file
             name: Name to reference sound by
         """
+        print(f"[AUDIO-DEBUG] load_sound called: name={name}, path={path}, enabled={self.enabled}")
+        if IS_WEB:
+            import platform
+            platform.window.console.log(f"[AUDIO-DEBUG] load_sound called: name={name}, path={path}, enabled={self.enabled}")
+        
         if not self.enabled:
+            print(f"  [AUDIO] Skipping load (audio disabled): {name}")
             return
         
         if not os.path.exists(path):
-            print(f"Warning: Sound file not found: {path}")
+            msg = f"Warning: Sound file not found: {path}"
+            print(msg)
+            if IS_WEB:
+                import platform
+                platform.window.console.log(msg)
             return
         
         try:
@@ -75,9 +85,17 @@ class AudioManager:
             sound.set_volume(self.sfx_volume)
             self.sounds[name] = sound
             
-            print(f"  [OK] Loaded sound: {name} from {os.path.basename(path)}")
+            msg = f"  [OK] Loaded sound: {name} from {os.path.basename(path)}"
+            print(msg)
+            if IS_WEB:
+                import platform
+                platform.window.console.log(msg)
         except Exception as e:
-            print(f"  [ERROR] Error loading sound {name} from {path}: {e}")
+            msg = f"  [ERROR] Error loading sound {name} from {path}: {e}"
+            print(msg)
+            if IS_WEB:
+                import platform
+                platform.window.console.log(msg)
             import traceback
             traceback.print_exc()
     
@@ -306,6 +324,13 @@ class AudioManager:
         """
         import os
         
+        # Debug logging
+        print(f"[AUDIO-DEBUG] load_game_sounds called with path: {sounds_path}")
+        print(f"[AUDIO-DEBUG] IS_WEB={IS_WEB}, enabled={self.enabled}")
+        if IS_WEB:
+            import platform
+            platform.window.console.log(f"[AUDIO-DEBUG] load_game_sounds called with path: {sounds_path}")
+        
         # Define sound files to load - CHECK FILE EXTENSIONS IN Assets/Sounds FOLDER!
         sound_files = {
             'roll1': 'roll1.mp3',  # Changed to match actual files
@@ -321,6 +346,11 @@ class AudioManager:
         
         for sound_name, filename in sound_files.items():
             full_path = os.path.join(sounds_path, filename)
+            print(f"  [AUDIO-DEBUG] Checking {sound_name}: {full_path}, exists={os.path.exists(full_path)}")
+            if IS_WEB:
+                import platform
+                platform.window.console.log(f"  [AUDIO-DEBUG] Checking {sound_name}: {full_path}, exists={os.path.exists(full_path)}")
+            
             if os.path.exists(full_path):
                 if sound_name != 'background':  # Background is music, not sound effect
                     self.load_sound(full_path, sound_name)
