@@ -30,7 +30,7 @@ def get_base_path():
     elif IS_WEB or os.path.exists("data"):
         return ""  # We're in src/ or web, use relative paths
     else:
-        return "../"  # We're running from project root, go up from src/
+        return "src/"  # We're running from project root, data is in src/
 
 BASE_PATH = get_base_path()
 

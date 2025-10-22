@@ -9,6 +9,7 @@ from ui.button import Button
 from ui.currency_display import CurrencyDisplay
 from ui.gacha_info_popup import GachaInfoPopup
 from ui.items_info_popup import ItemsInfoPopup
+from ui.pokemon_details_popup import PokemonDetailsPopup
 from utils.gacha_stats import GachaStats
 from logic.items_gacha import perform_items_gacha, calculate_new_item_chance
 
@@ -23,6 +24,10 @@ class GachaBuyState(GameState):
             self.selected_machine = kwargs['last_machine']
         else:
             self.selected_machine = "Red"  # Default selection
+        
+        # Pokemon details popup
+        self.pokemon_details_popup = None
+        self.featured_pokemon_rects = []  # Store clickable rectangles for featured Pokemon
         
         # Get gacha machine data
         self.machines = {
@@ -456,6 +461,19 @@ class GachaBuyState(GameState):
                 self.audio_manager.enable_audio_after_interaction(allow_music_start=allow_music)
                 break
         
+        # Handle Pokemon details popup if showing
+        if self.pokemon_details_popup is not None:
+            if self.pokemon_details_popup.is_showing():
+                for event in events:
+                    self.pokemon_details_popup.handle_event(event)
+                # Check again after event handling (popup might have closed itself)
+                if self.pokemon_details_popup is not None and not self.pokemon_details_popup.is_showing():
+                    self.pokemon_details_popup = None
+                return
+            else:
+                # Popup is not showing, clean it up
+                self.pokemon_details_popup = None
+        
         # Handle info popup first if visible
         if self.info_popup is not None and self.info_popup.is_showing():
             self.info_popup.update()
@@ -488,6 +506,21 @@ class GachaBuyState(GameState):
             # Check for currency click release
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 self.currency_held = False
+            
+            # Check for featured Pokemon clicks
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_pos = event.pos
+                for rect, pokemon in self.featured_pokemon_rects:
+                    if rect.collidepoint(mouse_pos):
+                        # Show Pokemon details popup
+                        if self.pokemon_details_popup is None:
+                            self.pokemon_details_popup = PokemonDetailsPopup(
+                                self.screen,
+                                self.font_manager,
+                                self.resource_manager
+                            )
+                        self.pokemon_details_popup.show(pokemon)
+                        break
             
             # Handle all buttons
             for button in self.machine_buttons.values():
@@ -578,6 +611,7 @@ class GachaBuyState(GameState):
         
         # Draw featured Pokemon sprites (3 random for this machine)
         # Don't show featured items for Items machine
+        self.featured_pokemon_rects = []  # Clear previous rects
         if self.selected_machine != "Items" and hasattr(self, 'featured_pokemon') and self.selected_machine in self.featured_pokemon:
             # Draw featured Pokemon
             featured = self.featured_pokemon[self.selected_machine]
@@ -598,6 +632,9 @@ class GachaBuyState(GameState):
                 box_rect = pygame.Rect(x, sprite_y, sprite_size, sprite_size)
                 pygame.draw.rect(self.screen, COLOR_BLACK, box_rect)
                 pygame.draw.rect(self.screen, rarity_color, box_rect, 3)
+                
+                # Store rectangle and pokemon for click detection
+                self.featured_pokemon_rects.append((box_rect, pokemon))
                 
                 # Draw Pokemon sprite
                 image = self.resource_manager.images.get(pokemon.image_path)
@@ -709,6 +746,10 @@ class GachaBuyState(GameState):
         # Draw error popup if visible
         if hasattr(self, 'error_popup') and self.error_popup.is_showing():
             self.error_popup.render(self.screen)
+        
+        # Draw Pokemon details popup if showing (render on top)
+        if self.pokemon_details_popup is not None and self.pokemon_details_popup.is_showing():
+            self.pokemon_details_popup.render(self.screen)
     
     def _wrap_text(self, text: str, max_width: int, font_size: int) -> list:
         """

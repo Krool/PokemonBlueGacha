@@ -10,6 +10,7 @@ from ui.sort_button import SortButton, SortOrder
 from ui.scrollable_grid import ScrollableGrid
 from ui.currency_display import CurrencyDisplay
 from ui.stats_popup import StatsPopup
+from ui.pokemon_details_popup import PokemonDetailsPopup
 from utils.gacha_stats import GachaStats
 
 
@@ -35,6 +36,7 @@ class InventoryState(GameState):
         self.currency_rect = None  # Clickable currency area
         self.title_rect = None  # Clickable title area for music randomization
         self.stats_popup = None  # Stats popup
+        self.pokemon_details_popup = None  # Pokemon details popup
         
         # Currency click hold tracking
         self.currency_held = False
@@ -364,6 +366,19 @@ class InventoryState(GameState):
                 # Popup is not showing, clean it up
                 self.stats_popup = None
         
+        # Handle Pokemon details popup if showing
+        if self.pokemon_details_popup is not None:
+            if self.pokemon_details_popup.is_showing():
+                for event in events:
+                    self.pokemon_details_popup.handle_event(event)
+                # Check again after event handling (popup might have closed itself)
+                if self.pokemon_details_popup is not None and not self.pokemon_details_popup.is_showing():
+                    self.pokemon_details_popup = None
+                return
+            else:
+                # Popup is not showing, clean it up
+                self.pokemon_details_popup = None
+        
         # Update UI components
         self.open_gacha_button.update()
         if self.mute_button:
@@ -410,6 +425,20 @@ class InventoryState(GameState):
             # Check for currency click release
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 self.currency_held = False
+            
+            # Check for Pokemon tile clicks
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                clicked_pokemon = self.scrollable_grid.get_clicked_pokemon(event.pos)
+                if clicked_pokemon:
+                    # Show Pokemon details popup
+                    if self.pokemon_details_popup is None:
+                        self.pokemon_details_popup = PokemonDetailsPopup(
+                            self.screen,
+                            self.font_manager,
+                            self.resource_manager
+                        )
+                    self.pokemon_details_popup.show(clicked_pokemon)
+                    continue
             
             # Keyboard shortcuts
             if event.type == pygame.KEYDOWN:
@@ -523,3 +552,7 @@ class InventoryState(GameState):
         # Draw stats popup if showing (render on top)
         if self.stats_popup is not None and self.stats_popup.is_showing():
             self.stats_popup.render(self.screen)
+        
+        # Draw Pokemon details popup if showing (render on top)
+        if self.pokemon_details_popup is not None and self.pokemon_details_popup.is_showing():
+            self.pokemon_details_popup.render(self.screen)

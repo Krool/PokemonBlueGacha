@@ -8,6 +8,7 @@ from ui.button import Button
 from ui.pokemon_tile import PokemonTile
 from ui.item_tile import ItemTile
 from ui.currency_display import CurrencyDisplay
+from ui.pokemon_details_popup import PokemonDetailsPopup
 from logic.items_gacha import perform_items_gacha
 
 class GachaOutcomeState(GameState):
@@ -26,6 +27,7 @@ class GachaOutcomeState(GameState):
         self.last_machine = "Red"  # Remember which machine was used
         self.currency_rect = None  # Clickable currency area
         self.owned_count_before_pull = 0  # Track count before this pull
+        self.pokemon_details_popup = None  # Pokemon details popup
         
         # Currency click hold tracking
         self.currency_held = False
@@ -384,6 +386,19 @@ class GachaOutcomeState(GameState):
                 self.error_popup.handle_event(event)
             return
         
+        # Handle Pokemon details popup if showing
+        if self.pokemon_details_popup is not None:
+            if self.pokemon_details_popup.is_showing():
+                for event in events:
+                    self.pokemon_details_popup.handle_event(event)
+                # Check again after event handling (popup might have closed itself)
+                if self.pokemon_details_popup is not None and not self.pokemon_details_popup.is_showing():
+                    self.pokemon_details_popup = None
+                return
+            else:
+                # Popup is not showing, clean it up
+                self.pokemon_details_popup = None
+        
         # Update buttons (they handle hover internally)
         self.roll_same_button.update()
         self.gacha_button.update()
@@ -404,6 +419,27 @@ class GachaOutcomeState(GameState):
             # Check for currency click release
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 self.currency_held = False
+            
+            # Check for Pokemon tile clicks (only for Pokemon gacha, not items)
+            pokemon_clicked = False
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not self.is_items_gacha:
+                mouse_pos = event.pos
+                for tile in self.pokemon_tiles:
+                    if tile.rect.collidepoint(mouse_pos):
+                        # Show Pokemon details popup
+                        if self.pokemon_details_popup is None:
+                            self.pokemon_details_popup = PokemonDetailsPopup(
+                                self.screen,
+                                self.font_manager,
+                                self.resource_manager
+                            )
+                        self.pokemon_details_popup.show(tile.pokemon)
+                        pokemon_clicked = True
+                        break
+            
+            # Skip button handling if a Pokemon was clicked
+            if pokemon_clicked:
+                continue
             
             # Pass events to buttons
             self.roll_same_button.handle_event(event)
@@ -501,4 +537,8 @@ class GachaOutcomeState(GameState):
         # Draw error popup if visible
         if hasattr(self, 'error_popup') and self.error_popup.is_showing():
             self.error_popup.render(self.screen)
+        
+        # Draw Pokemon details popup if showing (render on top)
+        if self.pokemon_details_popup is not None and self.pokemon_details_popup.is_showing():
+            self.pokemon_details_popup.render(self.screen)
 

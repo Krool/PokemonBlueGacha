@@ -1,152 +1,152 @@
-Number,Name,Type1,Type2,Rarity,Red_Weight,Blue_Weight,Yellow_Weight,Image
-001,Bulbasaur,Grass,Poison,Uncommon,1,1,1,Assets/Sprites/Pokemon/001_Bulbasaur.png
-002,Ivysaur,Grass,Poison,Rare,1,1,1,Assets/Sprites/Pokemon/002_Ivysaur.png
-003,Venusaur,Grass,Poison,Epic,1,1,1,Assets/Sprites/Pokemon/003_Venusaur.png
-004,Charmander,Fire,,Uncommon,1,1,1,Assets/Sprites/Pokemon/004_Charmander.png
-005,Charmeleon,Fire,,Rare,1,1,1,Assets/Sprites/Pokemon/005_Charmeleon.png
-006,Charizard,Fire,Flying,Epic,1,1,1,Assets/Sprites/Pokemon/006_Charizard.png
-007,Squirtle,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/007_Squirtle.png
-008,Wartortle,Water,,Rare,1,1,1,Assets/Sprites/Pokemon/008_Wartortle.png
-009,Blastoise,Water,,Epic,1,1,1,Assets/Sprites/Pokemon/009_Blastoise.png
-010,Caterpie,Bug,,Common,1,1,1,Assets/Sprites/Pokemon/010_Caterpie.png
-011,Metapod,Bug,,Common,1,1,1,Assets/Sprites/Pokemon/011_Metapod.png
-012,Butterfree,Bug,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/012_Butterfree.png
-013,Weedle,Bug,Poison,Common,1,1,0,Assets/Sprites/Pokemon/013_Weedle.png
-014,Kakuna,Bug,Poison,Common,1,1,0,Assets/Sprites/Pokemon/014_Kakuna.png
-015,Beedrill,Bug,Poison,Uncommon,1,1,0,Assets/Sprites/Pokemon/015_Beedrill.png
-016,Pidgey,Normal,Flying,Common,1,1,1,Assets/Sprites/Pokemon/016_Pidgey.png
-017,Pidgeotto,Normal,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/017_Pidgeotto.png
-018,Pidgeot,Normal,Flying,Rare,1,1,1,Assets/Sprites/Pokemon/018_Pidgeot.png
-019,Rattata,Normal,,Common,1,1,1,Assets/Sprites/Pokemon/019_Rattata.png
-020,Raticate,Normal,,Uncommon,1,1,1,Assets/Sprites/Pokemon/020_Raticate.png
-021,Spearow,Normal,Flying,Common,1,1,1,Assets/Sprites/Pokemon/021_Spearow.png
-022,Fearow,Normal,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/022_Fearow.png
-023,Ekans,Poison,,Common,1,0,0,Assets/Sprites/Pokemon/023_Ekans.png
-024,Arbok,Poison,,Uncommon,1,0,0,Assets/Sprites/Pokemon/024_Arbok.png
-025,Pikachu,Electric,,Rare,1,1,1,Assets/Sprites/Pokemon/025_Pikachu.png
-026,Raichu,Electric,,Epic,1,1,0,Assets/Sprites/Pokemon/026_Raichu.png
-027,Sandshrew,Ground,,Common,0,1,1,Assets/Sprites/Pokemon/027_Sandshrew.png
-028,Sandslash,Ground,,Uncommon,0,1,1,Assets/Sprites/Pokemon/028_Sandslash.png
-029,Nidoran♀,Poison,,Common,1,1,1,Assets/Sprites/Pokemon/029_Nidoran♀.png
-030,Nidorina,Poison,,Uncommon,1,1,1,Assets/Sprites/Pokemon/030_Nidorina.png
-031,Nidoqueen,Poison,Ground,Rare,1,1,1,Assets/Sprites/Pokemon/031_Nidoqueen.png
-032,Nidoran♂,Poison,,Common,1,1,1,Assets/Sprites/Pokemon/032_Nidoran♂.png
-033,Nidorino,Poison,,Uncommon,1,1,1,Assets/Sprites/Pokemon/033_Nidorino.png
-034,Nidoking,Poison,Ground,Rare,1,1,1,Assets/Sprites/Pokemon/034_Nidoking.png
-035,Clefairy,Normal,,Uncommon,1,1,1,Assets/Sprites/Pokemon/035_Clefairy.png
-036,Clefable,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/036_Clefable.png
-037,Vulpix,Fire,,Uncommon,0,1,1,Assets/Sprites/Pokemon/037_Vulpix.png
-038,Ninetales,Fire,,Rare,0,1,1,Assets/Sprites/Pokemon/038_Ninetales.png
-039,Jigglypuff,Normal,,Common,1,1,1,Assets/Sprites/Pokemon/039_Jigglypuff.png
-040,Wigglytuff,Normal,,Uncommon,1,1,1,Assets/Sprites/Pokemon/040_Wigglytuff.png
-041,Zubat,Poison,Flying,Common,1,1,1,Assets/Sprites/Pokemon/041_Zubat.png
-042,Golbat,Poison,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/042_Golbat.png
-043,Oddish,Grass,Poison,Common,1,0,1,Assets/Sprites/Pokemon/043_Oddish.png
-044,Gloom,Grass,Poison,Uncommon,1,0,1,Assets/Sprites/Pokemon/044_Gloom.png
-045,Vileplume,Grass,Poison,Rare,1,0,1,Assets/Sprites/Pokemon/045_Vileplume.png
-046,Paras,Bug,Grass,Common,1,1,1,Assets/Sprites/Pokemon/046_Paras.png
-047,Parasect,Bug,Grass,Uncommon,1,1,1,Assets/Sprites/Pokemon/047_Parasect.png
-048,Venonat,Bug,Poison,Common,1,1,1,Assets/Sprites/Pokemon/048_Venonat.png
-049,Venomoth,Bug,Poison,Uncommon,1,1,1,Assets/Sprites/Pokemon/049_Venomoth.png
-050,Diglett,Ground,,Common,1,1,1,Assets/Sprites/Pokemon/050_Diglett.png
-051,Dugtrio,Ground,,Uncommon,1,1,1,Assets/Sprites/Pokemon/051_Dugtrio.png
-052,Meowth,Normal,,Common,0,1,0,Assets/Sprites/Pokemon/052_Meowth.png
-053,Persian,Normal,,Uncommon,0,1,0,Assets/Sprites/Pokemon/053_Persian.png
-054,Psyduck,Water,,Common,1,1,1,Assets/Sprites/Pokemon/054_Psyduck.png
-055,Golduck,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/055_Golduck.png
-056,Mankey,Fighting,,Common,1,0,1,Assets/Sprites/Pokemon/056_Mankey.png
-057,Primeape,Fighting,,Uncommon,1,0,1,Assets/Sprites/Pokemon/057_Primeape.png
-058,Growlithe,Fire,,Uncommon,1,0,1,Assets/Sprites/Pokemon/058_Growlithe.png
-059,Arcanine,Fire,,Rare,1,0,1,Assets/Sprites/Pokemon/059_Arcanine.png
-060,Poliwag,Water,,Common,1,1,1,Assets/Sprites/Pokemon/060_Poliwag.png
-061,Poliwhirl,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/061_Poliwhirl.png
-062,Poliwrath,Water,Fighting,Rare,1,1,1,Assets/Sprites/Pokemon/062_Poliwrath.png
-063,Abra,Psychic,,Uncommon,1,1,1,Assets/Sprites/Pokemon/063_Abra.png
-064,Kadabra,Psychic,,Rare,1,1,1,Assets/Sprites/Pokemon/064_Kadabra.png
-065,Alakazam,Psychic,,Epic,1,1,1,Assets/Sprites/Pokemon/065_Alakazam.png
-066,Machop,Fighting,,Common,1,1,1,Assets/Sprites/Pokemon/066_Machop.png
-067,Machoke,Fighting,,Uncommon,1,1,1,Assets/Sprites/Pokemon/067_Machoke.png
-068,Machamp,Fighting,,Rare,1,1,1,Assets/Sprites/Pokemon/068_Machamp.png
-069,Bellsprout,Grass,Poison,Common,0,1,1,Assets/Sprites/Pokemon/069_Bellsprout.png
-070,Weepinbell,Grass,Poison,Uncommon,0,1,1,Assets/Sprites/Pokemon/070_Weepinbell.png
-071,Victreebel,Grass,Poison,Rare,0,1,1,Assets/Sprites/Pokemon/071_Victreebel.png
-072,Tentacool,Water,Poison,Common,1,1,1,Assets/Sprites/Pokemon/072_Tentacool.png
-073,Tentacruel,Water,Poison,Uncommon,1,1,1,Assets/Sprites/Pokemon/073_Tentacruel.png
-074,Geodude,Rock,Ground,Common,1,1,1,Assets/Sprites/Pokemon/074_Geodude.png
-075,Graveler,Rock,Ground,Uncommon,1,1,1,Assets/Sprites/Pokemon/075_Graveler.png
-076,Golem,Rock,Ground,Rare,1,1,1,Assets/Sprites/Pokemon/076_Golem.png
-077,Ponyta,Fire,,Uncommon,1,1,1,Assets/Sprites/Pokemon/077_Ponyta.png
-078,Rapidash,Fire,,Rare,1,1,1,Assets/Sprites/Pokemon/078_Rapidash.png
-079,Slowpoke,Water,Psychic,Common,1,1,1,Assets/Sprites/Pokemon/079_Slowpoke.png
-080,Slowbro,Water,Psychic,Uncommon,1,1,1,Assets/Sprites/Pokemon/080_Slowbro.png
-081,Magnemite,Electric,,Common,1,1,1,Assets/Sprites/Pokemon/081_Magnemite.png
-082,Magneton,Electric,,Uncommon,1,1,1,Assets/Sprites/Pokemon/082_Magneton.png
-083,Farfetch'd,Normal,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/083_farfetchd.png
-084,Doduo,Normal,Flying,Common,1,1,1,Assets/Sprites/Pokemon/084_Doduo.png
-085,Dodrio,Normal,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/085_Dodrio.png
-086,Seel,Water,,Common,1,1,1,Assets/Sprites/Pokemon/086_Seel.png
-087,Dewgong,Water,Ice,Uncommon,1,1,1,Assets/Sprites/Pokemon/087_Dewgong.png
-088,Grimer,Poison,,Common,1,1,1,Assets/Sprites/Pokemon/088_Grimer.png
-089,Muk,Poison,,Uncommon,1,1,1,Assets/Sprites/Pokemon/089_Muk.png
-090,Shellder,Water,,Common,1,1,1,Assets/Sprites/Pokemon/090_Shellder.png
-091,Cloyster,Water,Ice,Uncommon,1,1,1,Assets/Sprites/Pokemon/091_Cloyster.png
-092,Gastly,Ghost,Poison,Uncommon,1,1,1,Assets/Sprites/Pokemon/092_Gastly.png
-093,Haunter,Ghost,Poison,Rare,1,1,1,Assets/Sprites/Pokemon/093_Haunter.png
-094,Gengar,Ghost,Poison,Epic,1,1,1,Assets/Sprites/Pokemon/094_Gengar.png
-095,Onix,Rock,Ground,Uncommon,1,1,1,Assets/Sprites/Pokemon/095_Onix.png
-096,Drowzee,Psychic,,Common,1,1,1,Assets/Sprites/Pokemon/096_Drowzee.png
-097,Hypno,Psychic,,Uncommon,1,1,1,Assets/Sprites/Pokemon/097_Hypno.png
-098,Krabby,Water,,Common,1,1,1,Assets/Sprites/Pokemon/098_Krabby.png
-099,Kingler,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/099_Kingler.png
-100,Voltorb,Electric,,Common,1,1,1,Assets/Sprites/Pokemon/100_Voltorb.png
-101,Electrode,Electric,,Uncommon,1,1,1,Assets/Sprites/Pokemon/101_Electrode.png
-102,Exeggcute,Grass,Psychic,Common,1,1,1,Assets/Sprites/Pokemon/102_Exeggcute.png
-103,Exeggutor,Grass,Psychic,Uncommon,1,1,1,Assets/Sprites/Pokemon/103_Exeggutor.png
-104,Cubone,Ground,,Common,1,1,1,Assets/Sprites/Pokemon/104_Cubone.png
-105,Marowak,Ground,,Uncommon,1,1,1,Assets/Sprites/Pokemon/105_Marowak.png
-106,Hitmonlee,Fighting,,Rare,1,1,1,Assets/Sprites/Pokemon/106_Hitmonlee.png
-107,Hitmonchan,Fighting,,Rare,1,1,1,Assets/Sprites/Pokemon/107_Hitmonchan.png
-108,Lickitung,Normal,,Uncommon,1,1,1,Assets/Sprites/Pokemon/108_Lickitung.png
-109,Koffing,Poison,,Common,1,1,0,Assets/Sprites/Pokemon/109_Koffing.png
-110,Weezing,Poison,,Uncommon,1,1,0,Assets/Sprites/Pokemon/110_Weezing.png
-111,Rhyhorn,Ground,Rock,Common,1,1,1,Assets/Sprites/Pokemon/111_Rhyhorn.png
-112,Rhydon,Ground,Rock,Uncommon,1,1,1,Assets/Sprites/Pokemon/112_Rhydon.png
-113,Chansey,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/113_Chansey.png
-114,Tangela,Grass,,Uncommon,1,1,1,Assets/Sprites/Pokemon/114_Tangela.png
-115,Kangaskhan,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/115_Kangaskhan.png
-116,Horsea,Water,,Common,1,1,1,Assets/Sprites/Pokemon/116_Horsea.png
-117,Seadra,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/117_Seadra.png
-118,Goldeen,Water,,Common,1,1,1,Assets/Sprites/Pokemon/118_Goldeen.png
-119,Seaking,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/119_Seaking.png
-120,Staryu,Water,,Common,1,1,1,Assets/Sprites/Pokemon/120_Staryu.png
-121,Starmie,Water,Psychic,Uncommon,1,1,1,Assets/Sprites/Pokemon/121_Starmie.png
-122,Mr. Mime,Psychic,,Rare,1,1,1,Assets/Sprites/Pokemon/122_mr-mime.png
-123,Scyther,Bug,Flying,Rare,1,0,1,Assets/Sprites/Pokemon/123_Scyther.png
-124,Jynx,Ice,Psychic,Rare,1,1,0,Assets/Sprites/Pokemon/124_Jynx.png
-125,Electabuzz,Electric,,Rare,1,0,0,Assets/Sprites/Pokemon/125_Electabuzz.png
-126,Magmar,Fire,,Rare,0,1,0,Assets/Sprites/Pokemon/126_Magmar.png
-127,Pinsir,Bug,,Rare,0,1,1,Assets/Sprites/Pokemon/127_Pinsir.png
-128,Tauros,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/128_Tauros.png
-129,Magikarp,Water,,Common,1,1,1,Assets/Sprites/Pokemon/129_Magikarp.png
-130,Gyarados,Water,Flying,Epic,1,1,1,Assets/Sprites/Pokemon/130_Gyarados.png
-131,Lapras,Water,Ice,Epic,1,1,1,Assets/Sprites/Pokemon/131_Lapras.png
-132,Ditto,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/132_Ditto.png
-133,Eevee,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/133_Eevee.png
-134,Vaporeon,Water,,Epic,1,1,1,Assets/Sprites/Pokemon/134_Vaporeon.png
-135,Jolteon,Electric,,Epic,1,1,1,Assets/Sprites/Pokemon/135_Jolteon.png
-136,Flareon,Fire,,Epic,1,1,1,Assets/Sprites/Pokemon/136_Flareon.png
-137,Porygon,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/137_Porygon.png
-138,Omanyte,Rock,Water,Rare,1,1,1,Assets/Sprites/Pokemon/138_Omanyte.png
-139,Omastar,Rock,Water,Epic,1,1,1,Assets/Sprites/Pokemon/139_Omastar.png
-140,Kabuto,Rock,Water,Rare,1,1,1,Assets/Sprites/Pokemon/140_Kabuto.png
-141,Kabutops,Rock,Water,Epic,1,1,1,Assets/Sprites/Pokemon/141_Kabutops.png
-142,Aerodactyl,Rock,Flying,Epic,1,1,1,Assets/Sprites/Pokemon/142_Aerodactyl.png
-143,Snorlax,Normal,,Epic,1,1,1,Assets/Sprites/Pokemon/143_Snorlax.png
-144,Articuno,Ice,Flying,Legendary,1,1,3,Assets/Sprites/Pokemon/144_Articuno.png
-145,Zapdos,Electric,Flying,Legendary,1,1,3,Assets/Sprites/Pokemon/145_Zapdos.png
-146,Moltres,Fire,Flying,Legendary,1,1,3,Assets/Sprites/Pokemon/146_Moltres.png
-147,Dratini,Dragon,,Uncommon,1,1,1,Assets/Sprites/Pokemon/147_Dratini.png
-148,Dragonair,Dragon,,Rare,1,1,1,Assets/Sprites/Pokemon/148_Dragonair.png
-149,Dragonite,Dragon,Flying,Epic,1,1,1,Assets/Sprites/Pokemon/149_Dragonite.png
-150,Mewtwo,Psychic,,Legendary,1,1,2,Assets/Sprites/Pokemon/150_Mewtwo.png
-151,Mew,Psychic,,Legendary,0,0,1,Assets/Sprites/Pokemon/151_Mew.png
+Number,Name,Type1,Type2,Rarity,Red_Weight,Blue_Weight,Yellow_Weight,Image,Species,Height_ft,Weight_lbs,Pokedex_Entry
+001,Bulbasaur,Grass,Poison,Uncommon,1,1,1,Assets/Sprites/Pokemon/001_Bulbasaur.png,Seed,2.3,15.2,A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON.
+002,Ivysaur,Grass,Poison,Rare,1,1,1,Assets/Sprites/Pokemon/002_Ivysaur.png,Seed,3.3,28.7,"When the bulb on its back grows large, it appears to lose the ability to stand on its hind legs."
+003,Venusaur,Grass,Poison,Epic,1,1,1,Assets/Sprites/Pokemon/003_Venusaur.png,Seed,6.6,220.5,The plant blooms when it is absorbing solar energy. It stays on the move to seek sunlight.
+004,Charmander,Fire,,Uncommon,1,1,1,Assets/Sprites/Pokemon/004_Charmander.png,Lizard,2.0,18.7,"Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail."
+005,Charmeleon,Fire,,Rare,1,1,1,Assets/Sprites/Pokemon/005_Charmeleon.png,Flame,3.6,41.9,"When it swings its burning tail, it elevates the temperature to unbearably high levels."
+006,Charizard,Fire,Flying,Epic,1,1,1,Assets/Sprites/Pokemon/006_Charizard.png,Flame,5.6,199.5,Spits fire that is hot enough to melt boulders. Known to cause forest fires unintentionally.
+007,Squirtle,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/007_Squirtle.png,Tiny Turtle,1.6,19.8,"After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth."
+008,Wartortle,Water,,Rare,1,1,1,Assets/Sprites/Pokemon/008_Wartortle.png,Turtle,3.3,49.6,"Often hides in water to stalk unwary prey. For swimming fast, it moves its ears to maintain balance."
+009,Blastoise,Water,,Epic,1,1,1,Assets/Sprites/Pokemon/009_Blastoise.png,Shellfish,5.2,188.5,A brutal POKéMON with pressurized water jets on its shell. They are used for high speed tackles.
+010,Caterpie,Bug,,Common,1,1,1,Assets/Sprites/Pokemon/010_Caterpie.png,Worm,1.0,6.4,Its short feet are tipped with suction pads that enable it to tirelessly climb slopes and walls.
+011,Metapod,Bug,,Common,1,1,1,Assets/Sprites/Pokemon/011_Metapod.png,Cocoon,2.3,21.8,"This POKéMON is vulnerable to attack while its shell is soft, exposing its weak and tender body."
+012,Butterfree,Bug,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/012_Butterfree.png,Butterfly,3.6,70.5,"In battle, it flaps its wings at high speed to release highly toxic dust into the air."
+013,Weedle,Bug,Poison,Common,1,1,0,Assets/Sprites/Pokemon/013_Weedle.png,Hairy Bug,1.0,7.1,"Often found in forests, eating leaves. It has a sharp venomous stinger on its head."
+014,Kakuna,Bug,Poison,Common,1,1,0,Assets/Sprites/Pokemon/014_Kakuna.png,Cocoon,2.0,22.0,"Almost incapable of moving, this POKéMON can only harden its shell to protect itself from predators."
+015,Beedrill,Bug,Poison,Uncommon,1,1,0,Assets/Sprites/Pokemon/015_Beedrill.png,Poison Bee,3.3,65.0,Flies at high speed and attacks using its large venomous stingers on its forelegs and tail.
+016,Pidgey,Normal,Flying,Common,1,1,1,Assets/Sprites/Pokemon/016_Pidgey.png,Tiny Bird,1.0,4.0,A common sight in forests and woods. It flaps its wings at ground level to kick up blinding sand.
+017,Pidgeotto,Normal,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/017_Pidgeotto.png,Bird,3.6,66.1,"Very protective of its sprawling territorial area, this POKéMON will fiercely peck at any intruder."
+018,Pidgeot,Normal,Flying,Rare,1,1,1,Assets/Sprites/Pokemon/018_Pidgeot.png,Bird,4.9,87.1,"When hunting, it skims the surface of water at high speed to pick off unwary prey such as MAGIKARP."
+019,Rattata,Normal,,Common,1,1,1,Assets/Sprites/Pokemon/019_Rattata.png,Mouse,1.0,7.7,"Bites anything when it attacks. Small and very quick, it is a common sight in many places."
+020,Raticate,Normal,,Uncommon,1,1,1,Assets/Sprites/Pokemon/020_Raticate.png,Mouse,2.3,40.8,It uses its whis­ kers to maintain its balance. It apparently slows down if they are cut off.
+021,Spearow,Normal,Flying,Common,1,1,1,Assets/Sprites/Pokemon/021_Spearow.png,Tiny Bird,1.0,4.4,Eats bugs in grassy areas. It has to flap its short wings at high speed to stay airborne.
+022,Fearow,Normal,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/022_Fearow.png,Beak,3.9,83.8,"With its huge and magnificent wings, it can keep aloft without ever having to land for rest."
+023,Ekans,Poison,,Common,1,0,0,Assets/Sprites/Pokemon/023_Ekans.png,Snake,6.6,15.2,"Moves silently and stealthily. Eats the eggs of birds, such as PIDGEY and SPEAROW, whole."
+024,Arbok,Poison,,Uncommon,1,0,0,Assets/Sprites/Pokemon/024_Arbok.png,Cobra,11.5,143.3,It is rumored that the ferocious warning markings on its belly differ from area to area.
+025,Pikachu,Electric,,Rare,1,1,1,Assets/Sprites/Pokemon/025_Pikachu.png,Mouse,1.3,13.2,"When several of these POKéMON gather, their electricity could build and cause lightning storms."
+026,Raichu,Electric,,Epic,1,1,0,Assets/Sprites/Pokemon/026_Raichu.png,Mouse,2.6,66.1,Its long tail serves as a ground to protect itself from its own high voltage power.
+027,Sandshrew,Ground,,Common,0,1,1,Assets/Sprites/Pokemon/027_Sandshrew.png,Mouse,2.0,26.5,Burrows deep underground in arid locations far from water. It only emerges to hunt for food.
+028,Sandslash,Ground,,Uncommon,0,1,1,Assets/Sprites/Pokemon/028_Sandslash.png,Mouse,3.3,65.0,Curls up into a spiny ball when threatened. It can roll while curled up to attack or escape.
+029,Nidoran♀,Poison,,Common,1,1,1,Assets/Sprites/Pokemon/029_Nidoran♀.png,Poison Pin,1.3,15.4,"Although small, its venomous barbs render this POKéMON dangerous. The female has smaller horns."
+030,Nidorina,Poison,,Uncommon,1,1,1,Assets/Sprites/Pokemon/030_Nidorina.png,Poison Pin,2.6,44.1,The female's horn develops slowly. Prefers physical attacks such as clawing and biting.
+031,Nidoqueen,Poison,Ground,Rare,1,1,1,Assets/Sprites/Pokemon/031_Nidoqueen.png,Drill,4.3,132.3,Its hard scales provide strong protection. It uses its hefty bulk to execute powerful moves.
+032,Nidoran♂,Poison,,Common,1,1,1,Assets/Sprites/Pokemon/032_Nidoran♂.png,Poison Pin,1.6,19.8,"Stiffens its ears to sense danger. The larger its horns, the more powerful its secreted venom."
+033,Nidorino,Poison,,Uncommon,1,1,1,Assets/Sprites/Pokemon/033_Nidorino.png,Poison Pin,3.0,43.0,An aggressive POKéMON that is quick to attack. The horn on its head secretes a powerful venom.
+034,Nidoking,Poison,Ground,Rare,1,1,1,Assets/Sprites/Pokemon/034_Nidoking.png,Drill,4.6,136.7,"It uses its powerful tail in battle to smash, constrict, then break the prey's bones."
+035,Clefairy,Normal,,Uncommon,1,1,1,Assets/Sprites/Pokemon/035_Clefairy.png,Fairy,2.0,16.5,Its magical and cute appeal has many admirers. It is rare and found only in certain areas.
+036,Clefable,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/036_Clefable.png,Fairy,4.3,88.2,A timid fairy POKéMON that is rarely seen. It will run and hide the moment it senses people.
+037,Vulpix,Fire,,Uncommon,0,1,1,Assets/Sprites/Pokemon/037_Vulpix.png,Fox,2.0,21.8,"At the time of birth, it has just one tail. The tail splits from its tip as it grows older."
+038,Ninetales,Fire,,Rare,0,1,1,Assets/Sprites/Pokemon/038_Ninetales.png,Fox,3.6,43.9,Very smart and very vengeful. Grabbing one of its many tails could result in a 1000-year curse.
+039,Jigglypuff,Normal,,Common,1,1,1,Assets/Sprites/Pokemon/039_Jigglypuff.png,Balloon,1.6,12.1,"When its huge eyes light up, it sings a mysteriously soothing melody that lulls its enemies to sleep."
+040,Wigglytuff,Normal,,Uncommon,1,1,1,Assets/Sprites/Pokemon/040_Wigglytuff.png,Balloon,3.3,26.5,"The body is soft and rubbery. When angered, it will suck in air and inflate itself to an enormous size."
+041,Zubat,Poison,Flying,Common,1,1,1,Assets/Sprites/Pokemon/041_Zubat.png,Bat,2.6,16.5,Forms colonies in perpetually dark places. Uses ultrasonic waves to identify and approach targets.
+042,Golbat,Poison,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/042_Golbat.png,Bat,5.2,121.3,"Once it strikes, it will not stop draining energy from the victim even if it gets too heavy to fly."
+043,Oddish,Grass,Poison,Common,1,0,1,Assets/Sprites/Pokemon/043_Oddish.png,Weed,1.6,11.9,"During the day, it keeps its face buried in the ground. At night, it wanders around sowing its seeds."
+044,Gloom,Grass,Poison,Uncommon,1,0,1,Assets/Sprites/Pokemon/044_Gloom.png,Weed,2.6,19.0,The fluid that oozes from its mouth isn't drool. It is a nectar that is used to attract prey.
+045,Vileplume,Grass,Poison,Rare,1,0,1,Assets/Sprites/Pokemon/045_Vileplume.png,Flower,3.9,41.0,"The larger its petals, the more toxic pollen it contains. Its big head is heavy and hard to hold up."
+046,Paras,Bug,Grass,Common,1,1,1,Assets/Sprites/Pokemon/046_Paras.png,Mushroom,1.0,11.9,Burrows to suck tree roots. The mushrooms on its back grow by draw­ ing nutrients from the bug host.
+047,Parasect,Bug,Grass,Uncommon,1,1,1,Assets/Sprites/Pokemon/047_Parasect.png,Mushroom,3.3,65.0,A host-parasite pair in which the parasite mushroom has taken over the host bug. Prefers damp places.
+048,Venonat,Bug,Poison,Common,1,1,1,Assets/Sprites/Pokemon/048_Venonat.png,Insect,3.3,66.1,Lives in the shadows of tall trees where it eats insects. It is attracted by light at night.
+049,Venomoth,Bug,Poison,Uncommon,1,1,1,Assets/Sprites/Pokemon/049_Venomoth.png,Poison Moth,4.9,27.6,The dust-like scales covering its wings are color coded to indicate the kinds of poison it has.
+050,Diglett,Ground,,Common,1,1,1,Assets/Sprites/Pokemon/050_Diglett.png,Mole,0.7,1.8,Lives about one yard underground where it feeds on plant roots. It sometimes appears above ground.
+051,Dugtrio,Ground,,Uncommon,1,1,1,Assets/Sprites/Pokemon/051_Dugtrio.png,Mole,2.3,73.4,A team of DIGLETT triplets. It triggers huge earthquakes by burrowing 60 miles underground.
+052,Meowth,Normal,,Common,0,1,0,Assets/Sprites/Pokemon/052_Meowth.png,Scratch Cat,1.3,9.3,Adores circular objects. Wanders the streets on a nightly basis to look for dropped loose change.
+053,Persian,Normal,,Uncommon,0,1,0,Assets/Sprites/Pokemon/053_Persian.png,Classy Cat,3.3,70.5,"Although its fur has many admirers, it is tough to raise as a pet because of its fickle meanness."
+054,Psyduck,Water,,Common,1,1,1,Assets/Sprites/Pokemon/054_Psyduck.png,Duck,2.6,43.2,"While lulling its enemies with its vacant look, this wily POKéMON will use psychokinetic powers."
+055,Golduck,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/055_Golduck.png,Duck,5.6,168.9,"Often seen swim­ ming elegantly by lake shores. It is often mistaken for the Japanese monster, Kappa."
+056,Mankey,Fighting,,Common,1,0,1,Assets/Sprites/Pokemon/056_Mankey.png,Pig Monkey,1.6,61.7,Extremely quick to anger. It could be docile one moment then thrashing away the next instant.
+057,Primeape,Fighting,,Uncommon,1,0,1,Assets/Sprites/Pokemon/057_Primeape.png,Pig Monkey,3.3,70.5,Always furious and tenacious to boot. It will not abandon chasing its quarry until it is caught.
+058,Growlithe,Fire,,Uncommon,1,0,1,Assets/Sprites/Pokemon/058_Growlithe.png,Puppy,2.3,41.9,Very protective of its territory. It will bark and bite to repel intruders from its space.
+059,Arcanine,Fire,,Rare,1,0,1,Assets/Sprites/Pokemon/059_Arcanine.png,Legendary,6.2,341.7,A POKéMON that has been admired since the past for its beauty. It runs agilely as if on wings.
+060,Poliwag,Water,,Common,1,1,1,Assets/Sprites/Pokemon/060_Poliwag.png,Tadpole,2.0,27.3,Its newly grown legs prevent it from running. It appears to prefer swimming than trying to stand.
+061,Poliwhirl,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/061_Poliwhirl.png,Tadpole,3.3,44.1,"Capable of living in or out of water. When out of water, it sweats to keep its body slimy."
+062,Poliwrath,Water,Fighting,Rare,1,1,1,Assets/Sprites/Pokemon/062_Poliwrath.png,Tadpole,4.3,119.0,An adept swimmer at both the front crawl and breast stroke. Easily overtakes the best human swimmers.
+063,Abra,Psychic,,Uncommon,1,1,1,Assets/Sprites/Pokemon/063_Abra.png,Psi,3.0,43.0,"Using its ability to read minds, it will identify impending danger and TELEPORT to safety."
+064,Kadabra,Psychic,,Rare,1,1,1,Assets/Sprites/Pokemon/064_Kadabra.png,Psi,4.3,124.6,It emits special alpha waves from its body that induce headaches just by being close by.
+065,Alakazam,Psychic,,Epic,1,1,1,Assets/Sprites/Pokemon/065_Alakazam.png,Psi,4.9,105.8,"Its brain can out­ perform a super­ computer. Its intelligence quotient is said to be 5,000."
+066,Machop,Fighting,,Common,1,1,1,Assets/Sprites/Pokemon/066_Machop.png,Superpower,2.6,43.0,Loves to build its muscles. It trains in all styles of martial arts to become even stronger.
+067,Machoke,Fighting,,Uncommon,1,1,1,Assets/Sprites/Pokemon/067_Machoke.png,Superpower,4.9,155.4,"Its muscular body is so powerful, it must wear a power save belt to be able to regulate its motions."
+068,Machamp,Fighting,,Rare,1,1,1,Assets/Sprites/Pokemon/068_Machamp.png,Superpower,5.2,286.6,"Using its heavy muscles, it throws powerful punches that can send the victim clear over the horizon."
+069,Bellsprout,Grass,Poison,Common,0,1,1,Assets/Sprites/Pokemon/069_Bellsprout.png,Flower,2.3,8.8,A carnivorous POKéMON that traps and eats bugs. It uses its root feet to soak up needed moisture.
+070,Weepinbell,Grass,Poison,Uncommon,0,1,1,Assets/Sprites/Pokemon/070_Weepinbell.png,Flycatcher,3.3,14.1,It spits out POISONPOWDER to immobilize the enemy and then finishes it with a spray of ACID.
+071,Victreebel,Grass,Poison,Rare,0,1,1,Assets/Sprites/Pokemon/071_Victreebel.png,Flycatcher,5.6,34.2,"Said to live in huge colonies deep in jungles, although no one has ever returned from there."
+072,Tentacool,Water,Poison,Common,1,1,1,Assets/Sprites/Pokemon/072_Tentacool.png,Jellyfish,3.0,100.3,Drifts in shallow seas. Anglers who hook them by accident are often punished by its stinging acid.
+073,Tentacruel,Water,Poison,Uncommon,1,1,1,Assets/Sprites/Pokemon/073_Tentacruel.png,Jellyfish,5.2,121.3,"The tentacles are normally kept short. On hunts, they are extended to ensnare and immobilize prey."
+074,Geodude,Rock,Ground,Common,1,1,1,Assets/Sprites/Pokemon/074_Geodude.png,Rock,1.3,44.1,"Found in fields and mountains. Mistaking them for boulders, people often step or trip on them."
+075,Graveler,Rock,Ground,Uncommon,1,1,1,Assets/Sprites/Pokemon/075_Graveler.png,Rock,3.3,231.5,Rolls down slopes to move. It rolls over any obstacle without slowing or changing its direction.
+076,Golem,Rock,Ground,Rare,1,1,1,Assets/Sprites/Pokemon/076_Golem.png,Megaton,4.6,661.4,Its boulder-like body is extremely hard. It can easily withstand dynamite blasts without damage.
+077,Ponyta,Fire,,Uncommon,1,1,1,Assets/Sprites/Pokemon/077_Ponyta.png,Fire Horse,3.3,66.1,Its hooves are 10 times harder than diamonds. It can trample anything completely flat in little time.
+078,Rapidash,Fire,,Rare,1,1,1,Assets/Sprites/Pokemon/078_Rapidash.png,Fire Horse,5.6,209.4,"Very competitive, this POKéMON will chase anything that moves fast in the hopes of racing it."
+079,Slowpoke,Water,Psychic,Common,1,1,1,Assets/Sprites/Pokemon/079_Slowpoke.png,Dopey,3.9,79.4,Incredibly slow and dopey. It takes 5 seconds for it to feel pain when under attack.
+080,Slowbro,Water,Psychic,Uncommon,1,1,1,Assets/Sprites/Pokemon/080_Slowbro.png,Hermit Crab,5.2,173.1,The SHELLDER that is latched onto SLOWPOKE's tail is said to feed on the host's left over scraps.
+081,Magnemite,Electric,,Common,1,1,1,Assets/Sprites/Pokemon/081_Magnemite.png,Magnet,1.0,13.2,Uses anti-gravity to stay suspended. Appears without warning and uses THUNDER WAVE and similar moves.
+082,Magneton,Electric,,Uncommon,1,1,1,Assets/Sprites/Pokemon/082_Magneton.png,Magnet,3.3,132.3,Formed by several MAGNEMITEs linked together. They frequently appear when sunspots flare up.
+083,Farfetch'd,Normal,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/083_farfetchd.png,Wild Duck,2.6,33.1,The sprig of green onions it holds is its weapon. It is used much like a metal sword.
+084,Doduo,Normal,Flying,Common,1,1,1,Assets/Sprites/Pokemon/084_Doduo.png,Twin Bird,4.6,86.4,A bird that makes up for its poor flying with its fast foot speed. Leaves giant footprints.
+085,Dodrio,Normal,Flying,Uncommon,1,1,1,Assets/Sprites/Pokemon/085_Dodrio.png,Triple Bird,5.9,187.8,"Uses its three brains to execute complex plans. While two heads sleep, one head stays awake."
+086,Seel,Water,,Common,1,1,1,Assets/Sprites/Pokemon/086_Seel.png,Sea Lion,3.6,198.4,The protruding horn on its head is very hard. It is used for bashing through thick ice.
+087,Dewgong,Water,Ice,Uncommon,1,1,1,Assets/Sprites/Pokemon/087_Dewgong.png,Sea Lion,5.6,264.6,Stores thermal energy in its body. Swims at a steady 8 knots even in intensely cold waters.
+088,Grimer,Poison,,Common,1,1,1,Assets/Sprites/Pokemon/088_Grimer.png,Sludge,3.0,66.1,Appears in filthy areas. Thrives by sucking up polluted sludge that is pumped out of factories.
+089,Muk,Poison,,Uncommon,1,1,1,Assets/Sprites/Pokemon/089_Muk.png,Sludge,3.9,66.1,"Thickly covered with a filthy, vile sludge. It is so toxic, even its footprints contain poison."
+090,Shellder,Water,,Common,1,1,1,Assets/Sprites/Pokemon/090_Shellder.png,Bivalve,1.0,8.8,Its hard shell repels any kind of attack. It is vulnerable only when its shell is open.
+091,Cloyster,Water,Ice,Uncommon,1,1,1,Assets/Sprites/Pokemon/091_Cloyster.png,Bivalve,4.9,292.1,"When attacked, it launches its horns in quick volleys. Its innards have never been seen."
+092,Gastly,Ghost,Poison,Uncommon,1,1,1,Assets/Sprites/Pokemon/092_Gastly.png,Gas,4.3,0.2,"Almost invisible, this gaseous POKéMON cloaks the target and puts it to sleep without notice."
+093,Haunter,Ghost,Poison,Rare,1,1,1,Assets/Sprites/Pokemon/093_Haunter.png,Gas,5.2,0.2,"Because of its ability to slip through block walls, it is said to be from an­ other dimension."
+094,Gengar,Ghost,Poison,Epic,1,1,1,Assets/Sprites/Pokemon/094_Gengar.png,Shadow,4.9,89.3,"Under a full moon, this POKéMON likes to mimic the shadows of people and laugh at their fright."
+095,Onix,Rock,Ground,Uncommon,1,1,1,Assets/Sprites/Pokemon/095_Onix.png,Rock Snake,28.9,463.0,"As it grows, the stone portions of its body harden to become similar to a diamond, but colored black."
+096,Drowzee,Psychic,,Common,1,1,1,Assets/Sprites/Pokemon/096_Drowzee.png,Hypnosis,3.3,71.4,Puts enemies to sleep then eats their dreams. Occasionally gets sick from eating bad dreams.
+097,Hypno,Psychic,,Uncommon,1,1,1,Assets/Sprites/Pokemon/097_Hypno.png,Hypnosis,5.2,166.7,"When it locks eyes with an enemy, it will use a mix of PSI moves such as HYPNOSIS and CONFUSION."
+098,Krabby,Water,,Common,1,1,1,Assets/Sprites/Pokemon/098_Krabby.png,River Crab,1.3,14.3,"Its pincers are not only powerful weapons, they are used for balance when walking sideways."
+099,Kingler,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/099_Kingler.png,Pincer,4.3,132.3,"The large pincer has 10000 hp of crushing power. However, its huge size makes it unwieldy to use."
+100,Voltorb,Electric,,Common,1,1,1,Assets/Sprites/Pokemon/100_Voltorb.png,Ball,1.6,22.9,"Usually found in power plants. Easily mistaken for a POKé BALL, they have zapped many people."
+101,Electrode,Electric,,Uncommon,1,1,1,Assets/Sprites/Pokemon/101_Electrode.png,Ball,3.9,146.8,It stores electric energy under very high pressure. It often explodes with little or no provocation.
+102,Exeggcute,Grass,Psychic,Common,1,1,1,Assets/Sprites/Pokemon/102_Exeggcute.png,Egg,1.3,5.5,"Often mistaken for eggs. When disturbed, they quickly gather and attack in swarms."
+103,Exeggutor,Grass,Psychic,Uncommon,1,1,1,Assets/Sprites/Pokemon/103_Exeggutor.png,Coconut,6.6,264.6,"Legend has it that on rare occasions, one of its heads will drop off and continue on as an EXEGGCUTE."
+104,Cubone,Ground,,Common,1,1,1,Assets/Sprites/Pokemon/104_Cubone.png,Lonely,1.3,14.3,"Because it never removes its skull helmet, no one has ever seen this POKéMON's real face."
+105,Marowak,Ground,,Uncommon,1,1,1,Assets/Sprites/Pokemon/105_Marowak.png,Bone Keeper,3.3,99.2,The bone it holds is its key weapon. It throws the bone skillfully like a boomerang to KO targets.
+106,Hitmonlee,Fighting,,Rare,1,1,1,Assets/Sprites/Pokemon/106_Hitmonlee.png,Kicking,4.9,109.8,"When in a hurry, its legs lengthen progressively. It runs smoothly with extra long, loping strides."
+107,Hitmonchan,Fighting,,Rare,1,1,1,Assets/Sprites/Pokemon/107_Hitmonchan.png,Punching,4.6,110.7,"While apparently doing nothing, it fires punches in lightning fast volleys that are impossible to see."
+108,Lickitung,Normal,,Uncommon,1,1,1,Assets/Sprites/Pokemon/108_Lickitung.png,Licking,3.9,144.4,Its tongue can be extended like a chameleon's. It leaves a tingling sensation when it licks enemies.
+109,Koffing,Poison,,Common,1,1,0,Assets/Sprites/Pokemon/109_Koffing.png,Poison Gas,2.0,2.2,"Because it stores several kinds of toxic gases in its body, it is prone to exploding without warning."
+110,Weezing,Poison,,Uncommon,1,1,0,Assets/Sprites/Pokemon/110_Weezing.png,Poison Gas,3.9,20.9,"Where two kinds of poison gases meet, 2 KOFFINGs can fuse into a WEEZING over many years."
+111,Rhyhorn,Ground,Rock,Common,1,1,1,Assets/Sprites/Pokemon/111_Rhyhorn.png,Spikes,3.3,253.5,Its massive bones are 1000 times harder than human bones. It can easily knock a trailer flying.
+112,Rhydon,Ground,Rock,Uncommon,1,1,1,Assets/Sprites/Pokemon/112_Rhydon.png,Drill,6.2,264.6,"Protected by an armor-like hide, it is capable of living in molten lava of 3,600 degrees."
+113,Chansey,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/113_Chansey.png,Egg,3.6,76.3,A rare and elusive POKéMON that is said to bring happiness to those who manage to get it.
+114,Tangela,Grass,,Uncommon,1,1,1,Assets/Sprites/Pokemon/114_Tangela.png,Vine,3.3,77.2,The whole body is swathed with wide vines that are similar to sea­ weed. Its vines shake as it walks.
+115,Kangaskhan,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/115_Kangaskhan.png,Parent,7.2,176.4,The infant rarely ventures out of its mother's protective pouch until it is 3 years old.
+116,Horsea,Water,,Common,1,1,1,Assets/Sprites/Pokemon/116_Horsea.png,Dragon,1.3,17.6,Known to shoot down flying bugs with precision blasts of ink from the surface of the water.
+117,Seadra,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/117_Seadra.png,Dragon,3.9,55.1,Capable of swim­ ming backwards by rapidly flapping its wing-like pectoral fins and stout tail.
+118,Goldeen,Water,,Common,1,1,1,Assets/Sprites/Pokemon/118_Goldeen.png,Goldfish,2.0,33.1,"Its tail fin billows like an elegant ballroom dress, giving it the nickname of the Water Queen."
+119,Seaking,Water,,Uncommon,1,1,1,Assets/Sprites/Pokemon/119_Seaking.png,Goldfish,4.3,86.0,"In the autumn spawning season, they can be seen swimming power­ fully up rivers and creeks."
+120,Staryu,Water,,Common,1,1,1,Assets/Sprites/Pokemon/120_Staryu.png,Star Shape,2.6,76.1,An enigmatic POKéMON that can effortlessly regenerate any appendage it loses in battle.
+121,Starmie,Water,Psychic,Uncommon,1,1,1,Assets/Sprites/Pokemon/121_Starmie.png,Mysterious,3.6,176.4,Its central core glows with the seven colors of the rainbow. Some people value the core as a gem.
+122,Mr. Mime,Psychic,,Rare,1,1,1,Assets/Sprites/Pokemon/122_mr-mime.png,Barrier,4.3,120.2,"If interrupted while it is miming, it will slap around the offender with its broad hands."
+123,Scyther,Bug,Flying,Rare,1,0,1,Assets/Sprites/Pokemon/123_Scyther.png,Mantis,4.9,123.5,"With ninja-like agility and speed, it can create the illusion that there is more than one."
+124,Jynx,Ice,Psychic,Rare,1,1,0,Assets/Sprites/Pokemon/124_Jynx.png,Human Shape,4.6,89.5,It seductively wiggles its hips as it walks. It can cause people to dance in unison with it.
+125,Electabuzz,Electric,,Rare,1,0,0,Assets/Sprites/Pokemon/125_Electabuzz.png,Electric,3.6,66.1,"Normally found near power plants, they can wander away and cause major blackouts in cities."
+126,Magmar,Fire,,Rare,0,1,0,Assets/Sprites/Pokemon/126_Magmar.png,Spitfire,4.3,98.1,Its body always burns with an orange glow that enables it to hide perfectly among flames.
+127,Pinsir,Bug,,Rare,0,1,1,Assets/Sprites/Pokemon/127_Pinsir.png,Stag Beetle,4.9,121.3,"If it fails to crush the victim in its pincers, it will swing it around and toss it hard."
+128,Tauros,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/128_Tauros.png,Wild Bull,4.6,194.9,"When it targets an enemy, it charges furiously while whipping its body with its long tails."
+129,Magikarp,Water,,Common,1,1,1,Assets/Sprites/Pokemon/129_Magikarp.png,Fish,3.0,22.0,"In the distant past, it was somewhat stronger than the horribly weak descendants that exist today."
+130,Gyarados,Water,Flying,Epic,1,1,1,Assets/Sprites/Pokemon/130_Gyarados.png,Atrocious,21.3,518.1,"Rarely seen in the wild. Huge and vicious, it is capable of destroying entire cities in a rage."
+131,Lapras,Water,Ice,Epic,1,1,1,Assets/Sprites/Pokemon/131_Lapras.png,Transport,8.2,485.0,A POKéMON that has been over­ hunted almost to extinction. It can ferry people across the water.
+132,Ditto,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/132_Ditto.png,Transform,1.0,8.8,Capable of copying an enemy's genetic code to instantly transform itself into a duplicate of the enemy.
+133,Eevee,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/133_Eevee.png,Evolution,1.0,14.3,Its genetic code is irregular. It may mutate if it is exposed to radiation from element STONEs.
+134,Vaporeon,Water,,Epic,1,1,1,Assets/Sprites/Pokemon/134_Vaporeon.png,Bubble Jet,3.3,63.9,Lives close to water. Its long tail is ridged with a fin which is often mistaken for a mermaid's.
+135,Jolteon,Electric,,Epic,1,1,1,Assets/Sprites/Pokemon/135_Jolteon.png,Lightning,2.6,54.0,It accumulates negative ions in the atmosphere to blast out 10000- volt lightning bolts.
+136,Flareon,Fire,,Epic,1,1,1,Assets/Sprites/Pokemon/136_Flareon.png,Flame,3.0,55.1,"When storing thermal energy in its body, its temperature could soar to over 1600 degrees."
+137,Porygon,Normal,,Rare,1,1,1,Assets/Sprites/Pokemon/137_Porygon.png,Virtual,2.6,80.5,A POKéMON that consists entirely of programming code. Capable of moving freely in cyberspace.
+138,Omanyte,Rock,Water,Rare,1,1,1,Assets/Sprites/Pokemon/138_Omanyte.png,Spiral,1.3,16.5,"Although long extinct, in rare cases, it can be genetically resurrected from fossils."
+139,Omastar,Rock,Water,Epic,1,1,1,Assets/Sprites/Pokemon/139_Omastar.png,Spiral,3.3,77.2,A prehistoric POKéMON that died out when its heavy shell made it impossible to catch prey.
+140,Kabuto,Rock,Water,Rare,1,1,1,Assets/Sprites/Pokemon/140_Kabuto.png,Shellfish,1.6,25.4,A POKéMON that was resurrected from a fossil found in what was once the ocean floor eons ago.
+141,Kabutops,Rock,Water,Epic,1,1,1,Assets/Sprites/Pokemon/141_Kabutops.png,Shellfish,4.3,89.3,Its sleek shape is perfect for swim­ ming. It slashes prey with its claws and drains the body fluids.
+142,Aerodactyl,Rock,Flying,Epic,1,1,1,Assets/Sprites/Pokemon/142_Aerodactyl.png,Fossil,5.9,130.1,"A ferocious, pre­ historic POKéMON that goes for the enemy's throat with its serrated saw-like fangs."
+143,Snorlax,Normal,,Epic,1,1,1,Assets/Sprites/Pokemon/143_Snorlax.png,Sleeping,6.9,1014.1,"Very lazy. Just eats and sleeps. As its rotund bulk builds, it becomes steadily more slothful."
+144,Articuno,Ice,Flying,Legendary,1,1,3,Assets/Sprites/Pokemon/144_Articuno.png,Freeze,5.6,122.1,A legendary bird POKéMON that is said to appear to doomed people who are lost in icy mountains.
+145,Zapdos,Electric,Flying,Legendary,1,1,3,Assets/Sprites/Pokemon/145_Zapdos.png,Electric,5.2,116.0,A legendary bird POKéMON that is said to appear from clouds while dropping enormous lightning bolts.
+146,Moltres,Fire,Flying,Legendary,1,1,3,Assets/Sprites/Pokemon/146_Moltres.png,Flame,6.6,132.3,Known as the legendary bird of fire. Every flap of its wings creates a dazzling flash of flames.
+147,Dratini,Dragon,,Uncommon,1,1,1,Assets/Sprites/Pokemon/147_Dratini.png,Dragon,5.9,7.3,Long considered a mythical POKéMON until recently when a small colony was found living underwater.
+148,Dragonair,Dragon,,Rare,1,1,1,Assets/Sprites/Pokemon/148_Dragonair.png,Dragon,13.1,36.4,A mystical POKéMON that exudes a gentle aura. Has the ability to change climate conditions.
+149,Dragonite,Dragon,Flying,Epic,1,1,1,Assets/Sprites/Pokemon/149_Dragonite.png,Dragon,7.2,463.0,An extremely rarely seen marine POKéMON. Its intelligence is said to match that of humans.
+150,Mewtwo,Psychic,,Legendary,1,1,2,Assets/Sprites/Pokemon/150_Mewtwo.png,Genetic,6.6,269.0,It was created by a scientist after years of horrific gene splicing and DNA engineering experiments.
+151,Mew,Psychic,,Legendary,0,0,1,Assets/Sprites/Pokemon/151_Mew.png,New Species,1.3,8.8,So rare that it is still said to be a mirage by many experts. Only a few people have seen it worldwide.

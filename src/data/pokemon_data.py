@@ -17,6 +17,10 @@ class Pokemon:
     blue_weight: int     # 1 (0 if exclusive to other versions)
     yellow_weight: int   # 1 (0 if exclusive to other versions)
     image_path: str      # "Assets/Sprites/Pokemon/001_Bulbasaur.png"
+    species: str         # "Seed" (genus without "Pokémon")
+    height_ft: float     # 2.3 (height in feet)
+    weight_lbs: float    # 15.2 (weight in pounds)
+    pokedex_entry: str   # Pokedex description from Red/Blue
     
     def get_pokedex_num(self) -> int:
         """Returns numeric Pokédex number"""

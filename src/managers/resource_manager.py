@@ -57,7 +57,9 @@ class ResourceManager:
         
         # Try to load
         if not os.path.exists(path):
-            print(f"Warning: Image not found: {path}")
+            # Use ascii encoding to avoid Unicode errors in console
+            safe_path = path.encode('ascii', 'replace').decode('ascii')
+            print(f"Warning: Image not found: {safe_path}")
             return self.placeholder_image
         
         try:

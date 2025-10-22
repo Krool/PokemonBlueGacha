@@ -21,7 +21,7 @@ def _get_base_path():
     elif sys.platform == "emscripten" or os.path.exists("data"):
         return ""  # We're in src/ or web, use relative paths
     else:
-        return "../"  # We're running from project root, go up from src/
+        return "src/"  # We're running from project root, data is in src/
 
 _BASE_PATH = _get_base_path()
 
@@ -58,7 +58,7 @@ class CSVLoader:
                 reader = csv.DictReader(f)
                 
                 # Validate headers
-                expected_headers = ['Number', 'Name', 'Type1', 'Type2', 'Rarity', 'Red_Weight', 'Blue_Weight', 'Yellow_Weight', 'Image']
+                expected_headers = ['Number', 'Name', 'Type1', 'Type2', 'Rarity', 'Red_Weight', 'Blue_Weight', 'Yellow_Weight', 'Image', 'Species', 'Height_ft', 'Weight_lbs', 'Pokedex_Entry']
                 if not all(header in reader.fieldnames for header in expected_headers):
                     raise CSVLoadError(f"Pokemon CSV missing required headers. Expected: {expected_headers}")
                 
@@ -78,7 +78,11 @@ class CSVLoader:
                             red_weight=int(row['Red_Weight']),
                             blue_weight=int(row['Blue_Weight']),
                             yellow_weight=int(row['Yellow_Weight']),
-                            image_path=image_path
+                            image_path=image_path,
+                            species=row['Species'].strip(),
+                            height_ft=float(row['Height_ft']),
+                            weight_lbs=float(row['Weight_lbs']),
+                            pokedex_entry=row['Pokedex_Entry'].strip()
                         )
                         pokemon_list.append(pokemon)
                     except (KeyError, ValueError) as e:

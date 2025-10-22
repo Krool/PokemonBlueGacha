@@ -95,6 +95,35 @@ class ScrollableGrid:
                 self.scroll_offset -= event.y * 30  # 30 pixels per scroll
                 self.scroll_offset = max(0, min(self.scroll_offset, self.max_scroll))
     
+    def get_clicked_pokemon(self, mouse_pos):
+        """
+        Get the Pokemon that was clicked at the given mouse position
+        
+        Args:
+            mouse_pos: Mouse position (x, y)
+            
+        Returns:
+            Pokemon object if clicked, None otherwise
+        """
+        # Check if click is within grid area
+        if not self.rect.collidepoint(mouse_pos):
+            return None
+            
+        # Check each tile
+        for i, tile in enumerate(self.tiles):
+            # Calculate adjusted position based on scroll
+            adjusted_y = tile.rect.y - self.scroll_offset
+            
+            # Create a temporary rect at the adjusted position
+            adjusted_rect = pygame.Rect(tile.rect.x, adjusted_y, tile.rect.width, tile.rect.height)
+            
+            # Check if mouse is over this tile and tile is visible
+            if adjusted_rect.collidepoint(mouse_pos):
+                if adjusted_y + tile.rect.height >= self.rect.y and adjusted_y <= self.rect.bottom:
+                    return tile.pokemon
+        
+        return None
+    
     def update(self, dt):
         """Update grid (currently unused)"""
         pass
