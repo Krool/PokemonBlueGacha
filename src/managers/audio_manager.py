@@ -18,9 +18,7 @@ class AudioManager:
         self.sfx_volume = 0.125       # Sound effects at 12.5% (reduced by 75% total)
         self.current_music: Optional[str] = None
         self.sounds = {}
-        self.sound_paths = {}  # Store paths for web playback
         self.background_tracks: List[str] = []  # List of available background music tracks
-        self.sfx_channels = []  # Additional channels for sound effects on web
         self.user_interacted = False  # Track if user has interacted (for web autoplay)
         self.pending_music = None  # Store music to play after user interaction
         self.audio_errors_logged = set()  # Track logged errors to avoid spam
@@ -59,10 +57,7 @@ class AudioManager:
             return
         
         try:
-            # Store path for reference
-            self.sound_paths[name] = path
-            
-            # Try to use pygame.mixer.Sound for both desktop and web
+            # Load sound using pygame.mixer.Sound (works on both desktop and web)
             sound = pygame.mixer.Sound(path)
             sound.set_volume(self.sfx_volume)
             self.sounds[name] = sound
