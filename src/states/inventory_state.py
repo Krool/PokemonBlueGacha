@@ -511,7 +511,11 @@ class InventoryState(GameState):
         
         # Draw instructions at bottom (hide if stats popup is open)
         if self.font_manager and not (self.stats_popup is not None and self.stats_popup.is_showing()):
-            instructions = "Mouse Wheel: Scroll | Space: Open Gacha | ESC: Quit"
+            # Different instructions for web vs desktop
+            if IS_WEB:
+                instructions = "Mouse Wheel: Scroll | Space: Open Gacha"
+            else:
+                instructions = "Mouse Wheel: Scroll | Space: Open Gacha | ESC: Quit"
             inst_surface = self.font_manager.render_text(instructions, 16, (150, 150, 150))
             inst_rect = inst_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 20))
             self.screen.blit(inst_surface, inst_rect)
