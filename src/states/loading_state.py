@@ -50,19 +50,16 @@ class LoadingState(GameState):
                 # Don't auto-start music if muted
                 allow_music = not self.game_data.music_muted
                 self.audio_manager.enable_audio_after_interaction(allow_music_start=allow_music)
-            
-            if event.type == pygame.KEYDOWN and self.loading_complete:
-                # Skip to inventory if loading is done
-                self.state_manager.change_state('inventory')
+                
+                # If loading is complete, transition to game on click/keypress
+                if self.loading_complete and self.showing_complete:
+                    self.state_manager.change_state('inventory')
     
     def update(self, dt):
         """Update loading progress"""
         if self.loading_complete:
-            # Handle transition timer (non-blocking delay for web compatibility)
-            if self.showing_complete:
-                self.transition_timer -= dt
-                if self.transition_timer <= 0:
-                    self.state_manager.change_state('inventory')
+            # Wait for user interaction - no auto-transition
+            # This ensures audio works properly on web
             return
         
         if not self.loading_started:
@@ -70,13 +67,12 @@ class LoadingState(GameState):
             self.loading_started = True
             self.load_assets()
         
-        # Auto-transition after brief delay to show 100%
+        # Mark loading complete when progress reaches 100%
         if self.progress >= 1.0:
             self.progress = 1.0
             self.loading_complete = True
-            # Brief pause to show 100% before transitioning (async-friendly)
-            self.transition_timer = 0.5  # 500ms delay
             self.showing_complete = True
+            # Don't auto-transition - wait for user click
     
     def load_assets(self):
         """Load all game assets"""
@@ -163,10 +159,17 @@ class LoadingState(GameState):
         # Border
         pygame.draw.rect(self.screen, COLOR_WHITE, (bar_x, bar_y, bar_width, bar_height), 2)
         
-        # Instruction text if complete
+        # Instruction text if complete - prominent and clear
         if self.loading_complete:
-            font_small = pygame.font.Font(None, 24)
-            instruction = font_small.render("Press any key to continue", True, COLOR_WHITE)
-            instruction_rect = instruction.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() - 100))
+            # Main instruction - larger and centered
+            font_instruction = pygame.font.Font(None, 48)
+            instruction = font_instruction.render("Click anywhere to start", True, COLOR_WHITE)
+            instruction_rect = instruction.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() - 150))
             self.screen.blit(instruction, instruction_rect)
+            
+            # Smaller hint text
+            font_small = pygame.font.Font(None, 24)
+            hint = font_small.render("(Required for audio)", True, (200, 200, 200))
+            hint_rect = hint.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() - 100))
+            self.screen.blit(hint, hint_rect)
 
