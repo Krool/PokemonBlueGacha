@@ -2,6 +2,7 @@
 Loading screen state - loads all game assets
 """
 import pygame
+import math
 from .base_state import GameState
 from config import (COLOR_WHITE, COLOR_BLACK, LOGO_PATH, GACHA_RED_PATH, 
                     GACHA_BLUE_PATH, GACHA_YELLOW_PATH, GACHA_ITEM_PATH, POKEDOLLAR_ICON_PATH, RAYS_PATH, SOUNDS_PATH, LOADING_TIME)
@@ -14,7 +15,6 @@ class LoadingState(GameState):
         """Initialize loading state"""
         self.progress = 0.0
         self.loading_complete = False
-        self.loading_started = False
         self.load_stage = 0
         self.load_stages = [
             "Loading UI images...",
@@ -23,8 +23,13 @@ class LoadingState(GameState):
             "Complete!"
         ]
         self.current_stage_text = self.load_stages[0]
-        self.transition_timer = 0.0
         self.showing_complete = False
+        
+        # Async loading state
+        self.pokemon_index = 0
+        self.types_loaded = False
+        self.ui_loaded = False
+        self.audio_loaded = False
         
         # Try to load logo for display
         try:
@@ -56,60 +61,70 @@ class LoadingState(GameState):
                     self.state_manager.change_state('inventory')
     
     def update(self, dt):
-        """Update loading progress"""
+        """Update loading progress - loads assets gradually over multiple frames"""
         if self.loading_complete:
             # Wait for user interaction - no auto-transition
             # This ensures audio works properly on web
             return
         
-        if not self.loading_started:
-            # Start loading assets
-            self.loading_started = True
-            self.load_assets()
+        # Stage 0: Load UI images
+        if self.load_stage == 0:
+            self.current_stage_text = self.load_stages[0]
+            if not self.ui_loaded:
+                self.resource_manager.load_ui_images(
+                    LOGO_PATH, GACHA_RED_PATH, GACHA_BLUE_PATH, GACHA_YELLOW_PATH, 
+                    GACHA_ITEM_PATH, POKEDOLLAR_ICON_PATH, RAYS_PATH
+                )
+                self.ui_loaded = True
+                self.progress = 0.1
+            else:
+                self.load_stage = 1
         
-        # Mark loading complete when progress reaches 100%
-        if self.progress >= 1.0:
+        # Stage 1: Load Pokemon sprites (gradually)
+        elif self.load_stage == 1:
+            self.current_stage_text = self.load_stages[1]
+            
+            # Load Pokemon sprites in batches for smoother progress
+            pokemon_list = self.resource_manager.pokemon_list
+            batch_size = 5  # Load 5 Pokemon per frame
+            
+            if self.pokemon_index < len(pokemon_list):
+                end_index = min(self.pokemon_index + batch_size, len(pokemon_list))
+                for i in range(self.pokemon_index, end_index):
+                    self.resource_manager.load_image(pokemon_list[i].image_path)
+                self.pokemon_index = end_index
+                
+                # Update progress (UI=10%, Pokemon=70%, Audio=20%)
+                pokemon_progress = (self.pokemon_index / len(pokemon_list)) * 0.7
+                self.progress = 0.1 + pokemon_progress
+            else:
+                # Pokemon loading complete, move to types
+                if not self.types_loaded:
+                    for type_name, poke_type in self.resource_manager.types_dict.items():
+                        self.resource_manager.load_image(poke_type.image_path)
+                    self.types_loaded = True
+                    self.progress = 0.8
+                else:
+                    self.load_stage = 2
+        
+        # Stage 2: Load audio
+        elif self.load_stage == 2:
+            self.current_stage_text = self.load_stages[2]
+            if not self.audio_loaded:
+                self.audio_manager.load_game_sounds(SOUNDS_PATH)
+                self.audio_manager.load_background_music_tracks(SOUNDS_PATH)
+                self.audio_manager.play_random_background_music()
+                self.audio_loaded = True
+                self.progress = 0.95
+            else:
+                self.load_stage = 3
+        
+        # Stage 3: Complete
+        elif self.load_stage == 3:
+            self.current_stage_text = self.load_stages[3]
             self.progress = 1.0
             self.loading_complete = True
             self.showing_complete = True
-            # Don't auto-transition - wait for user click
-    
-    def load_assets(self):
-        """Load all game assets"""
-        total_stages = 3
-        
-        # Stage 1: Load UI images
-        self.current_stage_text = self.load_stages[0]
-        self.resource_manager.load_ui_images(
-            LOGO_PATH, GACHA_RED_PATH, GACHA_BLUE_PATH, GACHA_YELLOW_PATH, GACHA_ITEM_PATH, POKEDOLLAR_ICON_PATH, RAYS_PATH
-        )
-        self.progress = 1 / total_stages
-        pygame.display.flip()  # Update display to show progress
-        
-        # Stage 2: Load Pokemon sprites with progress callback
-        self.current_stage_text = self.load_stages[1]
-        def sprite_progress(current, total):
-            base_progress = 1 / total_stages
-            sprite_progress = (current / total) / total_stages
-            self.progress = base_progress + sprite_progress
-            if current % 10 == 0:  # Update display every 10 sprites
-                self.render()
-                pygame.display.flip()
-        
-        self.resource_manager.preload_all_sprites(sprite_progress)
-        self.progress = 2 / total_stages
-        pygame.display.flip()
-        
-        # Stage 3: Load audio
-        self.current_stage_text = self.load_stages[2]
-        self.audio_manager.load_game_sounds(SOUNDS_PATH)
-        self.audio_manager.load_background_music_tracks(SOUNDS_PATH)
-        self.progress = 1.0
-        
-        # Start random background music
-        self.audio_manager.play_random_background_music()
-        
-        self.current_stage_text = self.load_stages[3]
     
     def render(self):
         """Render loading screen"""
@@ -123,46 +138,54 @@ class LoadingState(GameState):
             
             # Add a semi-transparent dark overlay for better text readability
             overlay = pygame.Surface((self.screen.get_width(), self.screen.get_height()), pygame.SRCALPHA)
-            overlay.fill((0, 0, 0, 128))  # 50% opacity black
+            overlay.fill((0, 0, 0, 180))  # Darker overlay for better contrast
             self.screen.blit(overlay, (0, 0))
-        else:
-            # Fallback: just black background with title
-            font_title = pygame.font.Font(None, 72)
-            title = font_title.render("POKÉMON BLUE GACHA", True, COLOR_WHITE)
-            title_rect = title.get_rect(center=(self.screen.get_width() // 2, 200))
-            self.screen.blit(title, title_rect)
         
-        # Stage text
-        font_stage = pygame.font.Font(None, 32)
-        stage_text = font_stage.render(self.current_stage_text, True, COLOR_WHITE)
-        stage_rect = stage_text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2 - 40))
+        # Center Y position for loading elements
+        center_y = self.screen.get_height() // 2
+        
+        # Stage text (smaller and above progress bar)
+        font_stage = pygame.font.Font(None, 28)
+        stage_text = font_stage.render(self.current_stage_text, True, (200, 200, 200))
+        stage_rect = stage_text.get_rect(center=(self.screen.get_width() // 2, center_y - 60))
         self.screen.blit(stage_text, stage_rect)
         
-        # Percentage text
-        font = pygame.font.Font(None, 48)
-        percent_text = font.render(f"{int(self.progress * 100)}%", True, COLOR_WHITE)
-        percent_rect = percent_text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
-        self.screen.blit(percent_text, percent_rect)
-        
         # Draw progress bar
-        bar_width = 500
-        bar_height = 30
+        bar_width = min(600, self.screen.get_width() - 100)
+        bar_height = 40
         bar_x = (self.screen.get_width() - bar_width) // 2
-        bar_y = self.screen.get_height() // 2 + 60
+        bar_y = center_y - 20
         
-        # Background
-        pygame.draw.rect(self.screen, (64, 64, 64), (bar_x, bar_y, bar_width, bar_height))
-        # Progress
+        # Background (dark gray)
+        pygame.draw.rect(self.screen, (40, 40, 40), (bar_x, bar_y, bar_width, bar_height), border_radius=5)
+        
+        # Progress fill with gradient effect
         progress_width = int(bar_width * self.progress)
         if progress_width > 0:
-            pygame.draw.rect(self.screen, COLOR_WHITE, (bar_x, bar_y, progress_width, bar_height))
-        # Border
-        pygame.draw.rect(self.screen, COLOR_WHITE, (bar_x, bar_y, bar_width, bar_height), 2)
+            # Main progress bar (blue-ish white)
+            pygame.draw.rect(self.screen, (100, 149, 237), (bar_x, bar_y, progress_width, bar_height), border_radius=5)
+            # Lighter inner highlight
+            if progress_width > 4:
+                pygame.draw.rect(self.screen, (150, 180, 255), (bar_x, bar_y, progress_width, bar_height // 3), border_radius=5)
+        
+        # Border (white)
+        pygame.draw.rect(self.screen, COLOR_WHITE, (bar_x, bar_y, bar_width, bar_height), 3, border_radius=5)
+        
+        # Percentage text (inside or next to bar)
+        font_percent = pygame.font.Font(None, 36)
+        percent_text = font_percent.render(f"{int(self.progress * 100)}%", True, COLOR_WHITE)
+        percent_rect = percent_text.get_rect(center=(self.screen.get_width() // 2, bar_y + bar_height + 35))
+        self.screen.blit(percent_text, percent_rect)
         
         # Instruction text if complete
         if self.loading_complete:
-            font_instruction = pygame.font.Font(None, 48)
-            instruction = font_instruction.render("Click anywhere to start", True, COLOR_WHITE)
-            instruction_rect = instruction.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() - 150))
+            font_instruction = pygame.font.Font(None, 40)
+            instruction = font_instruction.render("Click or press any key to start", True, (100, 255, 100))
+            instruction_rect = instruction.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() - 100))
+            
+            # Add a subtle pulsing effect
+            pulse = abs(math.sin(pygame.time.get_ticks() / 500.0))
+            instruction.set_alpha(int(155 + pulse * 100))
+            
             self.screen.blit(instruction, instruction_rect)
 

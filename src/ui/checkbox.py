@@ -11,7 +11,8 @@ class Checkbox:
     def __init__(self, x: int, y: int, size: int, label: str,
                  font_manager, font_size: int = 18,
                  checked: bool = False,
-                 callback: Optional[Callable[[bool], None]] = None):
+                 callback: Optional[Callable[[bool], None]] = None,
+                 audio_manager = None):
         """
         Create a checkbox
         
@@ -23,6 +24,7 @@ class Checkbox:
             font_size: Label text size
             checked: Initial checked state
             callback: Function to call when toggled (receives new checked state)
+            audio_manager: AudioManager instance for click sounds (optional)
         """
         self.box_rect = pygame.Rect(x, y, size, size)
         self.label = label
@@ -30,6 +32,7 @@ class Checkbox:
         self.font_size = font_size
         self.checked = checked
         self.callback = callback
+        self.audio_manager = audio_manager
         
         # Colors
         self.box_color = (200, 200, 200)
@@ -62,6 +65,9 @@ class Checkbox:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1 and self.click_rect.collidepoint(event.pos):
                 self.checked = not self.checked
+                # Play click sound
+                if self.audio_manager:
+                    self.audio_manager.play_random_click_sound()
                 if self.callback:
                     self.callback(self.checked)
                 return True

@@ -3,7 +3,6 @@ Number,Name,Index,Category,Value,Rarity,Weight,Icon
 2,Ultra Ball,2,ball,1200,Common,10,ball/ultra.png
 3,Great Ball,3,ball,600,Common,10,ball/great.png
 4,Poké Ball,4,ball,200,Common,10,ball/poke.png
-5,Safari Ball,8,ball,1000,Common,10,ball/safari.png
 6,Moon Stone,10,evo-stone,3000,Uncommon,10,evo-stone/moon-stone.png
 7,Antidote,11,medicine,100,Common,10,medicine/antidote.png
 8,Burn Heal,12,medicine,250,Common,10,medicine/burn-heal.png
@@ -44,7 +43,6 @@ Number,Name,Index,Category,Value,Rarity,Weight,Icon
 44,Fresh Water,84,other,200,Common,10,hold-item/fresh-water.png
 45,Soda Pop,85,other,300,Common,10,hold-item/soda-pop.png
 46,Lemonade,86,other,350,Common,10,hold-item/lemonade.png
-47,Gold Teeth,103,valuable,5000,Rare,10,hold-item/gold-teeth.png
 48,TM01,193,tm,3000,Uncommon,10,tm/normal.png
 49,TM02,194,tm,2000,Uncommon,10,tm/normal.png
 50,TM05,197,tm,3000,Uncommon,10,tm/normal.png

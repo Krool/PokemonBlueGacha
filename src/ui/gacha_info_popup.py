@@ -15,7 +15,8 @@ class GachaInfoPopup:
                  pokemon_list: List,
                  rarities_dict: Dict,
                  font_manager,
-                 callback: Optional[callable] = None):
+                 callback: Optional[callable] = None,
+                 audio_manager = None):
         """
         Initialize gacha info popup
         
@@ -27,12 +28,14 @@ class GachaInfoPopup:
             rarities_dict: Dictionary of rarity data
             font_manager: FontManager instance
             callback: Optional callback when closed
+            audio_manager: AudioManager instance for click sounds (optional)
         """
         self.rect = pygame.Rect(x - width // 2, y - height // 2, width, height)
         self.font_manager = font_manager
         self.callback = callback
         self.showing = True
         self.machine_name = machine_name
+        self.audio_manager = audio_manager
         
         # Calculate drop rates
         self.drop_rates = self._calculate_drop_rates(pokemon_list, rarities_dict, machine_name)
@@ -64,7 +67,8 @@ class GachaInfoPopup:
             use_title_font=True,
             bg_color=(100, 100, 100),
             hover_color=(150, 150, 150),
-            callback=self.close
+            callback=self.close,
+            audio_manager=audio_manager
         )
     
     def _calculate_drop_rates(self, pokemon_list: List, rarities_dict: Dict, version: str) -> List[tuple]:

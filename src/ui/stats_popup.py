@@ -19,7 +19,8 @@ class StatsPopup:
                  optimal_cost: int,
                  font_manager,
                  game_data=None,
-                 callback: Optional[callable] = None):
+                 callback: Optional[callable] = None,
+                 audio_manager = None):
         """
         Initialize stats popup
         
@@ -37,11 +38,13 @@ class StatsPopup:
             optimal_cost: Expected Pokédollar cost using optimal strategy
             font_manager: FontManager instance
             callback: Optional callback when closed
+            audio_manager: AudioManager instance for click sounds (optional)
         """
         self.rect = pygame.Rect(x - width // 2, y - height // 2, width, height)
         self.font_manager = font_manager
         self.callback = callback
         self.showing = True
+        self.audio_manager = audio_manager
         
         # Stats data
         self.total_pulls = total_pulls
@@ -72,7 +75,8 @@ class StatsPopup:
             use_title_font=True,
             bg_color=(100, 100, 100),
             hover_color=(150, 150, 150),
-            callback=self.close
+            callback=self.close,
+            audio_manager=audio_manager
         )
     
     def close(self):

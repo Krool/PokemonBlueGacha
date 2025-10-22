@@ -18,7 +18,8 @@ class SortButton:
     
     def __init__(self, x: int, y: int, width: int, height: int, label: str,
                  font_manager, font_size: int = 20,
-                 callback: Optional[Callable[[SortOrder], None]] = None):
+                 callback: Optional[Callable[[SortOrder], None]] = None,
+                 audio_manager = None):
         """
         Create a sort button
         
@@ -29,12 +30,14 @@ class SortButton:
             font_manager: FontManager instance
             font_size: Text size
             callback: Function to call when clicked (receives new sort order)
+            audio_manager: AudioManager instance for click sounds (optional)
         """
         self.rect = pygame.Rect(x, y, width, height)
         self.label = label
         self.font_manager = font_manager
         self.font_size = font_size
         self.callback = callback
+        self.audio_manager = audio_manager
         
         self.sort_order = SortOrder.NONE
         
@@ -70,6 +73,9 @@ class SortButton:
                 else:
                     self.sort_order = SortOrder.ASCENDING
                 
+                # Play click sound
+                if self.audio_manager:
+                    self.audio_manager.play_random_click_sound()
                 if self.callback:
                     self.callback(self.sort_order)
                 return True

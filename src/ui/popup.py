@@ -14,7 +14,8 @@ class Popup:
                  button_text: str = "OK",
                  callback: Optional[Callable] = None,
                  add_gold_callback: Optional[Callable] = None,
-                 pokedollar_icon: Optional[pygame.Surface] = None):
+                 pokedollar_icon: Optional[pygame.Surface] = None,
+                 audio_manager = None):
         """
         Create a popup
         
@@ -28,6 +29,7 @@ class Popup:
             callback: Function to call when OK is clicked
             add_gold_callback: Optional callback to add gold (for insufficient funds)
             pokedollar_icon: Optional icon for add gold button
+            audio_manager: AudioManager instance for click sounds (optional)
         """
         self.rect = pygame.Rect(x - width // 2, y - height // 2, width, height)
         self.title = title
@@ -37,6 +39,7 @@ class Popup:
         self.callback = callback
         self.add_gold_callback = add_gold_callback
         self.pokedollar_icon = pokedollar_icon
+        self.audio_manager = audio_manager
         
         # Colors
         self.bg_color = (40, 40, 50)
@@ -63,7 +66,8 @@ class Popup:
                 use_title_font=True,
                 bg_color=(0, 150, 0),
                 hover_color=(0, 200, 0),
-                callback=self._add_gold_and_close
+                callback=self._add_gold_and_close,
+                audio_manager=audio_manager
             )
             
             self.ok_button = Button(
@@ -75,7 +79,8 @@ class Popup:
                 font_manager,
                 font_size=20,
                 use_title_font=True,
-                callback=self._on_ok_clicked
+                callback=self._on_ok_clicked,
+                audio_manager=audio_manager
             )
         else:
             # Single OK button
@@ -88,7 +93,8 @@ class Popup:
                 font_manager,
                 font_size=20,
                 use_title_font=True,
-                callback=self._on_ok_clicked
+                callback=self._on_ok_clicked,
+                audio_manager=audio_manager
             )
         
         self.is_visible = True
