@@ -60,11 +60,8 @@ class ItemTile:
         
         # Draw item name
         if self.font_manager:
-            # Truncate name if too long
-            name = self.item.name
-            max_length = 15
-            if len(name) > max_length:
-                name = name[:max_length - 2] + ".."
+            # Use abbreviated display name
+            name = self.item.get_display_name(max_length=7)
             
             name_size = 18 if self.rect.width > 200 else 14
             name_surface = self.font_manager.render_text(name, name_size, COLOR_WHITE)
