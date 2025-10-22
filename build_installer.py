@@ -46,7 +46,7 @@ def build_executable():
             "--name=PokemonBlueGacha",
             "--onefile",
             "--windowed",
-            "--icon=favicon.png",
+            "--icon=appicon.ico",
             "--paths=src",  # Add src to Python path
             "--add-data=src/data;data",
             "--add-data=src/Assets;Assets",
@@ -63,7 +63,7 @@ def build_executable():
             "--name=PokemonBlueGacha",
             "--onefile",
             "--windowed",
-            "--icon=favicon.png",
+            "--icon=appicon.ico",
             "--paths=src",  # Add src to Python path
             "--add-data=src/data:data",
             "--add-data=src/Assets:Assets",
