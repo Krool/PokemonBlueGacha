@@ -1,0 +1,80 @@
+Number,Name,Index,Category,Value,Rarity,Weight,Icon
+1,Master Ball,1,ball,50000,Legendary,10,ball/master.png
+2,Ultra Ball,2,ball,1200,Common,10,ball/ultra.png
+3,Great Ball,3,ball,600,Common,10,ball/great.png
+4,Poké Ball,4,ball,200,Common,10,ball/poke.png
+5,Safari Ball,8,ball,1000,Common,10,ball/safari.png
+6,Moon Stone,10,evo-stone,3000,Uncommon,10,evo-stone/moon-stone.png
+7,Antidote,11,medicine,100,Common,10,medicine/antidote.png
+8,Burn Heal,12,medicine,250,Common,10,medicine/burn-heal.png
+9,Ice Heal,13,medicine,250,Common,10,medicine/ice-heal.png
+10,Awakening,14,medicine,200,Common,10,medicine/awakening.png
+11,Parlyz Heal,15,medicine,200,Common,10,medicine/paralyze-heal.png
+12,Full Restore,16,medicine,3000,Uncommon,10,medicine/full-restore.png
+13,Max Potion,17,medicine,2500,Uncommon,10,medicine/max-potion.png
+14,Hyper Potion,18,medicine,1200,Common,10,medicine/hyper-potion.png
+15,Super Potion,19,medicine,700,Common,10,medicine/super-potion.png
+16,Potion,20,medicine,300,Common,10,medicine/potion.png
+17,Escape Rope,29,other,550,Common,10,hold-item/escape-rope.png
+18,Repel,30,other,350,Common,10,hold-item/repel.png
+19,Fire Stone,32,evo-stone,3000,Uncommon,10,evo-stone/fire-stone.png
+20,Thunder Stone,33,evo-stone,3000,Uncommon,10,evo-stone/thunder-stone.png
+21,Water Stone,34,evo-stone,3000,Uncommon,10,evo-stone/water-stone.png
+22,HP Up,35,vitamin,9800,Epic,10,hold-item/hp-up.png
+23,Protein,36,vitamin,9800,Epic,10,hold-item/protein.png
+24,Iron,37,vitamin,9800,Epic,10,hold-item/iron.png
+25,Carbos,38,vitamin,9800,Epic,10,hold-item/carbos.png
+26,Calcium,39,vitamin,9800,Epic,10,hold-item/calcium.png
+27,Rare Candy,40,vitamin,10000,Legendary,10,hold-item/rare-candy.png
+28,X Accuracy,46,battle,950,Common,10,hold-item/x-accuracy.png
+29,Leaf Stone,47,evo-stone,3000,Uncommon,10,evo-stone/leaf-stone.png
+30,Nugget,49,valuable,5000,Rare,10,hold-item/nugget.png
+31,Poké Doll,51,other,1000,Common,10,hold-item/poke-doll.png
+32,Full Heal,52,medicine,600,Common,10,medicine/full-heal.png
+33,Revive,53,medicine,1500,Uncommon,10,medicine/revive.png
+34,Max Revive,54,medicine,4000,Rare,10,medicine/max-revive.png
+35,Guard Spec.,55,battle,700,Common,10,hold-item/guard-spec.png
+36,Super Repel,56,other,500,Common,10,hold-item/super-repel.png
+37,Max Repel,57,other,700,Common,10,hold-item/max-repel.png
+38,Dire Hit,58,battle,650,Common,10,hold-item/dire-hit.png
+39,Coin,59,valuable,10,Common,0,other/coin.png
+40,X Attack,60,battle,500,Common,10,hold-item/x-attack.png
+41,X Defend,61,battle,550,Common,10,hold-item/x-defense.png
+42,X Speed,62,battle,350,Common,10,hold-item/x-speed.png
+43,X Special,63,battle,350,Common,10,hold-item/x-special.png
+44,Fresh Water,84,other,200,Common,10,hold-item/fresh-water.png
+45,Soda Pop,85,other,300,Common,10,hold-item/soda-pop.png
+46,Lemonade,86,other,350,Common,10,hold-item/lemonade.png
+47,Gold Teeth,103,valuable,5000,Rare,10,hold-item/gold-teeth.png
+48,TM01,193,tm,3000,Uncommon,10,tm/normal.png
+49,TM02,194,tm,2000,Uncommon,10,tm/normal.png
+50,TM05,197,tm,3000,Uncommon,10,tm/normal.png
+51,TM06,198,tm,5000,Rare,10,tm/poison.png
+52,TM07,199,tm,3000,Uncommon,10,tm/normal.png
+53,TM08,200,tm,4000,Rare,10,tm/normal.png
+54,TM09,201,tm,3000,Uncommon,10,tm/normal.png
+55,TM10,202,tm,3000,Uncommon,10,tm/normal.png
+56,TM11,203,tm,3000,Uncommon,10,tm/water.png
+57,TM12,204,tm,2000,Uncommon,10,tm/water.png
+58,TM13,205,tm,5500,Rare,10,tm/ice.png
+59,TM14,206,tm,5500,Rare,10,tm/ice.png
+60,TM15,207,tm,7500,Epic,10,tm/normal.png
+61,TM17,209,tm,3000,Uncommon,10,tm/fighting.png
+62,TM19,211,tm,3000,Uncommon,10,tm/fighting.png
+63,TM20,212,tm,2000,Uncommon,10,tm/normal.png
+64,TM22,214,tm,6000,Rare,10,tm/grass.png
+65,TM23,215,tm,2000,Uncommon,10,tm/dragon.png
+66,TM24,216,tm,5500,Rare,10,tm/electric.png
+67,TM25,217,tm,5500,Rare,10,tm/electric.png
+68,TM26,218,tm,7000,Epic,10,tm/ground.png
+69,TM27,219,tm,3000,Uncommon,10,tm/ground.png
+70,TM29,221,tm,7000,Epic,10,tm/psychic.png
+71,TM30,222,tm,2000,Uncommon,10,tm/psychic.png
+72,TM33,225,tm,3000,Uncommon,10,tm/psychic.png
+73,TM34,226,tm,2000,Uncommon,10,tm/normal.png
+74,TM35,227,tm,2000,Uncommon,10,tm/normal.png
+75,TM38,230,tm,5500,Rare,10,tm/fire.png
+76,TM44,236,tm,3000,Uncommon,10,tm/psychic.png
+77,TM48,240,tm,4000,Rare,10,tm/rock.png
+78,TM49,241,tm,3000,Uncommon,10,tm/normal.png
+79,TM50,242,tm,5000,Rare,10,tm/normal.png

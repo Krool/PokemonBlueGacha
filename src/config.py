@@ -13,29 +13,47 @@ COLOR_BLACK = (0, 0, 0)
 COLOR_GRAY = (128, 128, 128)
 COLOR_DARK_GRAY = (64, 64, 64)
 
-# File paths (relative to project root)
-POKEMON_CSV = "data/pokemon_gen1.csv"
-TYPES_CSV = "data/pokemon_types.csv"
-RARITY_CSV = "data/rarity_drop_weights.csv"
-GACHA_MACHINES_CSV = "data/gacha_machines.csv"
-ITEMS_CSV = "data/items_gen1.csv"
-SAVE_FILE = "saves/player_save.json"
+# File paths - work for both desktop and web
+import os
+import sys
 
-# Asset paths (relative to project root)
-SPRITES_PATH = "Assets/Sprites/Pokemon/"
-TYPES_PATH = "Assets/Sprites/Types/"
-SOUNDS_PATH = "Assets/Sounds/"
-TITLE_FONT_PATH = "Assets/Font/TitleFont.ttf"
-BODY_FONT_PATH = "Assets/Font/8BitFont.ttf"
+# Detect if running in browser (Pygbag)
+IS_WEB = sys.platform == "emscripten"
+
+# Determine base path: check if we're in src/ directory or project root
+# If data/ exists locally, we're in src (web), otherwise we're in root (desktop from project root)
+def get_base_path():
+    if IS_WEB or os.path.exists("data"):
+        return ""  # We're in src/ or web, use relative paths
+    else:
+        return "../"  # We're running from project root, go up from src/
+
+BASE_PATH = get_base_path()
+
+# File paths
+POKEMON_CSV = os.path.join(BASE_PATH, "data/pokemon_gen1.csv")
+TYPES_CSV = os.path.join(BASE_PATH, "data/pokemon_types.csv")
+RARITY_CSV = os.path.join(BASE_PATH, "data/rarity_drop_weights.csv")
+GACHA_MACHINES_CSV = os.path.join(BASE_PATH, "data/gacha_machines.csv")
+ITEMS_CSV = os.path.join(BASE_PATH, "data/items_gen1.csv")
+SAVE_FILE = os.path.join(BASE_PATH, "saves/player_save.json") if not IS_WEB else "player_save.json"
+
+# Asset paths
+SPRITES_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Pokemon/")
+TYPES_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Types/")
+ITEMS_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Items/")
+SOUNDS_PATH = os.path.join(BASE_PATH, "Assets/Sounds/")
+TITLE_FONT_PATH = os.path.join(BASE_PATH, "Assets/Font/TitleFont.ttf")
+BODY_FONT_PATH = os.path.join(BASE_PATH, "Assets/Font/8BitFont.ttf")
 
 # UI Images
-LOGO_PATH = "Assets/Sprites/Main/logo.png"
-GACHA_RED_PATH = "Assets/Sprites/Main/gacha_red.png"
-GACHA_BLUE_PATH = "Assets/Sprites/Main/gacha_blue.png"
-GACHA_YELLOW_PATH = "Assets/Sprites/Main/gacha_yellow.png"
-GACHA_ITEM_PATH = "Assets/Sprites/Main/gacha_item.png"
-POKEDOLLAR_ICON_PATH = "Assets/Sprites/Main/pokedollar_icon.png"
-RAYS_PATH = "Assets/Sprites/Main/rays.png"
+LOGO_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Main/logo.png")
+GACHA_RED_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Main/gacha_red.png")
+GACHA_BLUE_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Main/gacha_blue.png")
+GACHA_YELLOW_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Main/gacha_yellow.png")
+GACHA_ITEM_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Main/gacha_item.png")
+POKEDOLLAR_ICON_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Main/pokedollar_icon.png")
+RAYS_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Main/rays.png")
 
 # Game balance
 STARTING_GOLD = 0
