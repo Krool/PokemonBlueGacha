@@ -15,6 +15,14 @@ class AudioManager:
         # Print IS_WEB status immediately
         print(f"[AUDIO-DEBUG] AudioManager initializing, IS_WEB={IS_WEB}")
         
+        # Also log to browser console if on web
+        if IS_WEB:
+            try:
+                import platform
+                platform.window.console.log(f"[AUDIO-DEBUG] AudioManager initializing, IS_WEB={IS_WEB}")
+            except:
+                pass
+        
         self.enabled = True
         self.music_volume = 0.25  # Background music at 25%
         self.sfx_volume = 0.50    # Sound effects at 50%
@@ -85,6 +93,14 @@ class AudioManager:
         """
         # ALWAYS print this first to confirm method is being called
         print(f"[AUDIO-DEBUG] play_sound called: {name}, IS_WEB={IS_WEB}, enabled={self.enabled}")
+        
+        # Also log to browser console if on web
+        if IS_WEB:
+            try:
+                import platform
+                platform.window.console.log(f"[AUDIO-DEBUG] play_sound called: {name}, IS_WEB={IS_WEB}, enabled={self.enabled}")
+            except:
+                pass
         
         if not self.enabled:
             print(f"  [AUDIO] Audio disabled, skipping sound: {name}")
