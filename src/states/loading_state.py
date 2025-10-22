@@ -23,6 +23,8 @@ class LoadingState(GameState):
             "Complete!"
         ]
         self.current_stage_text = self.load_stages[0]
+        self.transition_timer = 0.0
+        self.showing_complete = False
         
         # Try to load logo for display
         try:
@@ -56,6 +58,11 @@ class LoadingState(GameState):
     def update(self, dt):
         """Update loading progress"""
         if self.loading_complete:
+            # Handle transition timer (non-blocking delay for web compatibility)
+            if self.showing_complete:
+                self.transition_timer -= dt
+                if self.transition_timer <= 0:
+                    self.state_manager.change_state('inventory')
             return
         
         if not self.loading_started:
@@ -67,9 +74,9 @@ class LoadingState(GameState):
         if self.progress >= 1.0:
             self.progress = 1.0
             self.loading_complete = True
-            # Brief pause to show 100% before transitioning
-            pygame.time.delay(500)
-            self.state_manager.change_state('inventory')
+            # Brief pause to show 100% before transitioning (async-friendly)
+            self.transition_timer = 0.5  # 500ms delay
+            self.showing_complete = True
     
     def load_assets(self):
         """Load all game assets"""

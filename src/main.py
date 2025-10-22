@@ -5,6 +5,7 @@ import pygame
 import sys
 import asyncio
 from config import *
+from config import IS_WEB
 from managers.state_manager import StateManager
 from managers.resource_manager import ResourceManager
 from managers.save_manager import SaveManager
@@ -68,6 +69,61 @@ class Game:
         # Start with loading state
         self.state_manager.change_state('loading')
     
+    def _show_fatal_error(self, message: str):
+        """
+        Display a fatal error message on screen (for web)
+        
+        Args:
+            message: Error message to display
+        """
+        print(f"\n{'='*60}")
+        print(f"FATAL ERROR - GAME CANNOT START")
+        print(f"{'='*60}")
+        print(message)
+        print(f"{'='*60}\n")
+        
+        # Display error on screen
+        self.screen.fill(COLOR_BLACK)
+        
+        # Error title
+        font_title = pygame.font.Font(None, 48)
+        title_surface = font_title.render("FATAL ERROR", True, (255, 0, 0))
+        title_rect = title_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 60))
+        self.screen.blit(title_surface, title_rect)
+        
+        # Error message (split into lines if too long)
+        font_body = pygame.font.Font(None, 24)
+        y_offset = SCREEN_HEIGHT // 2
+        max_width = SCREEN_WIDTH - 100
+        
+        words = message.split()
+        lines = []
+        current_line = []
+        
+        for word in words:
+            test_line = ' '.join(current_line + [word])
+            if font_body.size(test_line)[0] <= max_width:
+                current_line.append(word)
+            else:
+                if current_line:
+                    lines.append(' '.join(current_line))
+                current_line = [word]
+        if current_line:
+            lines.append(' '.join(current_line))
+        
+        for line in lines[:5]:  # Show max 5 lines
+            text_surface = font_body.render(line, True, COLOR_WHITE)
+            text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, y_offset))
+            self.screen.blit(text_surface, text_rect)
+            y_offset += 30
+        
+        # Instruction
+        instruction = font_body.render("Check console for details", True, (200, 200, 200))
+        instruction_rect = instruction.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 50))
+        self.screen.blit(instruction, instruction_rect)
+        
+        pygame.display.flip()
+    
     def load_game_data(self):
         """Load all CSV data"""
         print("\nLoading game data...")
@@ -90,10 +146,19 @@ class Game:
         except CSVLoadError as e:
             print(f"\n[ERROR] FATAL ERROR: {e}")
             print("Cannot continue without valid game data.")
-            sys.exit(1)
+            if not IS_WEB:
+                sys.exit(1)
+            else:
+                # On web, display error and prevent game from starting
+                self._show_fatal_error(f"FATAL ERROR: {e}")
+                raise  # Re-raise to prevent further initialization
         except Exception as e:
             print(f"\n[ERROR] UNEXPECTED ERROR: {e}")
-            sys.exit(1)
+            if not IS_WEB:
+                sys.exit(1)
+            else:
+                self._show_fatal_error(f"UNEXPECTED ERROR: {e}")
+                raise
     
     def register_states(self):
         """Register all game states"""
@@ -188,7 +253,11 @@ class Game:
         
         pygame.quit()
         print("[OK] Goodbye!")
-        sys.exit()
+        
+        # Only call sys.exit() on desktop, not on web
+        if not IS_WEB:
+            sys.exit()
+        # On web, just stop the running flag and let the loop exit naturally
 
 
 async def main():
@@ -200,7 +269,15 @@ async def main():
         print(f"\n[ERROR] CRITICAL ERROR: {e}")
         import traceback
         traceback.print_exc()
-        sys.exit(1)
+        
+        # Only call sys.exit() on desktop
+        if not IS_WEB:
+            sys.exit(1)
+        else:
+            # On web, just let the function end naturally
+            # The browser will show the error in console
+            print("\n[WEB] Game stopped due to critical error. Check console for details.")
+            return
 
 
 if __name__ == "__main__":
