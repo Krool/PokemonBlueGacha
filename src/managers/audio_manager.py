@@ -12,6 +12,9 @@ class AudioManager:
     """Manages game audio (music and sound effects)"""
     
     def __init__(self):
+        # Print IS_WEB status immediately
+        print(f"[AUDIO-DEBUG] AudioManager initializing, IS_WEB={IS_WEB}")
+        
         self.enabled = True
         self.music_volume = 0.25  # Background music at 25%
         self.sfx_volume = 0.50    # Sound effects at 50%
@@ -80,13 +83,16 @@ class AudioManager:
         Args:
             name: Name of sound to play
         """
+        # ALWAYS print this first to confirm method is being called
+        print(f"[AUDIO-DEBUG] play_sound called: {name}, IS_WEB={IS_WEB}, enabled={self.enabled}")
+        
         if not self.enabled:
             print(f"  [AUDIO] Audio disabled, skipping sound: {name}")
             return
         
         # Check if user has interacted (required for web)
         if IS_WEB and not self.user_interacted:
-            print(f"  [AUDIO] ⏸ Sound '{name}' queued (waiting for user interaction)")
+            print(f"  [AUDIO] Sound '{name}' queued (waiting for user interaction)")
             return
             
         if name not in self.sounds:
