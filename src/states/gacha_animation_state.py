@@ -34,6 +34,12 @@ class GachaAnimationState(GameState):
             is_items_gacha: Whether this is an items gacha
         """
         print("Entered GachaAnimationState")
+        
+        # Enable audio immediately on entry (user just clicked to pull)
+        # Don't auto-start music if muted
+        allow_music = not self.game_data.music_muted
+        self.audio_manager.enable_audio_after_interaction(allow_music_start=allow_music)
+        
         if results is None:
             results = []
         

@@ -94,20 +94,30 @@ class AudioManager:
             return
         
         try:
-            # Use pre-loaded sound for both desktop and web
+            sound = self.sounds[name]
+            
             if IS_WEB:
-                # On web, use simpler approach - just call play() and let pygame handle channels
-                # The multiple channels (16) are set up during init to support concurrent playback
-                sound = self.sounds[name]
-                sound.set_volume(self.sfx_volume)  # Ensure volume is set
-                channel = sound.play()
-                if channel:
-                    print(f"  [AUDIO] ✓ Playing sound: {name} on channel {channel}")
-                else:
-                    print(f"  [AUDIO] ✗ Failed to play sound: {name} (no channel available)")
+                # On web, find an available channel and play on it explicitly
+                # This is more reliable than sound.play() which can fail silently
+                channel_found = False
+                for i in range(pygame.mixer.get_num_channels()):
+                    channel = pygame.mixer.Channel(i)
+                    if not channel.get_busy():
+                        channel.set_volume(self.sfx_volume)
+                        channel.play(sound)
+                        channel_found = True
+                        print(f"  [AUDIO] ✓ Playing sound: {name} on channel {i}")
+                        break
+                
+                if not channel_found:
+                    # Force play on channel 0 if all busy
+                    channel = pygame.mixer.Channel(0)
+                    channel.set_volume(self.sfx_volume)
+                    channel.play(sound)
+                    print(f"  [AUDIO] ⚠ Playing sound: {name} on channel 0 (all channels busy)")
             else:
                 # Desktop: simpler playback
-                self.sounds[name].play()
+                sound.play()
                 print(f"  [AUDIO] Playing sound: {name}")
         except Exception as e:
             print(f"  [AUDIO] Error playing sound {name}: {e}")
