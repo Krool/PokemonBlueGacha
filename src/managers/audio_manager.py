@@ -97,13 +97,17 @@ class AudioManager:
             sound = self.sounds[name]
             
             if IS_WEB:
+                # On web, skip sound effects entirely if background music is playing
+                # This prevents "interrupted by pause" browser errors
+                # Sound effects and background music share the same pygame.mixer.music channel on web
+                if self.current_music is not None:
+                    return  # Silently skip to avoid conflicts
+                
                 # On web, pygame.mixer.Sound() doesn't work, so self.sounds[name] is a file path
-                # Use pygame.mixer.music to play sound effects
                 sound_path = sound  # It's actually a path, not a Sound object
                 
                 try:
-                    # DON'T call stop() - that causes "interrupted by pause" errors
-                    # Just load and play - pygame will handle the transition
+                    # Just load and play - no stop/pause calls to avoid browser errors
                     try:
                         pygame.mixer.music.load(sound_path)
                     except:
