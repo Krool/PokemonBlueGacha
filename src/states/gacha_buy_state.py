@@ -145,7 +145,8 @@ class GachaBuyState(GameState):
             hover_color=(70, 200, 70),
             use_title_font=True,
             callback=self._single_pull,
-            audio_manager=self.audio_manager
+            audio_manager=self.audio_manager,
+            play_click_sound=False  # Skip click - roll sound plays immediately
         )
         
         self.ten_pull_button = Button(
@@ -160,7 +161,8 @@ class GachaBuyState(GameState):
             hover_color=(70, 150, 255),
             use_title_font=True,
             callback=self._ten_pull,
-            audio_manager=self.audio_manager
+            audio_manager=self.audio_manager,
+            play_click_sound=False  # Skip click - roll sound plays immediately
         )
         
         # Back button

@@ -16,7 +16,9 @@ class Button:
                  border_color: tuple = (255, 255, 255),
                  border_width: int = 2,
                  use_title_font: bool = False,
-                 callback: Optional[Callable] = None):
+                 callback: Optional[Callable] = None,
+                 audio_manager = None,
+                 play_click_sound: bool = True):
         """
         Create a button
         
@@ -33,6 +35,8 @@ class Button:
             border_width: Border thickness
             use_title_font: Whether to use title font for button text
             callback: Function to call when clicked
+            audio_manager: AudioManager instance for click sounds (optional)
+            play_click_sound: Whether to play click sound when pressed (default True)
         """
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
@@ -45,6 +49,8 @@ class Button:
         self.border_width = border_width
         self.use_title_font = use_title_font
         self.callback = callback
+        self.audio_manager = audio_manager
+        self.play_click_sound = play_click_sound
         
         self.is_hovered = False
         self.is_pressed = False
@@ -69,6 +75,9 @@ class Button:
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1 and self.is_pressed and self.is_hovered:
                 self.is_pressed = False
+                # Play click sound (if enabled)
+                if self.audio_manager and self.play_click_sound:
+                    self.audio_manager.play_random_click_sound()
                 if self.callback:
                     self.callback()
                 return True
