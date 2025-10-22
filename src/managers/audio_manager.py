@@ -12,16 +12,18 @@ class AudioManager:
     
     def __init__(self):
         self.enabled = True
-        self.music_volume = 0.25  # Reduced from 0.5 to 0.25 (50% reduction)
-        self.sfx_volume = 0.35    # Reduced from 0.7 to 0.35 (50% reduction)
+        self.music_volume = 0.25  # Background music at 25%
+        self.sfx_volume = 0.50    # Sound effects at 50%
         self.current_music: Optional[str] = None
         self.sounds = {}
         self.background_tracks: List[str] = []  # List of available background music tracks
         
-        # Try to initialize pygame mixer
+        # Try to initialize pygame mixer with web-compatible settings
         try:
             if not pygame.mixer.get_init():
-                pygame.mixer.init()
+                # Use settings that work better on web
+                pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
+                print("✓ Audio mixer initialized")
         except Exception as e:
             print(f"Audio initialization failed: {e}")
             self.enabled = False
@@ -45,8 +47,9 @@ class AudioManager:
             sound = pygame.mixer.Sound(path)
             sound.set_volume(self.sfx_volume)
             self.sounds[name] = sound
+            print(f"  ✓ Loaded sound: {name} from {os.path.basename(path)}")
         except Exception as e:
-            print(f"Error loading sound {path}: {e}")
+            print(f"  ✗ Error loading sound {name} from {path}: {e}")
     
     def play_sound(self, name: str):
         """
@@ -55,7 +58,11 @@ class AudioManager:
         Args:
             name: Name of sound to play
         """
-        if not self.enabled or name not in self.sounds:
+        if not self.enabled:
+            return
+            
+        if name not in self.sounds:
+            print(f"Warning: Sound '{name}' not loaded")
             return
         
         try:
