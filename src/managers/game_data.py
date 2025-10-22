@@ -102,17 +102,19 @@ class GameData:
         self.newly_acquired_items = []
     
     def reset_inventory(self):
-        """Reset all owned Pokemon and pull statistics (for reset button)"""
+        """Reset all owned Pokemon, items, pull statistics, and currency (for reset button)"""
         self.pokemon_owned = {}
         self.items_owned = {}
         self.newly_acquired = []
         self.newly_acquired_items = []
+        # Reset currency to 0
+        self.gold = 0
         # Reset pull statistics
         self.stats['total_pulls'] = 0
         self.stats['pulls_by_version'] = {'Red': 0, 'Blue': 0, 'Yellow': 0, 'Items': 0}
         # Reset collection complete sound flag
         self.collection_complete_sound_played = False
-        print("Inventory and pull statistics reset")
+        print("Inventory, items, pull statistics, and currency reset")
     
     def get_total_owned_count(self) -> int:
         """Get total number of unique Pokemon owned"""

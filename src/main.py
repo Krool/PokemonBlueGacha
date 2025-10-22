@@ -3,6 +3,7 @@ Pokémon Blue Gacha - Main Entry Point
 """
 import pygame
 import sys
+import asyncio
 from config import *
 from managers.state_manager import StateManager
 from managers.resource_manager import ResourceManager
@@ -149,8 +150,8 @@ class Game:
         self.state_manager.register_state('gacha_animation', gacha_animation_state)
         self.state_manager.register_state('gacha_outcome', gacha_outcome_state)
     
-    def run(self):
-        """Main game loop"""
+    async def run(self):
+        """Main game loop - async for web compatibility"""
         print("\nStarting main game loop...\n")
         
         while self.running:
@@ -171,6 +172,9 @@ class Game:
             self.screen.fill(COLOR_BLACK)
             self.state_manager.render()
             pygame.display.flip()
+            
+            # Yield to browser (crucial for Pygbag)
+            await asyncio.sleep(0)
         
         self.quit()
     
@@ -187,11 +191,11 @@ class Game:
         sys.exit()
 
 
-def main():
-    """Entry point"""
+async def main():
+    """Entry point - async for web compatibility"""
     try:
         game = Game()
-        game.run()
+        await game.run()
     except Exception as e:
         print(f"\n✗ CRITICAL ERROR: {e}")
         import traceback
@@ -200,5 +204,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
 

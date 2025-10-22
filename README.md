@@ -1,126 +1,95 @@
-# Pokémon Blue Gacha
+# 🎮 Pokémon Blue Gacha
 
-A single-player desktop gacha game featuring all 151 Generation 1 Pokémon. Built with Python and Pygame.
+A browser-based gacha game featuring all 151 Generation 1 Pokémon plus 79 classic items!
 
-## 🎮 Overview
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Pygame](https://img.shields.io/badge/Pygame-2.6-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+![Status](https://img.shields.io/badge/Status-Active-success)
 
-Roll for Pokémon using three different gacha machines (Red, Blue, Yellow), each with unique pools and rates. Collect all 151 Pokémon and manage your Pokédex!
+---
+
+## 🎯 Play Now
+
+**[▶️ Play in Browser](https://USERNAME.github.io/PokemonBlueGacha/)** *(Update USERNAME with your GitHub username)*
+
+No installation required! Works on desktop and mobile browsers.
+
+---
 
 ## ✨ Features
 
-### Three Gacha Machines
-- **Red Machine** (1,000 / 9,000 Pokédollars)
-  - Red version exclusive Pokémon (Growlithe, Arcanine, Scyther, etc.)
-- **Blue Machine** (1,000 / 9,000 Pokédollars)
-  - Blue version exclusive Pokémon (Sandshrew, Vulpix, Pinsir, etc.)
-- **Yellow Machine** (1,500 / 13,500 Pokédollars)
-  - All Pokémon available
-  - **2x Legendary drop rate**
-  - 50% higher cost
+### 🎰 Four Gacha Machines
+- **Red Machine**: Red version exclusives + commons
+- **Blue Machine**: Blue version exclusives + commons  
+- **Yellow Machine**: All Pokémon + 2x legendary chance
+- **Items Machine**: 79 valuable Gen 1 items
 
-### Pokédex System
-- Full 151 Pokémon collection tracking
-- Sort by: Number, Rarity, Amount Owned
-- Filter: Show All / Owned Only
-- Track duplicate counts
-- "NEW!" badges for first-time catches
-- Rarity-colored outlines with glow effects
-- Type-colored backgrounds
+### 📖 Complete Pokédex
+- Track all 151 Gen 1 Pokémon
+- View by Pokédex number, rarity, or quantity
+- Filter to show only owned Pokémon
+- See rarity-colored borders and "NEW!" badges
 
-### Gacha Statistics
-- Track total pulls and per-machine pulls
-- Expected pulls calculator (shows rarest Pokémon odds)
-- Recommended machine badge (suggests best gacha to use)
-- Optimal strategy cost calculator
-- Complete collection from scratch estimates
+### 💰 Smart Economy
+- Earn Pokédollars for pulls
+- Different costs for each machine type
+- 1-pull and 10-pull options
+- Strategic recommendations based on your collection
 
-### Drop Rate Transparency
-- INFO button on gacha page shows all Pokémon and their exact drop rates
-- Scrollable list with percentages
-- Rarity color-coding for easy identification
-- Version-specific rates displayed
+### 📊 Statistics & Analytics
+- Track total pulls by machine
+- Calculate expected pulls to completion
+- View optimal gacha strategy
+- See drop rates for all outcomes
 
-### Audio System
-- 8 background music tracks (randomly selected and shuffled)
-- Change music by clicking Pokédollar display or unmuting
-- Mute/unmute toggle (persists between sessions)
-- Sound effects for pulls:
-  - Common/Uncommon/Rare/Epic: Random roll sounds
-  - Legendary: Special "cha-ching" sound
-  - Collection complete: Special celebration sound
+### 🎨 Polish & UX
+- Beautiful sprite-based UI
+- Smooth animations with rarity effects
+- 8 randomized background music tracks
+- Sound effects for special moments
+- Responsive design for mobile
 
-### Gacha Animations
-- Shake, rotation, and color tint effects based on rarity
-- Rays background effect (scaled and colored by rarity)
-- Individual animations for each Pokémon in 10-pulls
-- Skip animation by clicking
+### 💾 Persistent Saves
+- Automatic save system
+- Saves to browser storage (web)
+- Saves to JSON file (desktop)
+- Never lose your collection!
 
-### Save System
-- Auto-save progress (Pokédollars, Pokémon, statistics)
-- Persistent music mute state
-- Collection complete sound flag (plays once)
-- JSON-based save file
+---
 
-## 🎯 Game Flow
+## 🎮 How to Play
 
-1. **Loading State**: Splash screen with logo background
-2. **Pokédex State**: View collection, access gacha, view stats
-3. **Gacha Buy State**: Select machine, view featured Pokémon, purchase pulls
-4. **Gacha Animation State**: Watch the rolls with effects
-5. **Gacha Outcome State**: View results, pull again, or return to Pokédex
+1. **Start with Pokédollars**: Click the currency display to add money
+2. **Open Gacha**: Click "OPEN GACHA" from your Pokédex
+3. **Choose Machine**: Select Red, Blue, Yellow, or Items
+4. **Pull**: Choose 1-pull or 10-pull based on your budget
+5. **Collect**: Watch the animation and see your results!
+6. **Complete**: Collect all 151 Pokémon and 79 items!
 
-## 🎲 Gacha Mechanics
+### 💡 Pro Tips
 
-### Two-Step Weighted System
-1. **Step 1**: Roll for rarity tier (based on rarity weights)
-2. **Step 2**: Roll for specific Pokémon within that rarity (based on Pokémon weights)
+- **Yellow Machine** has 2x legendary rates but costs 50% more
+- Check the **INFO** button for drop rates and recommendations
+- Use the **"Pull Again"** button to quickly repeat pulls
+- **Mute** button remembers your preference
+- **Reset** button clears everything to start fresh
 
-### Rarity Tiers
-- **Common** (White) - 42% base drop rate
-- **Uncommon** (Green) - 36% base drop rate
-- **Rare** (Blue) - 15% base drop rate
-- **Epic** (Purple) - 6% base drop rate
-- **Legendary** (Orange) - 1% base drop rate (2% in Yellow)
+---
 
-### Pull Options
-- **1-Pull**: Single Pokémon roll
-- **10-Pull**: 10 Pokémon rolls with 10% discount
+## 🖥️ Play Locally (Desktop)
 
-## 📊 Data Files
+### Prerequisites
+- Python 3.11+
+- Pygame 2.6+
 
-Located in `data/` folder:
-- `pokemon_gen1.csv` - All 151 Pokémon with types, rarities, version-specific weights
-- `pokemon_types.csv` - 15 types with icons and colors
-- `rarity_drop_weights.csv` - 5 rarity tiers with version-specific weights and colors
-- `gacha_machines.csv` - 3 machine definitions with costs and descriptions
+### Installation
 
-## 🎨 Assets
-
-### Images
-- Pokémon sprites: `Assets/Sprites/Pokemon/`
-- Type icons: `Assets/Sprites/Types/`
-- UI elements: `Assets/Sprites/Main/`
-  - Gacha machine images (Red, Blue, Yellow)
-  - Logo
-  - Pokédollar icon
-  - Rays effect
-
-### Fonts
-- `Assets/Font/8BitFont.ttf` - Body text
-- `Assets/Font/TitleFont.ttf` - Titles and headers
-
-### Audio
-- Background music: `Assets/Sounds/background1-8.mp3`
-- Sound effects: `Assets/Sounds/` (roll1-3, legendary, chaching, gotemall)
-
-## 🚀 Installation & Running
-
-### Requirements
-- Python 3.7+
-- Pygame
-
-### Setup
 ```bash
+# Clone the repository
+git clone https://github.com/USERNAME/PokemonBlueGacha.git
+cd PokemonBlueGacha
+
 # Install dependencies
 pip install pygame
 
@@ -128,76 +97,280 @@ pip install pygame
 python src/main.py
 ```
 
-## 🎮 Controls
+### Run in Browser Locally
 
-- **Mouse**: Click buttons, scroll lists
-- **Mouse Wheel**: Scroll Pokédex and drop rate lists
-- **Click Pokédollar**: Add 10,000 (hold for continuous)
-- **ESC**: Close popups
+```bash
+# Install Pygbag
+pip install pygbag
 
-## 💡 Tips
+# Run locally in browser
+pygbag .
 
-1. **Yellow Machine**: Best for legendaries (2x rate)
-2. **Red/Blue Machines**: Use for version exclusives
-3. **Stats Panel**: Check recommendations for optimal pulls
-4. **Drop Rates**: Click INFO to see exact percentages
-5. **Music**: Click Pokédollar icon to change tracks
+# Opens at http://localhost:8000
+```
 
-## 🏗️ Project Structure
+---
+
+## 📁 Project Structure
 
 ```
 PokemonBlueGacha/
 ├── src/
 │   ├── main.py                 # Entry point
-│   ├── config.py               # Game constants
-│   ├── data/                   # Data classes
-│   ├── managers/               # Core managers
-│   ├── states/                 # Game states
-│   ├── ui/                     # UI components
-│   └── utils/                  # Utility functions
-├── data/                       # CSV data files
-├── Assets/                     # Images, fonts, sounds
-├── saves/                      # Player save files
-└── Documentation/              # Additional docs
+│   ├── config.py               # Game configuration
+│   ├── managers/               # Resource, save, state management
+│   ├── states/                 # Game states (loading, gacha, inventory)
+│   ├── logic/                  # Gacha logic, calculations
+│   ├── ui/                     # UI components (buttons, popups, tiles)
+│   └── data/                   # Data structures (Pokemon, items, rarities)
+├── Assets/
+│   ├── Sprites/
+│   │   ├── Pokemon/            # 151 Pokemon sprites
+│   │   ├── Items/              # 79 item icons
+│   │   ├── Types/              # 15 type icons
+│   │   └── Main/               # UI sprites
+│   ├── Sounds/                 # Sound effects
+│   ├── Music/                  # Background music (8 tracks)
+│   └── Fonts/                  # Custom fonts
+├── data/
+│   ├── pokemon_gen1.csv        # Pokemon data (151 entries)
+│   ├── items_gen1.csv          # Items data (79 entries)
+│   ├── rarity_drop_weights.csv # Rarity weights per machine
+│   ├── pokemon_types.csv       # Type definitions
+│   └── gacha_machines.csv      # Machine configurations
+└── save_data.json              # Player save file (auto-generated)
 ```
 
-## 📝 Documentation
+---
 
-Additional documentation available in:
-- `Documentation/GACHA_SYSTEM_SUMMARY.md` - Gacha system overview
-- `Documentation/gacha_system_logic.md` - Detailed gacha logic
-- `Documentation/ASSETS_SUMMARY.md` - Asset creation guide
+## 🛠️ Built With
 
-Recent feature documentation:
-- `RANDOM_MUSIC_SYSTEM.md` - Music system details
-- `GACHA_INFO_POPUP_FEATURE.md` - Drop rate display
-- `STATS_AND_RECOMMENDATIONS_FEATURE.md` - Statistics panel
+- **[Python 3.11](https://www.python.org/)** - Core language
+- **[Pygame 2.6](https://www.pygame.org/)** - Game framework
+- **[Pygbag](https://pygame-web.github.io/)** - Web deployment
+- **CSV Data** - Pokémon and item databases
+- **Gen 1 Sprites** - Classic Pokémon artwork
 
-## 🎉 Special Features
+---
 
-- **Collection Complete Sound**: Plays once when you catch all 151
-- **Legendary Cha-Ching**: Special sound for legendary pulls
-- **Persistent Preferences**: Music mute state saved between sessions
-- **Smart Recommendations**: Game suggests which machine to use
-- **Optimal Strategy Cost**: Calculates expected Pokédollars to complete collection
-- **Clickable Optimal Cost**: Click the cost in stats to set your money to that amount
+## 🎲 Gacha System
 
-## 🔄 Version History
+### Two-Step Weighted Roll
 
-- **v1.0**: Initial release with basic gacha system
-- **v1.1**: Added three-machine system (Red/Blue/Yellow)
-- **v1.2**: Enhanced Pokédex with sort/filter options
-- **v1.3**: Added statistics and recommendations
-- **v1.4**: Implemented drop rate transparency (INFO button)
-- **v1.5**: 8-track random music system
-- **Current**: Fully featured with animations, sound effects, and polish
+1. **Rarity Roll**: First determine the rarity based on machine weights
+2. **Entity Roll**: Then select from available Pokémon/items in that rarity
+
+### Drop Rates (Default)
+
+| Rarity | Red/Blue | Yellow | Items |
+|--------|----------|--------|-------|
+| Common | 42% | 41% | 60% |
+| Uncommon | 36% | 36% | 20% |
+| Rare | 15% | 15% | 14% |
+| Epic | 6% | 6% | 5% |
+| Legendary | 1% | 2% | 1% |
+
+### Version Exclusives
+
+- **Red only**: Oddish, Gloom, Vileplume, Mankey, Primeape, Growlithe, Arcanine, Scyther, Electabuzz
+- **Blue only**: Bellsprout, Weepinbell, Victreebel, Meowth, Persian, Vulpix, Ninetales, Pinsir, Magmar
+- **Yellow**: All Pokémon available + boosted legendaries
+
+---
+
+## 📊 Statistics & Math
+
+### Expected Pulls Calculator
+
+The game calculates:
+- **Pulls to complete each machine** (based on rarest unowned)
+- **Optimal strategy** (which machine to prioritize)
+- **Expected cost** (total Pokédollars needed)
+- **From-scratch pulls** (complete collection starting fresh)
+
+Uses **Coupon Collector Problem** math for accurate estimates!
+
+---
+
+## 🌐 Web Deployment
+
+This game is **100% web-ready**! Deploy to:
+
+- **GitHub Pages** (free, recommended) - See [GITHUB_PAGES_DEPLOYMENT.md](GITHUB_PAGES_DEPLOYMENT.md)
+- **Itch.io** (free + game store)
+- **Netlify/Vercel** (free tier available)
+
+### Quick Deploy
+
+```bash
+# Build for web
+pygbag --build .
+
+# Deploy to GitHub Pages
+git checkout -b gh-pages
+cp -r build/web/* .
+git add . && git commit -m "Deploy"
+git push -u origin gh-pages
+```
+
+See full deployment guide: **[GITHUB_PAGES_DEPLOYMENT.md](GITHUB_PAGES_DEPLOYMENT.md)**
+
+---
+
+## 📱 Mobile Support
+
+✅ **Fully responsive** - works on phones and tablets!  
+✅ **Touch controls** - tap = click, swipe = scroll  
+✅ **Tested on**: iPhone Safari, Android Chrome, iPad  
+
+---
+
+## 🎵 Audio
+
+### Background Music
+- 8 randomized tracks
+- Random track on game start
+- Random track on unmute
+- Click "POKÉDEX" title to shuffle
+
+### Sound Effects
+- Button clicks
+- Gacha spins
+- Pokémon reveal
+- Legendary "cha-ching"
+- Collection complete celebration
+
+---
+
+## 🎨 Visual Polish
+
+- **Rarity Colors**: White, Green, Blue, Purple, Orange
+- **Animated Rays**: Scale and color by rarity
+- **Shake Effects**: Individual animation per result
+- **NEW! Badges**: Highlight first-time acquisitions
+- **Type Icons**: Show dual-type Pokémon correctly
+- **Count Labels**: Display owned quantity
+
+---
+
+## 🔧 Configuration
+
+Edit `src/config.py` to customize:
+
+```python
+SCREEN_WIDTH = 1024
+SCREEN_HEIGHT = 768
+FPS = 60
+
+# Machine costs
+SINGLE_PULL_COST_RED = 900
+SINGLE_PULL_COST_BLUE = 900
+SINGLE_PULL_COST_YELLOW = 1350
+TEN_PULL_COST_RED = 9000
+# ... etc
+```
+
+Edit `data/*.csv` to modify:
+- Pokémon stats and rarities
+- Item values and drop rates
+- Gacha machine configurations
+- Type colors and icons
+
+---
+
+## 📜 Disclaimer
+
+**This is an unofficial fan-made game.**
+
+Pokémon © 1995-2025 Nintendo / Game Freak / Creatures Inc.
+
+This project is **not affiliated with, endorsed by, or connected to Nintendo, Game Freak, or The Pokémon Company**.
+
+All Pokémon names, sprites, and related media are trademarks and copyrights of their respective owners.
+
+This game is provided **free of charge** for educational and entertainment purposes only.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+
+- 🐛 Report bugs
+- 💡 Suggest features  
+- 🔧 Submit pull requests
+- ⭐ Star the repo!
+
+### Development Setup
+
+```bash
+# Clone and install
+git clone https://github.com/USERNAME/PokemonBlueGacha.git
+cd PokemonBlueGacha
+pip install pygame pygbag
+
+# Run locally
+python src/main.py
+
+# Test web build
+pygbag .
+```
+
+---
 
 ## 📄 License
 
-This is a fan project for educational purposes. Pokémon and all related properties are owned by Nintendo, Game Freak, and The Pokémon Company.
+MIT License - See [LICENSE](LICENSE) file
 
-## 🙏 Credits
+**TL;DR**: Free to use, modify, and distribute. Keep attribution.
 
-- Pokémon sprites and data from various community databases
-- Background music and sound effects sourced for educational use
-- Built with Python and Pygame
+---
+
+## 🙏 Acknowledgments
+
+- **Nintendo/Game Freak** - Original Pokémon games and assets
+- **Pygame Community** - Excellent game framework
+- **Pygbag Project** - Making web deployment easy
+- **PokéAPI & Bulbapedia** - Data sources
+- **All contributors and players!**
+
+---
+
+## 📞 Contact
+
+- **GitHub Issues**: [Report bugs](https://github.com/USERNAME/PokemonBlueGacha/issues)
+- **Discussions**: [Share ideas](https://github.com/USERNAME/PokemonBlueGacha/discussions)
+
+---
+
+## 🎯 Roadmap
+
+Potential future features:
+- [ ] Generation 2 Pokémon (251 total)
+- [ ] Shiny variants (rare recolors)
+- [ ] Trading system (multiplayer)
+- [ ] Daily login bonuses
+- [ ] Achievement system
+- [ ] Leaderboards
+- [ ] Additional gacha machines
+- [ ] More item types
+
+**Want to help?** Open an issue or PR!
+
+---
+
+## ⭐ Star History
+
+If you enjoy this game, consider starring the repo! ⭐
+
+[![Star History Chart](https://api.star-history.com/svg?repos=USERNAME/PokemonBlueGacha&type=Date)](https://star-history.com/#USERNAME/PokemonBlueGacha&Date)
+
+---
+
+<div align="center">
+
+**Made with ❤️ and Python**
+
+[Play Now](https://USERNAME.github.io/PokemonBlueGacha/) • [Report Bug](https://github.com/USERNAME/PokemonBlueGacha/issues) • [Request Feature](https://github.com/USERNAME/PokemonBlueGacha/issues)
+
+</div>
