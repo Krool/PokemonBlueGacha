@@ -24,13 +24,20 @@ def build_executable():
         print("[OK] PyInstaller installed")
     
     # Clean previous builds
-    if os.path.exists("build"):
-        shutil.rmtree("build")
-        print("[OK] Cleaned build directory")
+    try:
+        if os.path.exists("build"):
+            shutil.rmtree("build")
+            print("[OK] Cleaned build directory")
+    except PermissionError:
+        print("[WARN] Could not clean build directory (files in use)")
     
-    if os.path.exists("dist"):
-        shutil.rmtree("dist")
-        print("[OK] Cleaned dist directory")
+    try:
+        if os.path.exists("dist"):
+            shutil.rmtree("dist")
+            print("[OK] Cleaned dist directory")
+    except PermissionError:
+        print("[WARN] Could not clean dist directory (executable may be running)")
+        print("[INFO] Close the .exe file and try again, or PyInstaller will overwrite")
     
     # PyInstaller command for Windows
     if sys.platform == "win32":
@@ -40,6 +47,7 @@ def build_executable():
             "--onefile",
             "--windowed",
             "--icon=favicon.png",
+            "--paths=src",  # Add src to Python path
             "--add-data=src/data;data",
             "--add-data=src/Assets;Assets",
             "--hidden-import=pygame",
@@ -56,6 +64,7 @@ def build_executable():
             "--onefile",
             "--windowed",
             "--icon=favicon.png",
+            "--paths=src",  # Add src to Python path
             "--add-data=src/data:data",
             "--add-data=src/Assets:Assets",
             "--hidden-import=pygame",

@@ -3,7 +3,7 @@
 
 a = Analysis(
     ['src\\main.py'],
-    pathex=[],
+    pathex=['src'],
     binaries=[],
     datas=[('src/data', 'data'), ('src/Assets', 'Assets')],
     hiddenimports=['pygame', 'csv', 'json', 'asyncio'],
