@@ -12,14 +12,6 @@ class AudioManager:
     """Manages game audio (music and sound effects)"""
     
     def __init__(self):
-        # Print IS_WEB status immediately
-        print(f"[AUDIO-DEBUG] AudioManager initializing, IS_WEB={IS_WEB}")
-        
-        # Also log to browser console if on web
-        if IS_WEB:
-            import platform
-            platform.window.console.log(f"[AUDIO-DEBUG] AudioManager initializing, IS_WEB={IS_WEB}")
-        
         self.enabled = True
         self.music_volume = 0.25  # Background music at 25%
         self.sfx_volume = 0.50    # Sound effects at 50%
@@ -58,51 +50,30 @@ class AudioManager:
             path: Path to sound file
             name: Name to reference sound by
         """
-        print(f"[AUDIO-DEBUG] load_sound called: name={name}, path={path}, enabled={self.enabled}")
-        if IS_WEB:
-            import platform
-            platform.window.console.log(f"[AUDIO-DEBUG] load_sound called: name={name}, path={path}, enabled={self.enabled}")
-        
         if not self.enabled:
-            print(f"  [AUDIO] Skipping load (audio disabled): {name}")
             return
         
         if not os.path.exists(path):
-            msg = f"Warning: Sound file not found: {path}"
-            print(msg)
-            if IS_WEB:
-                import platform
-                platform.window.console.log(msg)
+            print(f"Warning: Sound file not found: {path}")
             return
         
         try:
-            # Store path for reference (on web, we'll use pygame.mixer.music to play these)
+            # Store path for reference
             self.sound_paths[name] = path
             
             if IS_WEB:
-                # On web, pygame.mixer.Sound() doesn't work (throws "Surface doesn't have a colorkey" error)
-                # Instead, store the path and we'll use pygame.mixer.music to play it later
-                # This means only one sound effect can play at a time on web, but at least it works
+                # On web, pygame.mixer.Sound() doesn't work
+                # Store the path and use pygame.mixer.music to play it later
                 self.sounds[name] = path  # Store path instead of Sound object
-                msg = f"  [OK] Registered sound for web: {name} from {os.path.basename(path)}"
-                print(msg)
-                import platform
-                platform.window.console.log(msg)
+                print(f"  [OK] Registered sound for web: {name}")
             else:
                 # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
                 sound = pygame.mixer.Sound(path)
                 sound.set_volume(self.sfx_volume)
                 self.sounds[name] = sound
-                msg = f"  [OK] Loaded sound: {name} from {os.path.basename(path)}"
-                print(msg)
+                print(f"  [OK] Loaded sound: {name}")
         except Exception as e:
-            msg = f"  [ERROR] Error loading sound {name} from {path}: {e}"
-            print(msg)
-            if IS_WEB:
-                import platform
-                platform.window.console.log(msg)
-            import traceback
-            traceback.print_exc()
+            print(f"  [ERROR] Error loading sound {name}: {e}")
     
     def play_sound(self, name: str):
         """
@@ -111,72 +82,37 @@ class AudioManager:
         Args:
             name: Name of sound to play
         """
-        # ALWAYS print this first to confirm method is being called
-        print(f"[AUDIO-DEBUG] play_sound called: {name}, IS_WEB={IS_WEB}, enabled={self.enabled}")
-        
-        # Also log to browser console if on web
-        if IS_WEB:
-            import platform
-            platform.window.console.log(f"[AUDIO-DEBUG] play_sound called: {name}, IS_WEB={IS_WEB}, enabled={self.enabled}")
-        
         if not self.enabled:
-            msg = f"  [AUDIO] Audio disabled, skipping sound: {name}"
-            print(msg)
-            if IS_WEB:
-                import platform
-                platform.window.console.log(msg)
             return
         
         # Check if user has interacted (required for web)
         if IS_WEB and not self.user_interacted:
-            msg = f"  [AUDIO] Sound '{name}' queued (waiting for user interaction), user_interacted={self.user_interacted}"
-            print(msg)
-            import platform
-            platform.window.console.log(msg)
             return
             
         if name not in self.sounds:
-            msg = f"  [AUDIO] Warning: Sound '{name}' not loaded (available: {list(self.sounds.keys())})"
-            print(msg)
-            if IS_WEB:
-                import platform
-                platform.window.console.log(msg)
             return
         
         try:
             sound = self.sounds[name]
             
             if IS_WEB:
-                # On web, pygame.mixer.Sound() doesn't work, so self.sounds[name] is actually a file path
+                # On web, pygame.mixer.Sound() doesn't work, so self.sounds[name] is a file path
                 # Use pygame.mixer.music to play sound effects (will interrupt background music briefly)
-                import platform
                 sound_path = sound  # It's actually a path, not a Sound object
-                platform.window.console.log(f"  [AUDIO-WEB] Playing sound effect using mixer.music: {name}")
-                platform.window.console.log(f"  [AUDIO-WEB] Sound path: {sound_path}")
                 
                 try:
-                    # Stop current music
+                    # Stop current music and play the sound effect
                     pygame.mixer.music.stop()
-                    # Load and play the sound effect
                     pygame.mixer.music.load(sound_path)
                     pygame.mixer.music.set_volume(self.sfx_volume)
                     pygame.mixer.music.play()
-                    
-                    msg = f"  [AUDIO-WEB] Playing sound effect: {name}"
-                    print(msg)
-                    platform.window.console.log(msg)
                 except Exception as e:
-                    msg = f"  [AUDIO-WEB] Error playing sound with mixer.music: {e}"
-                    print(msg)
-                    platform.window.console.log(msg)
+                    print(f"  [ERROR] Error playing sound {name}: {e}")
             else:
                 # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
                 sound.play()
-                print(f"  [AUDIO] Playing sound: {name}")
         except Exception as e:
-            print(f"  [AUDIO] Error playing sound {name}: {e}")
-            import traceback
-            traceback.print_exc()
+            print(f"  [ERROR] Error playing sound {name}: {e}")
     
     def enable_audio_after_interaction(self, allow_music_start: bool = True):
         """
@@ -186,25 +122,16 @@ class AudioManager:
         Args:
             allow_music_start: If False, don't auto-play pending music (useful if music is muted)
         """
-        if IS_WEB:
-            print(f"[AUDIO-WEB] enable_audio_after_interaction called (allow_music_start={allow_music_start})")
-            print(f"[AUDIO-WEB] user_interacted before: {self.user_interacted}")
+        if IS_WEB and not self.user_interacted:
+            self.user_interacted = True
             
-            if not self.user_interacted:
-                self.user_interacted = True
-                print("[OK] User interaction detected - audio enabled")
-                
-                # If there's pending music, play it now (unless music is muted)
-                if self.pending_music and allow_music_start:
-                    print(f"  Playing pending music: {os.path.basename(self.pending_music)}")
-                    self.play_music(self.pending_music)
-                    self.pending_music = None
-                elif self.pending_music and not allow_music_start:
-                    # Clear pending music if muted
-                    print(f"  Cleared pending music (muted): {os.path.basename(self.pending_music)}")
-                    self.pending_music = None
-            else:
-                print("[AUDIO-WEB] User already interacted, audio already enabled")
+            # If there's pending music, play it now (unless music is muted)
+            if self.pending_music and allow_music_start:
+                self.play_music(self.pending_music)
+                self.pending_music = None
+            elif self.pending_music:
+                # Clear pending music if muted
+                self.pending_music = None
     
     def play_music(self, path: str, loops: int = -1):
         """
@@ -313,21 +240,14 @@ class AudioManager:
         """
         import os
         
-        # Debug logging
-        print(f"[AUDIO-DEBUG] load_game_sounds called with path: {sounds_path}")
-        print(f"[AUDIO-DEBUG] IS_WEB={IS_WEB}, enabled={self.enabled}")
-        if IS_WEB:
-            import platform
-            platform.window.console.log(f"[AUDIO-DEBUG] load_game_sounds called with path: {sounds_path}")
-        
-        # Define sound files to load - CHECK FILE EXTENSIONS IN Assets/Sounds FOLDER!
+        # Define sound files to load
         sound_files = {
-            'roll1': 'roll1.mp3',  # Changed to match actual files
+            'roll1': 'roll1.mp3',
             'roll2': 'roll2.mp3',
             'roll3': 'roll3.mp3',
             'legendary': 'legendary.mp3',
-            'chaching': 'chaching.mp3',  # Special sound for legendary pulls
-            'gotemall': 'gotemall.mp3',  # Sound for completing the collection
+            'chaching': 'chaching.mp3',
+            'gotemall': 'gotemall.mp3',
             'background': 'background.mp3'  # This will be loaded as music, not sound
         }
         
@@ -335,10 +255,6 @@ class AudioManager:
         
         for sound_name, filename in sound_files.items():
             full_path = os.path.join(sounds_path, filename)
-            print(f"  [AUDIO-DEBUG] Checking {sound_name}: {full_path}, exists={os.path.exists(full_path)}")
-            if IS_WEB:
-                import platform
-                platform.window.console.log(f"  [AUDIO-DEBUG] Checking {sound_name}: {full_path}, exists={os.path.exists(full_path)}")
             
             if os.path.exists(full_path):
                 if sound_name != 'background':  # Background is music, not sound effect
