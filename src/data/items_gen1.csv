@@ -37,7 +37,6 @@ Number,Name,Index,Category,Value,Rarity,Weight,Icon
 36,Super Repel,56,other,500,Common,10,hold-item/super-repel.png
 37,Max Repel,57,other,700,Common,10,hold-item/max-repel.png
 38,Dire Hit,58,battle,650,Common,10,hold-item/dire-hit.png
-39,Coin,59,valuable,10,Common,0,other/coin.png
 40,X Attack,60,battle,500,Common,10,hold-item/x-attack.png
 41,X Defend,61,battle,550,Common,10,hold-item/x-defense.png
 42,X Speed,62,battle,350,Common,10,hold-item/x-speed.png

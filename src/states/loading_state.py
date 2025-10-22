@@ -159,17 +159,10 @@ class LoadingState(GameState):
         # Border
         pygame.draw.rect(self.screen, COLOR_WHITE, (bar_x, bar_y, bar_width, bar_height), 2)
         
-        # Instruction text if complete - prominent and clear
+        # Instruction text if complete
         if self.loading_complete:
-            # Main instruction - larger and centered
             font_instruction = pygame.font.Font(None, 48)
             instruction = font_instruction.render("Click anywhere to start", True, COLOR_WHITE)
             instruction_rect = instruction.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() - 150))
             self.screen.blit(instruction, instruction_rect)
-            
-            # Smaller hint text
-            font_small = pygame.font.Font(None, 24)
-            hint = font_small.render("(Required for audio)", True, (200, 200, 200))
-            hint_rect = hint.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() - 100))
-            self.screen.blit(hint, hint_rect)
 

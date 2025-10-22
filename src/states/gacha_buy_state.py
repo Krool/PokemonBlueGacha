@@ -89,7 +89,8 @@ class GachaBuyState(GameState):
                 bg_color=(180, 50, 50),
                 hover_color=(220, 70, 70),
                 use_title_font=True,
-                callback=lambda: self._select_machine("Red")
+                callback=lambda: self._select_machine("Red"),
+                audio_manager=self.audio_manager
             ),
             "Blue": Button(
                 start_x + button_width + spacing, button_y, button_width, button_height,
@@ -99,7 +100,8 @@ class GachaBuyState(GameState):
                 bg_color=(50, 50, 180),
                 hover_color=(70, 70, 220),
                 use_title_font=True,
-                callback=lambda: self._select_machine("Blue")
+                callback=lambda: self._select_machine("Blue"),
+                audio_manager=self.audio_manager
             ),
             "Yellow": Button(
                 start_x + (button_width + spacing) * 2, button_y, button_width, button_height,
@@ -109,7 +111,8 @@ class GachaBuyState(GameState):
                 bg_color=(180, 180, 50),
                 hover_color=(220, 220, 70),
                 use_title_font=True,
-                callback=lambda: self._select_machine("Yellow")
+                callback=lambda: self._select_machine("Yellow"),
+                audio_manager=self.audio_manager
             ),
             "Items": Button(
                 start_x + (button_width + spacing) * 3, button_y, button_width, button_height,
@@ -119,7 +122,8 @@ class GachaBuyState(GameState):
                 bg_color=(100, 150, 100),
                 hover_color=(130, 180, 130),
                 use_title_font=True,
-                callback=lambda: self._select_machine("Items")
+                callback=lambda: self._select_machine("Items"),
+                audio_manager=self.audio_manager
             )
         }
         
@@ -140,7 +144,8 @@ class GachaBuyState(GameState):
             bg_color=(50, 150, 50),
             hover_color=(70, 200, 70),
             use_title_font=True,
-            callback=self._single_pull
+            callback=self._single_pull,
+            audio_manager=self.audio_manager
         )
         
         self.ten_pull_button = Button(
@@ -154,7 +159,8 @@ class GachaBuyState(GameState):
             bg_color=(50, 100, 200),
             hover_color=(70, 150, 255),
             use_title_font=True,
-            callback=self._ten_pull
+            callback=self._ten_pull,
+            audio_manager=self.audio_manager
         )
         
         # Back button
@@ -165,7 +171,8 @@ class GachaBuyState(GameState):
             font_size=20,
             bg_color=(100, 100, 100),
             hover_color=(150, 150, 150),
-            callback=self._go_back
+            callback=self._go_back,
+            audio_manager=self.audio_manager
         )
         
         # Info button (to the left of 1-pull button)
@@ -182,7 +189,8 @@ class GachaBuyState(GameState):
             font_size=20,
             bg_color=(50, 100, 150),
             hover_color=(70, 130, 180),
-            callback=self._show_info
+            callback=self._show_info,
+            audio_manager=self.audio_manager
         )
         
         # Add gold button (cheat)
@@ -279,7 +287,10 @@ class GachaBuyState(GameState):
                 results = [self.resource_manager.get_item_by_number(num) for num in item_numbers]
                 results = [r for r in results if r is not None]  # Filter None
                 
-                print(f"Single pull from Items machine! Got {results[0].name} ({results[0].rarity})! Gold: {self.game_data.gold}")
+                try:
+                    print(f"Single pull from Items machine! Got {results[0].name} ({results[0].rarity})! Gold: {self.game_data.gold}")
+                except UnicodeEncodeError:
+                    print(f"Single pull from Items machine! Got {results[0].name.encode('ascii', errors='ignore').decode('ascii')} ({results[0].rarity})! Gold: {self.game_data.gold}")
                 
                 # Add to inventory
                 for item in results:
@@ -294,7 +305,10 @@ class GachaBuyState(GameState):
                 
                 # Perform gacha roll
                 result = self.gacha_system.roll_single(self.selected_machine)
-                print(f"Single pull from {self.selected_machine} machine! Got {result.name} ({result.rarity})! Gold: {self.game_data.gold}")
+                try:
+                    print(f"Single pull from {self.selected_machine} machine! Got {result.name} ({result.rarity})! Gold: {self.game_data.gold}")
+                except UnicodeEncodeError:
+                    print(f"Single pull from {self.selected_machine} machine! Got {result.name.encode('ascii', errors='ignore').decode('ascii')} ({result.rarity})! Gold: {self.game_data.gold}")
                 
                 # Add to inventory
                 self.game_data.add_pokemon(result.number)
@@ -318,7 +332,8 @@ class GachaBuyState(GameState):
                 f"You need {machine.cost_single:,} Pokédollars but only have {self.game_data.gold:,}.",
                 self.font_manager,
                 add_gold_callback=add_gold,
-                pokedollar_icon=self.resource_manager.pokedollar_icon
+                pokedollar_icon=self.resource_manager.pokedollar_icon,
+                audio_manager=self.audio_manager
             )
     
     def _ten_pull(self):
@@ -345,7 +360,10 @@ class GachaBuyState(GameState):
                 
                 print(f"10-pull from Items machine! Gold: {self.game_data.gold}")
                 for item in results:
-                    print(f"  - {item.name} ({item.rarity})")
+                    try:
+                        print(f"  - {item.name} ({item.rarity})")
+                    except UnicodeEncodeError:
+                        print(f"  - {item.name.encode('ascii', errors='ignore').decode('ascii')} ({item.rarity})")
                     self.game_data.add_item(item.number)
                 self.game_data.save()
                 
@@ -359,7 +377,10 @@ class GachaBuyState(GameState):
                 results = self.gacha_system.roll_ten(self.selected_machine)
                 print(f"10-pull from {self.selected_machine} machine! Gold: {self.game_data.gold}")
                 for result in results:
-                    print(f"  - {result.name} ({result.rarity})")
+                    try:
+                        print(f"  - {result.name} ({result.rarity})")
+                    except UnicodeEncodeError:
+                        print(f"  - {result.name.encode('ascii', errors='ignore').decode('ascii')} ({result.rarity})")
                     self.game_data.add_pokemon(result.number)
                 self.game_data.save()
                 
@@ -381,7 +402,8 @@ class GachaBuyState(GameState):
                 f"You need {machine.cost_10pull:,} Pokédollars but only have {self.game_data.gold:,}.",
                 self.font_manager,
                 add_gold_callback=add_gold,
-                pokedollar_icon=self.resource_manager.pokedollar_icon
+                pokedollar_icon=self.resource_manager.pokedollar_icon,
+                audio_manager=self.audio_manager
             )
     
     def _go_back(self):
@@ -395,12 +417,13 @@ class GachaBuyState(GameState):
             self.info_popup = ItemsInfoPopup(
                 SCREEN_WIDTH // 2,
                 SCREEN_HEIGHT // 2,
-                700,
+                800,
                 600,
                 self.resource_manager.items_list,
                 self.resource_manager.rarities_dict,
                 self.font_manager,
-                callback=None
+                callback=None,
+                audio_manager=self.audio_manager
             )
         else:
             # Show Pokemon info popup
@@ -413,7 +436,8 @@ class GachaBuyState(GameState):
                 self.resource_manager.pokemon_list,
                 self.resource_manager.rarities_dict,
                 self.font_manager,
-                callback=None
+                callback=None,
+                audio_manager=self.audio_manager
             )
     
     def exit(self):
