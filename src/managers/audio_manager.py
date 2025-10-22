@@ -98,30 +98,26 @@ class AudioManager:
             
             if IS_WEB:
                 # On web, pygame.mixer.Sound() doesn't work, so self.sounds[name] is a file path
-                # Use pygame.mixer.music to play sound effects (will interrupt background music briefly)
+                # Use pygame.mixer.music to play sound effects
                 sound_path = sound  # It's actually a path, not a Sound object
                 
                 try:
-                    # Wrap each call individually to suppress pythons.js errors
-                    try:
-                        pygame.mixer.music.stop()
-                    except:
-                        pass  # Silently ignore all stop errors
-                    
+                    # DON'T call stop() - that causes "interrupted by pause" errors
+                    # Just load and play - pygame will handle the transition
                     try:
                         pygame.mixer.music.load(sound_path)
                     except:
-                        pass  # Silently ignore all load errors
+                        pass  # Silently ignore load errors
                     
                     try:
                         pygame.mixer.music.set_volume(self.sfx_volume)
                     except:
-                        pass  # Silently ignore all volume errors
+                        pass  # Silently ignore volume errors
                     
                     try:
                         pygame.mixer.music.play()
                     except:
-                        pass  # Silently ignore all play errors
+                        pass  # Silently ignore play errors
                         
                 except Exception:
                     # Silently handle all web audio errors
@@ -130,7 +126,7 @@ class AudioManager:
                 # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
                 sound.play()
         except Exception:
-            # Catch any other errors silently on web
+            # Catch any other errors silently
             pass
     
     def enable_audio_after_interaction(self, allow_music_start: bool = True):

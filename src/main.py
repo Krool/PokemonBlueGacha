@@ -220,23 +220,38 @@ class Game:
         print("\nStarting main game loop...\n")
         
         while self.running:
-            dt = self.clock.tick(FPS) / 1000.0  # Delta time in seconds
-            
-            # Handle events
-            events = pygame.event.get()
-            for event in events:
-                if event.type == pygame.QUIT:
-                    self.running = False
-            
-            self.state_manager.handle_events(events)
-            
-            # Update
-            self.state_manager.update(dt)
-            
-            # Render
-            self.screen.fill(COLOR_BLACK)
-            self.state_manager.render()
-            pygame.display.flip()
+            try:
+                dt = self.clock.tick(FPS) / 1000.0  # Delta time in seconds
+                
+                # Handle events
+                events = pygame.event.get()
+                for event in events:
+                    if event.type == pygame.QUIT:
+                        self.running = False
+                
+                self.state_manager.handle_events(events)
+                
+                # Update
+                self.state_manager.update(dt)
+                
+                # Render
+                self.screen.fill(COLOR_BLACK)
+                self.state_manager.render()
+                pygame.display.flip()
+                
+            except Exception as e:
+                # Silently handle all exceptions on web (prevents Pygbag error popups)
+                # Print to console for debugging but don't let it crash the game
+                if IS_WEB:
+                    # Only log unique errors to avoid console spam
+                    error_msg = str(e)
+                    if "fetching process" in error_msg or "media resource" in error_msg:
+                        pass  # Silently ignore audio errors
+                    else:
+                        print(f"[WARN] Game loop error (suppressed): {e}")
+                else:
+                    # On desktop, re-raise to catch actual bugs
+                    raise
             
             # Yield to browser (crucial for Pygbag)
             await asyncio.sleep(0)
