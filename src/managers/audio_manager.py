@@ -99,22 +99,35 @@ class AudioManager:
             if IS_WEB:
                 # On web, find an available channel and play on it explicitly
                 # This is more reliable than sound.play() which can fail silently
+                print(f"  [AUDIO-WEB] Attempting to play sound: {name}")
+                print(f"  [AUDIO-WEB] Sound object: {sound}")
+                print(f"  [AUDIO-WEB] User interacted: {self.user_interacted}")
+                print(f"  [AUDIO-WEB] Audio enabled: {self.enabled}")
+                print(f"  [AUDIO-WEB] SFX volume: {self.sfx_volume}")
+                print(f"  [AUDIO-WEB] Total channels: {pygame.mixer.get_num_channels()}")
+                
                 channel_found = False
                 for i in range(pygame.mixer.get_num_channels()):
                     channel = pygame.mixer.Channel(i)
-                    if not channel.get_busy():
+                    busy = channel.get_busy()
+                    print(f"  [AUDIO-WEB] Channel {i} busy: {busy}")
+                    if not busy:
+                        print(f"  [AUDIO-WEB] Using channel {i} for sound: {name}")
                         channel.set_volume(self.sfx_volume)
-                        channel.play(sound)
+                        result = channel.play(sound)
+                        print(f"  [AUDIO-WEB] channel.play() returned: {result}")
                         channel_found = True
-                        print(f"  [AUDIO] Playing sound: {name} on channel {i}")
+                        print(f"  [AUDIO-WEB] SUCCESS: Playing sound: {name} on channel {i}")
                         break
                 
                 if not channel_found:
                     # Force play on channel 0 if all busy
+                    print(f"  [AUDIO-WEB] All channels busy, forcing on channel 0")
                     channel = pygame.mixer.Channel(0)
                     channel.set_volume(self.sfx_volume)
-                    channel.play(sound)
-                    print(f"  [AUDIO] [WARN] Playing sound: {name} on channel 0 (all channels busy)")
+                    result = channel.play(sound)
+                    print(f"  [AUDIO-WEB] channel.play() on channel 0 returned: {result}")
+                    print(f"  [AUDIO-WEB] [WARN] Playing sound: {name} on channel 0 (all channels busy)")
             else:
                 # Desktop: simpler playback
                 sound.play()
@@ -132,19 +145,25 @@ class AudioManager:
         Args:
             allow_music_start: If False, don't auto-play pending music (useful if music is muted)
         """
-        if IS_WEB and not self.user_interacted:
-            self.user_interacted = True
-            print("[OK] User interaction detected - audio enabled")
+        if IS_WEB:
+            print(f"[AUDIO-WEB] enable_audio_after_interaction called (allow_music_start={allow_music_start})")
+            print(f"[AUDIO-WEB] user_interacted before: {self.user_interacted}")
             
-            # If there's pending music, play it now (unless music is muted)
-            if self.pending_music and allow_music_start:
-                print(f"  Playing pending music: {os.path.basename(self.pending_music)}")
-                self.play_music(self.pending_music)
-                self.pending_music = None
-            elif self.pending_music and not allow_music_start:
-                # Clear pending music if muted
-                print(f"  Cleared pending music (muted): {os.path.basename(self.pending_music)}")
-                self.pending_music = None
+            if not self.user_interacted:
+                self.user_interacted = True
+                print("[OK] User interaction detected - audio enabled")
+                
+                # If there's pending music, play it now (unless music is muted)
+                if self.pending_music and allow_music_start:
+                    print(f"  Playing pending music: {os.path.basename(self.pending_music)}")
+                    self.play_music(self.pending_music)
+                    self.pending_music = None
+                elif self.pending_music and not allow_music_start:
+                    # Clear pending music if muted
+                    print(f"  Cleared pending music (muted): {os.path.basename(self.pending_music)}")
+                    self.pending_music = None
+            else:
+                print("[AUDIO-WEB] User already interacted, audio already enabled")
     
     def play_music(self, path: str, loops: int = -1):
         """
