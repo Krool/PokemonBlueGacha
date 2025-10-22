@@ -3,7 +3,7 @@ Inventory/Pokédex State - Shows all 151 Pokemon with sorting and filtering
 """
 import pygame
 from states.base_state import GameState
-from config import COLOR_WHITE, COLOR_BLACK, SCREEN_WIDTH, SCREEN_HEIGHT
+from config import COLOR_WHITE, COLOR_BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, IS_WEB
 from ui.button import Button
 from ui.checkbox import Checkbox
 from ui.sort_button import SortButton, SortOrder
@@ -74,19 +74,21 @@ class InventoryState(GameState):
         start_x = SCREEN_WIDTH - total_width - 20
         
         # Mute button (leftmost) - moved down to avoid Pokemon count overlap
+        # Hidden on web (no background music on web)
         buttons_y = 95
-        mute_text = "UNMUTE" if self.game_data.music_muted else "MUTE"
-        self.mute_button = Button(
-            start_x, buttons_y,
-            mute_width, 35,
-            mute_text,
-            self.font_manager,
-            font_size=16,
-            bg_color=(100, 100, 100),
-            hover_color=(130, 130, 130),
-            callback=self._toggle_mute,
-            audio_manager=self.audio_manager
-        )
+        if not IS_WEB:
+            mute_text = "UNMUTE" if self.game_data.music_muted else "MUTE"
+            self.mute_button = Button(
+                start_x, buttons_y,
+                mute_width, 35,
+                mute_text,
+                self.font_manager,
+                font_size=16,
+                bg_color=(100, 100, 100),
+                hover_color=(130, 130, 130),
+                callback=self._toggle_mute,
+                audio_manager=self.audio_manager
+            )
         
         # Info button (centered between mute and reset)
         self.info_button = Button(
@@ -177,8 +179,9 @@ class InventoryState(GameState):
             # Start playing background music when entering Pokédex
             self.audio_manager.play_random_background_music()
         
-        # Update mute button text
-        self.mute_button.text = "UNMUTE" if self.game_data.music_muted else "MUTE"
+        # Update mute button text (desktop only)
+        if self.mute_button:
+            self.mute_button.text = "UNMUTE" if self.game_data.music_muted else "MUTE"
         
         # Refresh the grid with current sort/filter
         self._refresh_grid()
@@ -254,12 +257,14 @@ class InventoryState(GameState):
         
         if self.game_data.music_muted:
             self.audio_manager.stop_music()
-            self.mute_button.text = "UNMUTE"
+            if self.mute_button:
+                self.mute_button.text = "UNMUTE"
             print("Music muted")
         else:
             # Play random background music
             self.audio_manager.play_random_background_music()
-            self.mute_button.text = "MUTE"
+            if self.mute_button:
+                self.mute_button.text = "MUTE"
             print("Music unmuted")
     
     def _reset_collection(self):
@@ -361,7 +366,8 @@ class InventoryState(GameState):
         
         # Update UI components
         self.open_gacha_button.update()
-        self.mute_button.update()
+        if self.mute_button:
+            self.mute_button.update()
         self.reset_button.update()
         self.info_button.update()
         self.owned_only_checkbox.update()
@@ -371,7 +377,8 @@ class InventoryState(GameState):
         for event in events:
             # Pass to UI components
             self.open_gacha_button.handle_event(event)
-            self.mute_button.handle_event(event)
+            if self.mute_button:
+                self.mute_button.handle_event(event)
             self.reset_button.handle_event(event)
             self.info_button.handle_event(event)
             self.owned_only_checkbox.handle_event(event)
@@ -487,7 +494,8 @@ class InventoryState(GameState):
         
         # Draw buttons
         self.open_gacha_button.render(self.screen)
-        self.mute_button.render(self.screen)
+        if self.mute_button:
+            self.mute_button.render(self.screen)
         self.reset_button.render(self.screen)
         self.info_button.render(self.screen)
         

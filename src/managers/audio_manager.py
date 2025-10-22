@@ -4,12 +4,8 @@ Audio management for music and sound effects
 import pygame
 import os
 import random
-import time
 from typing import Optional, List
 from config import IS_WEB
-
-if IS_WEB:
-    import platform
 
 
 class AudioManager:
@@ -44,40 +40,6 @@ class AudioManager:
         except Exception as e:
             print(f"Audio initialization failed: {e}")
             self.enabled = False
-        
-        # Initialize Web Audio API for sound effects on web
-        if IS_WEB:
-            self._init_web_audio()
-    
-    def _init_web_audio(self):
-        """Initialize Web Audio API using Tone.js for simultaneous sound effects"""
-        if self.web_audio_initialized:
-            return
-        
-        try:
-            # Inject Tone.js if not already loaded
-            platform.window.eval("""
-                if (typeof Tone === 'undefined') {
-                    var script = document.createElement('script');
-                    script.src = 'https://unpkg.com/tone@14.8.49/build/Tone.js';
-                    script.onload = function() {
-                        console.log('[AudioManager] Tone.js loaded successfully');
-                        window.toneJsLoaded = true;
-                    };
-                    document.head.appendChild(script);
-                } else {
-                    window.toneJsLoaded = true;
-                }
-                
-                // Create players object for sound effects
-                if (!window.gameSounds) {
-                    window.gameSounds = {};
-                }
-            """)
-            self.web_audio_initialized = True
-            print("[OK] Web Audio API initialization started")
-        except Exception as e:
-            print(f"[WARN] Web Audio API initialization failed: {e}")
     
     def load_sound(self, path: str, name: str):
         """
@@ -96,22 +58,8 @@ class AudioManager:
         
         try:
             if IS_WEB:
-                # On web, load sound into Tone.js for simultaneous playback
+                # On web, just store the path - we'll use pygame.mixer.music to play it
                 self.sounds[name] = path
-                try:
-                    # Register sound with Tone.js
-                    js_code = f"""
-                        if (typeof Tone !== 'undefined' && window.gameSounds) {{
-                            window.gameSounds['{name}'] = new Tone.Player({{
-                                url: '{path}',
-                                volume: {20 * (self.sfx_volume - 1)}  // Convert 0-1 to decibels
-                            }}).toDestination();
-                            console.log('[AudioManager] Loaded sound: {name}');
-                        }}
-                    """
-                    platform.window.eval(js_code)
-                except:
-                    pass  # Tone.js may not be loaded yet, that's okay
                 print(f"  [OK] Registered sound for web: {name}")
             else:
                 # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
@@ -130,8 +78,7 @@ class AudioManager:
             name: Name of sound to play
             priority: Unused (kept for backwards compatibility)
         
-        Note: On web, sound effects will briefly interrupt background music
-        due to Pygbag limitations (single audio channel).
+        Note: On web, uses pygame.mixer.music (no background music on web)
         """
         if not self.enabled:
             return
@@ -147,14 +94,12 @@ class AudioManager:
             sound = self.sounds[name]
             
             if IS_WEB:
-                # On web, use Tone.js for simultaneous sound effects
+                # On web, use pygame.mixer.music for sound effects
+                # (background music is disabled on web)
                 try:
-                    js_code = f"""
-                        if (typeof Tone !== 'undefined' && window.gameSounds && window.gameSounds['{name}']) {{
-                            window.gameSounds['{name}'].start();
-                        }}
-                    """
-                    platform.window.eval(js_code)
+                    pygame.mixer.music.load(sound)  # sound is a path string
+                    pygame.mixer.music.set_volume(self.sfx_volume)
+                    pygame.mixer.music.play()
                 except:
                     pass  # Silently ignore errors
             else:
@@ -178,18 +123,13 @@ class AudioManager:
         Required for browser autoplay policies.
         
         Args:
-            allow_music_start: If False, don't auto-play pending music (useful if music is muted)
+            allow_music_start: Unused on web (no background music)
+        
+        Note: On web, only marks user as having interacted (no music to start)
         """
         if IS_WEB and not self.user_interacted:
             self.user_interacted = True
-            
-            # If there's pending music, play it now (unless music is muted)
-            if self.pending_music and allow_music_start:
-                self.play_music(self.pending_music)
-                self.pending_music = None
-            elif self.pending_music:
-                # Clear pending music if muted
-                self.pending_music = None
+            # No pending music on web - sound effects will work after this
     
     def play_music(self, path: str, loops: int = -1):
         """
@@ -198,16 +138,17 @@ class AudioManager:
         Args:
             path: Path to music file
             loops: Number of loops (-1 for infinite)
+        
+        Note: On web, background music is disabled to allow sound effects
         """
         if not self.enabled:
             return
         
-        if not os.path.exists(path):
+        # Skip background music on web entirely
+        if IS_WEB:
             return
         
-        # On web, if user hasn't interacted yet, store music to play later
-        if IS_WEB and not self.user_interacted:
-            self.pending_music = path
+        if not os.path.exists(path):
             return
         
         try:
@@ -240,8 +181,8 @@ class AudioManager:
             pass
     
     def stop_music(self):
-        """Stop background music"""
-        if not self.enabled:
+        """Stop background music (no-op on web)"""
+        if not self.enabled or IS_WEB:
             return
         
         try:
@@ -252,8 +193,8 @@ class AudioManager:
             pass
     
     def play_random_background_music(self):
-        """Play a random background track from available tracks"""
-        if not self.enabled or not self.background_tracks:
+        """Play a random background track from available tracks (disabled on web)"""
+        if not self.enabled or not self.background_tracks or IS_WEB:
             return
         
         # Filter out currently playing track if multiple tracks exist
