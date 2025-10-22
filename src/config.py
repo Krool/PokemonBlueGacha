@@ -23,7 +23,11 @@ IS_WEB = sys.platform == "emscripten"
 # Determine base path: check if we're in src/ directory or project root
 # If data/ exists locally, we're in src (web), otherwise we're in root (desktop from project root)
 def get_base_path():
-    if IS_WEB or os.path.exists("data"):
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        # Running as PyInstaller bundle
+        return sys._MEIPASS
+    elif IS_WEB or os.path.exists("data"):
         return ""  # We're in src/ or web, use relative paths
     else:
         return "../"  # We're running from project root, go up from src/
@@ -36,7 +40,18 @@ TYPES_CSV = os.path.join(BASE_PATH, "data/pokemon_types.csv")
 RARITY_CSV = os.path.join(BASE_PATH, "data/rarity_drop_weights.csv")
 GACHA_MACHINES_CSV = os.path.join(BASE_PATH, "data/gacha_machines.csv")
 ITEMS_CSV = os.path.join(BASE_PATH, "data/items_gen1.csv")
-SAVE_FILE = os.path.join(BASE_PATH, "saves/player_save.json") if not IS_WEB else "player_save.json"
+
+# Save file needs to be in a writable location
+if IS_WEB:
+    SAVE_FILE = "player_save.json"
+elif getattr(sys, 'frozen', False):
+    # PyInstaller: save to user's directory
+    save_dir = os.path.join(os.path.expanduser("~"), ".pokemonbluegacha")
+    os.makedirs(save_dir, exist_ok=True)
+    SAVE_FILE = os.path.join(save_dir, "player_save.json")
+else:
+    # Normal Python: save to project directory
+    SAVE_FILE = os.path.join(BASE_PATH, "saves/player_save.json")
 
 # Asset paths
 SPRITES_PATH = os.path.join(BASE_PATH, "Assets/Sprites/Pokemon/")

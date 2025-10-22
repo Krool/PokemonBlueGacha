@@ -3,12 +3,27 @@ CSV loading utilities with error handling
 """
 import csv
 import os
+import sys
 from typing import List, Dict
 from .pokemon_data import Pokemon
 from .type_data import PokemonType
 from .rarity_data import Rarity
 from .gacha_machine_data import GachaMachine
 from .item_data import Item
+
+
+# Get base path for resolving asset paths (same logic as config.py)
+def _get_base_path():
+    """Get the base path for assets"""
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        # Running as PyInstaller bundle
+        return sys._MEIPASS
+    elif sys.platform == "emscripten" or os.path.exists("data"):
+        return ""  # We're in src/ or web, use relative paths
+    else:
+        return "../"  # We're running from project root, go up from src/
+
+_BASE_PATH = _get_base_path()
 
 
 class CSVLoadError(Exception):
@@ -49,6 +64,11 @@ class CSVLoader:
                 
                 for row_num, row in enumerate(reader, start=2):  # Start at 2 (after header)
                     try:
+                        # Resolve image path with base path for PyInstaller compatibility
+                        image_path = row['Image'].strip()
+                        if _BASE_PATH:
+                            image_path = os.path.join(_BASE_PATH, image_path)
+                        
                         pokemon = Pokemon(
                             number=row['Number'].strip(),
                             name=row['Name'].strip(),
@@ -58,7 +78,7 @@ class CSVLoader:
                             red_weight=int(row['Red_Weight']),
                             blue_weight=int(row['Blue_Weight']),
                             yellow_weight=int(row['Yellow_Weight']),
-                            image_path=row['Image'].strip()
+                            image_path=image_path
                         )
                         pokemon_list.append(pokemon)
                     except (KeyError, ValueError) as e:
@@ -104,9 +124,14 @@ class CSVLoader:
                 
                 for row in reader:
                     try:
+                        # Resolve image path with base path for PyInstaller compatibility
+                        image_path = row['Image'].strip()
+                        if _BASE_PATH:
+                            image_path = os.path.join(_BASE_PATH, image_path)
+                        
                         poke_type = PokemonType(
                             name=row['Type'].strip(),
-                            image_path=row['Image'].strip(),
+                            image_path=image_path,
                             color_hex=row['Color'].strip()
                         )
                         types_dict[poke_type.name] = poke_type
@@ -288,6 +313,11 @@ class CSVLoader:
                 
                 for row_num, row in enumerate(reader, start=2):
                     try:
+                        # Resolve icon path with base path for PyInstaller compatibility
+                        icon_path = row['Icon'].strip()
+                        if _BASE_PATH:
+                            icon_path = os.path.join(_BASE_PATH, icon_path)
+                        
                         item = Item(
                             number=row['Number'].strip(),
                             name=row['Name'].strip(),
@@ -296,7 +326,7 @@ class CSVLoader:
                             value=int(row['Value']),
                             rarity=row['Rarity'].strip(),
                             weight=int(row['Weight']),
-                            icon=row['Icon'].strip()
+                            icon=icon_path
                         )
                         items_list.append(item)
                     except (KeyError, ValueError) as e:
