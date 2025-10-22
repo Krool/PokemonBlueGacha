@@ -24,7 +24,6 @@ class AudioManager:
         self.user_interacted = False  # Track if user has interacted (for web autoplay)
         self.pending_music = None  # Store music to play after user interaction
         self.audio_errors_logged = set()  # Track logged errors to avoid spam
-        self.last_sfx_time = 0  # Track last sound effect play time (for web cooldown)
         
         # Try to initialize pygame mixer with web-compatible settings
         try:
@@ -33,11 +32,10 @@ class AudioManager:
                 pygame.mixer.init(frequency=22050, size=-16, channels=8, buffer=512)
                 print("[OK] Audio mixer initialized")
                 
-                # Set up multiple channels for sound effects (web workaround)
+                # Set up multiple channels for sound effects
                 if IS_WEB:
-                    pygame.mixer.set_num_channels(16)  # More channels for better mixing
-                    # Reserve channel 0 for music effects, channels 1-15 for sound effects
-                    print("  Set up 16 audio channels for web compatibility")
+                    pygame.mixer.set_num_channels(64)  # 64 channels for simultaneous sounds
+                    print("  Set up 64 audio channels for web")
                     print("  Note: Audio may require user interaction to start (browser policy)")
                 else:
                     pygame.mixer.set_num_channels(8)
@@ -64,30 +62,23 @@ class AudioManager:
             # Store path for reference
             self.sound_paths[name] = path
             
-            if IS_WEB:
-                # On web, pygame.mixer.Sound() doesn't work
-                # Store the path and use pygame.mixer.music to play it later
-                self.sounds[name] = path  # Store path instead of Sound object
-                print(f"  [OK] Registered sound for web: {name}")
-            else:
-                # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
-                sound = pygame.mixer.Sound(path)
-                sound.set_volume(self.sfx_volume)
-                self.sounds[name] = sound
-                print(f"  [OK] Loaded sound: {name}")
+            # Try to use pygame.mixer.Sound for both desktop and web
+            sound = pygame.mixer.Sound(path)
+            sound.set_volume(self.sfx_volume)
+            self.sounds[name] = sound
+            print(f"  [OK] Loaded sound: {name}")
         except Exception as e:
             print(f"  [ERROR] Error loading sound {name}: {e}")
     
     def play_sound(self, name: str, priority: bool = False):
         """
-        Play a sound effect
+        Play a sound effect using pygame channels
         
         Args:
             name: Name of sound to play
-            priority: If True, bypasses cooldown and busy checks (for important sounds)
+            priority: Currently unused with channel system (kept for compatibility)
         
-        Note: On web, sound effects can only play when music channel is idle
-        and requires 200ms cooldown between plays (unless priority=True)
+        Note: Uses pygame.mixer.Channel() to allow simultaneous sounds with background music
         """
         if not self.enabled:
             return
@@ -102,40 +93,22 @@ class AudioManager:
         try:
             sound = self.sounds[name]
             
-            if IS_WEB:
-                # Check cooldown - require 200ms between sound effects
-                current_time = time.time()
-                if current_time - self.last_sfx_time < 0.2:
-                    # Too soon after last sound - skip to avoid browser conflicts
-                    return
-                
-                # On web, check if background music is playing
-                # If it is, skip sound effects to keep music playing
-                # (pygame.mixer.music is a single channel on web - can't play both simultaneously)
-                if self.current_music is not None:
-                    try:
-                        is_busy = pygame.mixer.music.get_busy()
-                        if is_busy:
-                            # Background music is playing - skip sound effect to preserve music
-                            return
-                    except:
-                        # If get_busy fails, assume it's safe to play
-                        pass
-                
-                # On web, pygame.mixer.Sound() doesn't work, so self.sounds[name] is a file path
-                sound_path = sound  # It's actually a path, not a Sound object
-                
-                try:
-                    # Load and play sound effect (will interrupt music if playing)
-                    pygame.mixer.music.load(sound_path)
-                    pygame.mixer.music.set_volume(self.sfx_volume)
-                    pygame.mixer.music.play()
-                    self.last_sfx_time = current_time  # Update last play time
-                except:
-                    pass  # Silently ignore all errors
-            else:
-                # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
-                sound.play()
+            # Use channel-based playback (works on both desktop and web)
+            # This allows sound effects to play simultaneously with background music
+            try:
+                # Find an available channel and play the sound
+                channel = pygame.mixer.find_channel()
+                if channel:
+                    channel.play(sound)
+                else:
+                    # All 64 channels busy - play on channel 0 (will interrupt oldest sound)
+                    pygame.mixer.Channel(0).play(sound)
+            except Exception as e:
+                if IS_WEB:
+                    # On web, silently ignore errors
+                    pass
+                else:
+                    print(f"[ERROR] Error playing sound {name}: {e}")
         except Exception:
             # Catch any other errors silently
             pass
@@ -276,8 +249,7 @@ class AudioManager:
         try:
             for sound in self.sounds.values():
                 try:
-                    if not IS_WEB:  # Only set volume on desktop (web stores paths, not Sound objects)
-                        sound.set_volume(self.sfx_volume)
+                    sound.set_volume(self.sfx_volume)
                 except:
                     pass  # Silently ignore errors
         except:
