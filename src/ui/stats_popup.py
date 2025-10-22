@@ -2,7 +2,7 @@
 Statistics popup UI component
 """
 import pygame
-from config import COLOR_WHITE, COLOR_BLACK, SCREEN_WIDTH, SCREEN_HEIGHT
+from config import COLOR_WHITE, COLOR_BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, IS_WEB
 from ui.button import Button
 from typing import Optional
 
@@ -105,8 +105,8 @@ class StatsPopup:
                     print(f"Set gold to optimal strategy cost: {self.optimal_cost:,}")
                 return  # Don't close popup or process other events
         
-        # Also close on escape or click outside
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+        # Also close on escape (desktop only) or click outside
+        if not IS_WEB and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.close()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if not self.rect.collidepoint(event.pos):

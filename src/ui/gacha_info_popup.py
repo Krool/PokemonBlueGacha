@@ -2,7 +2,7 @@
 Gacha Info Popup - Shows all possible Pokemon and their drop rates
 """
 import pygame
-from config import COLOR_WHITE, COLOR_BLACK, SCREEN_WIDTH, SCREEN_HEIGHT
+from config import COLOR_WHITE, COLOR_BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, IS_WEB
 from ui.button import Button
 from typing import Optional, List, Dict
 
@@ -160,8 +160,8 @@ class GachaInfoPopup:
                 self.scroll_offset -= event.y * 30  # 30 pixels per scroll
                 self.scroll_offset = max(0, min(self.scroll_offset, self.max_scroll))
         
-        # Close on escape or click outside
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+        # Close on escape (desktop only) or click outside
+        if not IS_WEB and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.close()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if not self.rect.collidepoint(event.pos):

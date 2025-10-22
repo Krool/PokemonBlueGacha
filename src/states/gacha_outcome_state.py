@@ -3,7 +3,7 @@ Gacha Outcome State - Shows results with Pokemon/Item tiles
 """
 import pygame
 from states.base_state import GameState
-from config import COLOR_WHITE, COLOR_BLACK, SCREEN_WIDTH, SCREEN_HEIGHT
+from config import COLOR_WHITE, COLOR_BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, IS_WEB
 from ui.button import Button
 from ui.pokemon_tile import PokemonTile
 from ui.item_tile import ItemTile
@@ -412,7 +412,7 @@ class GachaOutcomeState(GameState):
             
             # Handle keyboard shortcuts
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+                if not IS_WEB and event.key == pygame.K_ESCAPE:
                     self._go_to_inventory()
                 elif event.key == pygame.K_SPACE:
                     self._roll_same()

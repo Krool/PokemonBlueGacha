@@ -415,8 +415,8 @@ class InventoryState(GameState):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self._open_gacha()
-                elif event.key == pygame.K_ESCAPE:
-                    # Quit game
+                elif not IS_WEB and event.key == pygame.K_ESCAPE:
+                    # Quit game (desktop only)
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
     
     def update(self, dt):

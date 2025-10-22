@@ -2,6 +2,7 @@
 Popup/Modal UI Component
 """
 import pygame
+from config import IS_WEB
 from typing import Callable, Optional
 from ui.currency_display import CurrencyDisplay
 
@@ -130,9 +131,9 @@ class Popup:
         if self.add_gold_button and self.add_gold_button.handle_event(event):
             return True
         
-        # ESC or Enter to close
+        # ESC (desktop only) or Enter to close
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE or event.key == pygame.K_RETURN:
+            if (not IS_WEB and event.key == pygame.K_ESCAPE) or event.key == pygame.K_RETURN:
                 self._on_ok_clicked()
                 return True
         
