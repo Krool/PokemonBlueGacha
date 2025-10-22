@@ -17,11 +17,8 @@ class AudioManager:
         
         # Also log to browser console if on web
         if IS_WEB:
-            try:
-                import platform
-                platform.window.console.log(f"[AUDIO-DEBUG] AudioManager initializing, IS_WEB={IS_WEB}")
-            except:
-                pass
+            import platform
+            platform.window.console.log(f"[AUDIO-DEBUG] AudioManager initializing, IS_WEB={IS_WEB}")
         
         self.enabled = True
         self.music_volume = 0.25  # Background music at 25%
@@ -96,43 +93,31 @@ class AudioManager:
         
         # Also log to browser console if on web
         if IS_WEB:
-            try:
-                import platform
-                platform.window.console.log(f"[AUDIO-DEBUG] play_sound called: {name}, IS_WEB={IS_WEB}, enabled={self.enabled}")
-            except:
-                pass
+            import platform
+            platform.window.console.log(f"[AUDIO-DEBUG] play_sound called: {name}, IS_WEB={IS_WEB}, enabled={self.enabled}")
         
         if not self.enabled:
             msg = f"  [AUDIO] Audio disabled, skipping sound: {name}"
             print(msg)
             if IS_WEB:
-                try:
-                    import platform
-                    platform.window.console.log(msg)
-                except:
-                    pass
+                import platform
+                platform.window.console.log(msg)
             return
         
         # Check if user has interacted (required for web)
         if IS_WEB and not self.user_interacted:
             msg = f"  [AUDIO] Sound '{name}' queued (waiting for user interaction), user_interacted={self.user_interacted}"
             print(msg)
-            try:
-                import platform
-                platform.window.console.log(msg)
-            except:
-                pass
+            import platform
+            platform.window.console.log(msg)
             return
             
         if name not in self.sounds:
             msg = f"  [AUDIO] Warning: Sound '{name}' not loaded (available: {list(self.sounds.keys())})"
             print(msg)
             if IS_WEB:
-                try:
-                    import platform
-                    platform.window.console.log(msg)
-                except:
-                    pass
+                import platform
+                platform.window.console.log(msg)
             return
         
         try:
@@ -141,16 +126,13 @@ class AudioManager:
             if IS_WEB:
                 # On web, find an available channel and play on it explicitly
                 # This is more reliable than sound.play() which can fail silently
-                try:
-                    import platform
-                    platform.window.console.log(f"  [AUDIO-WEB] Attempting to play sound: {name}")
-                    platform.window.console.log(f"  [AUDIO-WEB] Sound object: {sound}")
-                    platform.window.console.log(f"  [AUDIO-WEB] User interacted: {self.user_interacted}")
-                    platform.window.console.log(f"  [AUDIO-WEB] Audio enabled: {self.enabled}")
-                    platform.window.console.log(f"  [AUDIO-WEB] SFX volume: {self.sfx_volume}")
-                    platform.window.console.log(f"  [AUDIO-WEB] Total channels: {pygame.mixer.get_num_channels()}")
-                except:
-                    pass
+                import platform
+                platform.window.console.log(f"  [AUDIO-WEB] Attempting to play sound: {name}")
+                platform.window.console.log(f"  [AUDIO-WEB] Sound object: {sound}")
+                platform.window.console.log(f"  [AUDIO-WEB] User interacted: {self.user_interacted}")
+                platform.window.console.log(f"  [AUDIO-WEB] Audio enabled: {self.enabled}")
+                platform.window.console.log(f"  [AUDIO-WEB] SFX volume: {self.sfx_volume}")
+                platform.window.console.log(f"  [AUDIO-WEB] Total channels: {pygame.mixer.get_num_channels()}")
                 print(f"  [AUDIO-WEB] Attempting to play sound: {name}")
                 print(f"  [AUDIO-WEB] Sound object: {sound}")
                 print(f"  [AUDIO-WEB] User interacted: {self.user_interacted}")
