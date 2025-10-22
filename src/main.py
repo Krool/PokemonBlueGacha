@@ -62,7 +62,7 @@ class Game:
         self.register_states()
         
         print("\n" + "=" * 60)
-        print("✓ Initialization complete!")
+        print("[OK] Initialization complete!")
         print("=" * 60 + "\n")
         
         # Start with loading state
@@ -88,11 +88,11 @@ class Game:
             )
             
         except CSVLoadError as e:
-            print(f"\n✗ FATAL ERROR: {e}")
+            print(f"\n[ERROR] FATAL ERROR: {e}")
             print("Cannot continue without valid game data.")
             sys.exit(1)
         except Exception as e:
-            print(f"\n✗ UNEXPECTED ERROR: {e}")
+            print(f"\n[ERROR] UNEXPECTED ERROR: {e}")
             sys.exit(1)
     
     def register_states(self):
@@ -187,7 +187,7 @@ class Game:
         self.game_data.save()
         
         pygame.quit()
-        print("✓ Goodbye!")
+        print("[OK] Goodbye!")
         sys.exit()
 
 
@@ -197,7 +197,7 @@ async def main():
         game = Game()
         await game.run()
     except Exception as e:
-        print(f"\n✗ CRITICAL ERROR: {e}")
+        print(f"\n[ERROR] CRITICAL ERROR: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

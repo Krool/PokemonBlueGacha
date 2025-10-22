@@ -72,10 +72,11 @@ class InventoryState(GameState):
         # Start position (align to right)
         start_x = SCREEN_WIDTH - total_width - 20
         
-        # Mute button (leftmost)
+        # Mute button (leftmost) - moved down to avoid Pokemon count overlap
+        buttons_y = 95
         mute_text = "UNMUTE" if self.game_data.music_muted else "MUTE"
         self.mute_button = Button(
-            start_x, 70,
+            start_x, buttons_y,
             mute_width, 35,
             mute_text,
             self.font_manager,
@@ -87,7 +88,7 @@ class InventoryState(GameState):
         
         # Info button (centered between mute and reset)
         self.info_button = Button(
-            start_x + mute_width + button_spacing, 70,
+            start_x + mute_width + button_spacing, buttons_y,
             info_width, 35,
             "INFO",
             self.font_manager,
@@ -99,7 +100,7 @@ class InventoryState(GameState):
         
         # Reset button (rightmost)
         self.reset_button = Button(
-            start_x + mute_width + button_spacing + info_width + button_spacing, 70,
+            start_x + mute_width + button_spacing + info_width + button_spacing, buttons_y,
             reset_width, 35,
             "RESET",
             self.font_manager,
@@ -328,7 +329,9 @@ class InventoryState(GameState):
         # Enable audio on any user interaction (for web browser autoplay policy)
         for event in events:
             if event.type in (pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
-                self.audio_manager.enable_audio_after_interaction()
+                # Don't auto-start music if muted
+                allow_music = not self.game_data.music_muted
+                self.audio_manager.enable_audio_after_interaction(allow_music_start=allow_music)
                 break
         
         # Handle stats popup first if showing
@@ -425,7 +428,7 @@ class InventoryState(GameState):
             # Store clickable rect for title
             self.title_rect = title_surface.get_rect(topleft=(title_x, title_y))
             
-            # Draw progress (gold color when collection is complete)
+            # Draw progress (gold color when collection is complete) - positioned right next to title
             owned_count = self.game_data.get_total_owned_count()
             total_count = len(self.resource_manager.pokemon_list)
             progress_text = f"{owned_count}/{total_count}"
@@ -433,7 +436,11 @@ class InventoryState(GameState):
             # Use gold color if collection is complete
             progress_color = (255, 215, 0) if owned_count >= total_count else COLOR_WHITE
             progress_surface = self.font_manager.render_text(progress_text, 32, progress_color, is_title=True)
-            self.screen.blit(progress_surface, (SCREEN_WIDTH - 130, 75))
+            
+            # Position to the right of the title with spacing
+            progress_x = title_x + title_surface.get_width() + 20
+            progress_y = title_y + 20  # Align vertically with title (slightly lower to baseline-align better)
+            self.screen.blit(progress_surface, (progress_x, progress_y))
         
         # Draw currency (top right, with dark gray background container)
         currency_x = SCREEN_WIDTH - 20
@@ -447,17 +454,7 @@ class InventoryState(GameState):
             text_surface = self.font_manager.render_text(amount_str, 28, COLOR_WHITE)
             total_width = icon_size + 5 + text_surface.get_width()
             
-            # Draw background container (dark gray)
-            bg_rect = pygame.Rect(
-                currency_x - total_width - padding,
-                currency_y - icon_size // 2 - padding // 2,
-                total_width + padding * 2,
-                icon_size + padding
-            )
-            pygame.draw.rect(self.screen, (40, 40, 40), bg_rect)
-            pygame.draw.rect(self.screen, (80, 80, 80), bg_rect, 2)  # Border
-            
-            # Store currency rect for click detection
+            # Store currency rect for click detection (no background)
             self.currency_rect = pygame.Rect(
                 currency_x - total_width, currency_y - icon_size // 2,
                 total_width, icon_size

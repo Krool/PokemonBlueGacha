@@ -355,7 +355,9 @@ class GachaOutcomeState(GameState):
         # Enable audio on any user interaction (for web browser autoplay policy)
         for event in events:
             if event.type in (pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
-                self.audio_manager.enable_audio_after_interaction()
+                # Don't auto-start music if muted
+                allow_music = not self.game_data.music_muted
+                self.audio_manager.enable_audio_after_interaction(allow_music_start=allow_music)
                 break
         
         # Handle error popup first if visible
@@ -424,19 +426,11 @@ class GachaOutcomeState(GameState):
             text_surface = self.font_manager.render_text(amount_str, 28, COLOR_WHITE)
             total_width = icon_size + 5 + text_surface.get_width()
             
-            # Draw dark gray background container
-            padding = 10
-            bg_rect = pygame.Rect(
-                currency_x - total_width - padding,
-                currency_y - icon_size // 2 - padding,
-                total_width + padding * 2,
-                icon_size + padding * 2
+            # Store clickable rect for currency (no background)
+            self.currency_rect = pygame.Rect(
+                currency_x - total_width, currency_y - icon_size // 2,
+                total_width, icon_size
             )
-            pygame.draw.rect(self.screen, (50, 50, 50), bg_rect)
-            pygame.draw.rect(self.screen, (100, 100, 100), bg_rect, 2)  # Border
-            
-            # Store clickable rect (same as background)
-            self.currency_rect = bg_rect
         
         CurrencyDisplay.render(
             self.screen,

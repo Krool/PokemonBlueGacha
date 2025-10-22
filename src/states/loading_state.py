@@ -45,7 +45,9 @@ class LoadingState(GameState):
         for event in events:
             # Enable audio on any user interaction (for web browser autoplay policy)
             if event.type in (pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
-                self.audio_manager.enable_audio_after_interaction()
+                # Don't auto-start music if muted
+                allow_music = not self.game_data.music_muted
+                self.audio_manager.enable_audio_after_interaction(allow_music_start=allow_music)
             
             if event.type == pygame.KEYDOWN and self.loading_complete:
                 # Skip to inventory if loading is done

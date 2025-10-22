@@ -71,7 +71,7 @@ class CSVLoader:
         if len(pokemon_list) == 0:
             raise CSVLoadError("No valid Pokemon data loaded")
         
-        print(f"✓ Loaded {len(pokemon_list)} Pokémon")
+        print(f"[OK] Loaded {len(pokemon_list)} Pokemon")
         return pokemon_list
     
     @staticmethod
@@ -120,7 +120,7 @@ class CSVLoader:
         if len(types_dict) == 0:
             raise CSVLoadError("No valid type data loaded")
         
-        print(f"✓ Loaded {len(types_dict)} types")
+        print(f"[OK] Loaded {len(types_dict)} types")
         return types_dict
     
     @staticmethod
@@ -172,7 +172,7 @@ class CSVLoader:
         if len(rarities_dict) == 0:
             raise CSVLoadError("No valid rarity data loaded")
         
-        print(f"✓ Loaded {len(rarities_dict)} rarities")
+        print(f"[OK] Loaded {len(rarities_dict)} rarities")
         return rarities_dict
     
     @staticmethod
@@ -204,7 +204,7 @@ class CSVLoader:
             error_msg = "Data integrity issues found:\n" + "\n".join(issues)
             raise CSVLoadError(error_msg)
         
-        print("✓ Data integrity validated")
+        print("[OK] Data integrity validated")
         return True
     
     @staticmethod
@@ -255,7 +255,7 @@ class CSVLoader:
         if len(machines_dict) == 0:
             raise CSVLoadError("No valid gacha machine data loaded")
         
-        print(f"✓ Loaded {len(machines_dict)} gacha machines")
+        print(f"[OK] Loaded {len(machines_dict)} gacha machines")
         return machines_dict
     
     @staticmethod
@@ -309,6 +309,6 @@ class CSVLoader:
         if len(items_list) == 0:
             raise CSVLoadError("No valid items data loaded")
         
-        print(f"✓ Loaded {len(items_list)} items")
+        print(f"[OK] Loaded {len(items_list)} items")
         return items_list
 

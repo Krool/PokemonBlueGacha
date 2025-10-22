@@ -176,7 +176,7 @@ class ResourceManager:
             if progress_callback:
                 progress_callback(current, total_images)
         
-        print(f"✓ Preloaded {len(self.images)} images")
+        print(f"[OK] Preloaded {len(self.images)} images")
     
     def load_ui_images(self, logo_path: str, gacha_red_path: str, 
                        gacha_blue_path: str, gacha_yellow_path: str, gacha_item_path: str,
@@ -200,5 +200,5 @@ class ResourceManager:
         self.gacha_item = self.load_image(gacha_item_path)
         self.pokedollar_icon = self.load_image(pokedollar_icon_path)
         self.rays = self.load_image(rays_path)
-        print("✓ UI images loaded")
+        print("[OK] UI images loaded")
 

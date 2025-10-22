@@ -28,13 +28,16 @@ class AudioManager:
             if not pygame.mixer.get_init():
                 # Use settings that work better on web
                 pygame.mixer.init(frequency=22050, size=-16, channels=8, buffer=512)
-                print("✓ Audio mixer initialized")
+                print("[OK] Audio mixer initialized")
                 
                 # Set up multiple channels for sound effects (web workaround)
                 if IS_WEB:
-                    pygame.mixer.set_num_channels(8)
-                    print("  Set up 8 audio channels for web compatibility")
+                    pygame.mixer.set_num_channels(16)  # More channels for better mixing
+                    # Reserve channel 0 for music effects, channels 1-15 for sound effects
+                    print("  Set up 16 audio channels for web compatibility")
                     print("  Note: Audio may require user interaction to start (browser policy)")
+                else:
+                    pygame.mixer.set_num_channels(8)
         except Exception as e:
             print(f"Audio initialization failed: {e}")
             self.enabled = False
@@ -64,9 +67,9 @@ class AudioManager:
             sound.set_volume(self.sfx_volume)
             self.sounds[name] = sound
             
-            print(f"  ✓ Loaded sound: {name} from {os.path.basename(path)}")
+            print(f"  [OK] Loaded sound: {name} from {os.path.basename(path)}")
         except Exception as e:
-            print(f"  ✗ Error loading sound {name} from {path}: {e}")
+            print(f"  [ERROR] Error loading sound {name} from {path}: {e}")
             import traceback
             traceback.print_exc()
     
@@ -91,26 +94,52 @@ class AudioManager:
         
         try:
             # Use pre-loaded sound for both desktop and web
-            self.sounds[name].play()
-            print(f"  🔊 Playing sound: {name}")
+            # On web, find a free channel to ensure sounds don't interrupt each other
+            if IS_WEB:
+                # Find first available channel (skip channel 0, reserved for special effects)
+                channel = None
+                for ch_idx in range(1, pygame.mixer.get_num_channels()):
+                    ch = pygame.mixer.Channel(ch_idx)
+                    if not ch.get_busy():
+                        channel = ch
+                        break
+                
+                if channel:
+                    channel.play(self.sounds[name])
+                    print(f"  [AUDIO] Playing sound: {name} on channel {ch_idx}")
+                else:
+                    # All channels busy, just play anyway (will use first available)
+                    self.sounds[name].play()
+                    print(f"  [AUDIO] Playing sound: {name} (all channels busy)")
+            else:
+                # Desktop: simpler playback
+                self.sounds[name].play()
+                print(f"  [AUDIO] Playing sound: {name}")
         except Exception as e:
             print(f"Error playing sound {name}: {e}")
             import traceback
             traceback.print_exc()
     
-    def enable_audio_after_interaction(self):
+    def enable_audio_after_interaction(self, allow_music_start: bool = True):
         """
         Call this after first user interaction to enable audio on web.
         Required for browser autoplay policies.
+        
+        Args:
+            allow_music_start: If False, don't auto-play pending music (useful if music is muted)
         """
         if IS_WEB and not self.user_interacted:
             self.user_interacted = True
-            print("✓ User interaction detected - audio enabled")
+            print("[OK] User interaction detected - audio enabled")
             
-            # If there's pending music, play it now
-            if self.pending_music:
+            # If there's pending music, play it now (unless music is muted)
+            if self.pending_music and allow_music_start:
                 print(f"  Playing pending music: {os.path.basename(self.pending_music)}")
                 self.play_music(self.pending_music)
+                self.pending_music = None
+            elif self.pending_music and not allow_music_start:
+                # Clear pending music if muted
+                print(f"  Cleared pending music (muted): {os.path.basename(self.pending_music)}")
                 self.pending_music = None
     
     def play_music(self, path: str, loops: int = -1):
@@ -173,7 +202,7 @@ class AudioManager:
         
         # Only print playing message if not queued (already printed in play_music)
         if not IS_WEB or self.user_interacted:
-            print(f"🎵 Playing random background music: {os.path.basename(track)}")
+            print(f"[MUSIC] Playing random background music: {os.path.basename(track)}")
     
     def load_background_music_tracks(self, sounds_path: str):
         """
@@ -192,7 +221,7 @@ class AudioManager:
                     self.background_tracks.append(track_path)
                     break
         
-        print(f"✓ Found {len(self.background_tracks)} background music tracks")
+        print(f"[OK] Found {len(self.background_tracks)} background music tracks")
         
         # Keep all tracks for rotation
         if self.background_tracks:
@@ -247,5 +276,5 @@ class AudioManager:
                             self.load_sound(alt_path, sound_name)
                         break
         
-        print(f"✓ Loaded {len(self.sounds)} sound effects")
+        print(f"[OK] Loaded {len(self.sounds)} sound effects")
 

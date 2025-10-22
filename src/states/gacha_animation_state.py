@@ -110,7 +110,9 @@ class GachaAnimationState(GameState):
         # Enable audio on any user interaction (for web browser autoplay policy)
         for event in events:
             if event.type in (pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
-                self.audio_manager.enable_audio_after_interaction()
+                # Don't auto-start music if muted
+                allow_music = not self.game_data.music_muted
+                self.audio_manager.enable_audio_after_interaction(allow_music_start=allow_music)
                 break
         
         for event in events:

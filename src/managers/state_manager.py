@@ -31,7 +31,7 @@ class StateManager:
             state: GameState instance
         """
         self.states[name] = state
-        print(f"✓ Registered state: {name}")
+        print(f"[OK] Registered state: {name}")
     
     def change_state(self, name: str, **kwargs):
         """
@@ -51,7 +51,7 @@ class StateManager:
         # Enter new state
         self.current_state = self.states[name]
         self.current_state_name = name
-        print(f"→ Changed to state: {name}")
+        print(f"[STATE] Changed to state: {name}")
         self.current_state.enter(**kwargs)
     
     def handle_events(self, events):
