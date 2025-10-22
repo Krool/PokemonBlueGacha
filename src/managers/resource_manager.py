@@ -8,6 +8,7 @@ from data.pokemon_data import Pokemon
 from data.type_data import PokemonType
 from data.rarity_data import Rarity
 from data.gacha_machine_data import GachaMachine
+from data.item_data import Item
 
 
 class ResourceManager:
@@ -19,10 +20,14 @@ class ResourceManager:
         self.types_dict: Dict[str, PokemonType] = {}
         self.rarities_dict: Dict[str, Rarity] = {}
         self.gacha_machines_dict: Dict[str, GachaMachine] = {}
+        self.items_list: List[Item] = []
         
         # Image cache
         self.images: Dict[str, pygame.Surface] = {}
         self.placeholder_image: Optional[pygame.Surface] = None
+        
+        # Special images
+        self.gacha_item_image: Optional[pygame.Surface] = None
         
         self._create_placeholder()
     
@@ -121,6 +126,30 @@ class ResourceManager:
         """Get gacha machine data object by version name"""
         return self.gacha_machines_dict.get(version)
     
+    def get_item_by_number(self, item_number: str) -> Optional[Item]:
+        """Get Item data object by number"""
+        for item in self.items_list:
+            if item.number == item_number:
+                return item
+        return None
+    
+    def get_item_icon(self, item_number: str) -> pygame.Surface:
+        """
+        Get item icon by number
+        
+        Args:
+            item_number: Item number (e.g., "001")
+            
+        Returns:
+            Item icon Surface
+        """
+        item = self.get_item_by_number(item_number)
+        if item:
+            return self.load_image(item.get_icon_path())
+        
+        print(f"Warning: Item {item_number} not found")
+        return self.placeholder_image
+    
     def preload_all_sprites(self, progress_callback=None):
         """
         Preload all Pokemon and type sprites (call during loading screen)
@@ -150,7 +179,8 @@ class ResourceManager:
         print(f"✓ Preloaded {len(self.images)} images")
     
     def load_ui_images(self, logo_path: str, gacha_red_path: str, 
-                       gacha_blue_path: str, gacha_yellow_path: str, pokedollar_icon_path: str, rays_path: str):
+                       gacha_blue_path: str, gacha_yellow_path: str, gacha_item_path: str,
+                       pokedollar_icon_path: str, rays_path: str):
         """
         Load UI images (logo, gacha machines, currency icon, rays effect)
         
@@ -159,6 +189,7 @@ class ResourceManager:
             gacha_red_path: Path to red gacha machine image
             gacha_blue_path: Path to blue gacha machine image
             gacha_yellow_path: Path to yellow gacha machine image
+            gacha_item_path: Path to items gacha machine image
             pokedollar_icon_path: Path to Pokédollar icon image
             rays_path: Path to rays background effect image
         """
@@ -166,6 +197,7 @@ class ResourceManager:
         self.gacha_red = self.load_image(gacha_red_path)
         self.gacha_blue = self.load_image(gacha_blue_path)
         self.gacha_yellow = self.load_image(gacha_yellow_path)
+        self.gacha_item = self.load_image(gacha_item_path)
         self.pokedollar_icon = self.load_image(pokedollar_icon_path)
         self.rays = self.load_image(rays_path)
         print("✓ UI images loaded")

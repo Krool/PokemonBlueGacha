@@ -214,7 +214,7 @@ class GachaInfoPopup:
         for pokemon, drop_rate in self.drop_rates:
             if y + line_height > 0 and y < self.content_rect.height:
                 # Pokemon number and name
-                name_text = f"#{pokemon.number:03d} {pokemon.name}"
+                name_text = f"#{pokemon.number} {pokemon.name}"
                 name_surface = self.font_manager.render_text(name_text, 16, COLOR_WHITE)
                 content_surface.blit(name_surface, (10, y))
                 

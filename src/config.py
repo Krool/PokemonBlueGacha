@@ -18,6 +18,7 @@ POKEMON_CSV = "data/pokemon_gen1.csv"
 TYPES_CSV = "data/pokemon_types.csv"
 RARITY_CSV = "data/rarity_drop_weights.csv"
 GACHA_MACHINES_CSV = "data/gacha_machines.csv"
+ITEMS_CSV = "data/items_gen1.csv"
 SAVE_FILE = "saves/player_save.json"
 
 # Asset paths (relative to project root)
@@ -32,6 +33,7 @@ LOGO_PATH = "Assets/Sprites/Main/logo.png"
 GACHA_RED_PATH = "Assets/Sprites/Main/gacha_red.png"
 GACHA_BLUE_PATH = "Assets/Sprites/Main/gacha_blue.png"
 GACHA_YELLOW_PATH = "Assets/Sprites/Main/gacha_yellow.png"
+GACHA_ITEM_PATH = "Assets/Sprites/Main/gacha_item.png"
 POKEDOLLAR_ICON_PATH = "Assets/Sprites/Main/pokedollar_icon.png"
 RAYS_PATH = "Assets/Sprites/Main/rays.png"
 

@@ -12,8 +12,9 @@ class GachaAnimationState(GameState):
     
     def __init__(self, state_manager, game_data, resource_manager, audio_manager, font_manager=None, gacha_system=None):
         super().__init__(state_manager, game_data, resource_manager, audio_manager, font_manager, gacha_system)
-        self.results = []  # List of Pokemon objects
+        self.results = []  # List of Pokemon/Item objects
         self.is_ten_pull = False
+        self.is_items_gacha = False
         self.current_index = 0  # Which result we're showing (for 10-pull)
         self.animation_time = 0.0
         self.duration = 0.0  # Set based on rarity
@@ -21,14 +22,16 @@ class GachaAnimationState(GameState):
         self.sound_played = False
         self.owned_before = 0  # Count of owned Pokemon before this pull
         
-    def enter(self, results=None, is_ten_pull=False, machine=None, owned_before=0):
+    def enter(self, results=None, is_ten_pull=False, machine=None, owned_before=0, is_items_gacha=False):
         """
         Enter the animation state
         
         Args:
-            results: List of Pokemon objects from gacha roll
+            results: List of Pokemon/Item objects from gacha roll
             is_ten_pull: Whether this was a 10-pull (show all at once) or single pull
-            machine: Which gacha machine was used (Red, Blue, Yellow)
+            machine: Which gacha machine was used (Red, Blue, Yellow, Items)
+            owned_before: Count of owned Pokemon before this pull (0 for items)
+            is_items_gacha: Whether this is an items gacha
         """
         print("Entered GachaAnimationState")
         if results is None:
@@ -36,6 +39,7 @@ class GachaAnimationState(GameState):
         
         self.results = results
         self.is_ten_pull = is_ten_pull
+        self.is_items_gacha = is_items_gacha
         self.machine = machine if machine else "Red"
         self.current_index = 0
         self.animation_time = 0.0
@@ -44,10 +48,10 @@ class GachaAnimationState(GameState):
         
         if not is_ten_pull and len(results) > 0:
             # Single pull - animate the first (only) result
-            pokemon = results[0]
-            self.rarity_obj = self.resource_manager.rarities_dict.get(pokemon.rarity)
-            self.duration = self._get_animation_duration(pokemon.rarity)
-            self._play_rarity_sound(pokemon.rarity)
+            result = results[0]
+            self.rarity_obj = self.resource_manager.rarities_dict.get(result.rarity)
+            self.duration = self._get_animation_duration(result.rarity)
+            self._play_rarity_sound(result.rarity)
             self.sound_played = True
         elif is_ten_pull and len(results) > 0:
             # 10-pull - find highest rarity for sound/duration
@@ -118,6 +122,7 @@ class GachaAnimationState(GameState):
                                         results=self.results, 
                                         is_ten_pull=self.is_ten_pull,
                                         machine=self.machine,
+                                        is_items_gacha=self.is_items_gacha,
                                         owned_before=self.owned_before)
     
     def update(self, dt):
@@ -155,15 +160,19 @@ class GachaAnimationState(GameState):
         if len(self.results) == 0:
             return
         
-        pokemon = self.results[0]
+        result = self.results[0]  # Can be Pokemon or Item
         rarity_color = self.rarity_obj.get_color_rgb() if self.rarity_obj else (255, 255, 255)
         
         # Render rays background effect
         if hasattr(self.resource_manager, 'rays') and self.resource_manager.rays:
-            self._render_rays_effect(screen, pokemon.rarity, rarity_color, progress)
+            self._render_rays_effect(screen, result.rarity, rarity_color, progress)
         
-        # Get Pokemon image
-        image = self.resource_manager.images.get(pokemon.image_path)
+        # Get image (Pokemon sprite or item icon)
+        if self.is_items_gacha:
+            image = self.resource_manager.get_item_icon(result.number)
+        else:
+            image = self.resource_manager.images.get(result.image_path)
+        
         if not image:
             return
         
@@ -172,7 +181,7 @@ class GachaAnimationState(GameState):
         image = pygame.transform.scale(image, (base_size, base_size))
         
         # Apply effects based on progress and rarity
-        image = self._apply_animation_effects(image, pokemon.rarity, progress)
+        image = self._apply_animation_effects(image, result.rarity, progress)
         
         # Position in center
         x = SCREEN_WIDTH // 2 - image.get_width() // 2
@@ -185,7 +194,7 @@ class GachaAnimationState(GameState):
             alpha = int(min((progress - 0.5) * 2, 1.0) * 255)
             
             if self.font_manager:
-                rarity_text = pokemon.rarity.upper()
+                rarity_text = result.rarity.upper()
                 text_surface = self.font_manager.render_text(rarity_text, 36, rarity_color, is_title=True)
                 text_surface.set_alpha(alpha)
                 text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150))
@@ -193,8 +202,8 @@ class GachaAnimationState(GameState):
     
     def _render_ten_pull_animation(self, screen, progress):
         """Render animation for a 10-pull (all at once)"""
-        # Show all 10 Pokemon appearing with a wave effect
-        for i, pokemon in enumerate(self.results):
+        # Show all 10 Pokemon/Items appearing with a wave effect
+        for i, result in enumerate(self.results):
             # Stagger appearance
             item_progress = max(0, min((progress * 1.5 - i * 0.05), 1.0))
             
@@ -212,15 +221,19 @@ class GachaAnimationState(GameState):
             center_x = start_x + col * spacing_x
             center_y = start_y + row * spacing_y
             
-            # Render individual rays behind this Pokemon
+            # Render individual rays behind this result
             if hasattr(self.resource_manager, 'rays') and self.resource_manager.rays:
-                rarity_obj = self.resource_manager.rarities_dict.get(pokemon.rarity)
+                rarity_obj = self.resource_manager.rarities_dict.get(result.rarity)
                 if rarity_obj:
                     rarity_color = rarity_obj.get_color_rgb()
-                    self._render_rays_effect_at_position(screen, pokemon.rarity, rarity_color, item_progress, center_x, center_y, scale_multiplier=0.4)
+                    self._render_rays_effect_at_position(screen, result.rarity, rarity_color, item_progress, center_x, center_y, scale_multiplier=0.4)
             
-            # Get Pokemon image
-            image = self.resource_manager.images.get(pokemon.image_path)
+            # Get image (Pokemon sprite or item icon)
+            if self.is_items_gacha:
+                image = self.resource_manager.get_item_icon(result.number)
+            else:
+                image = self.resource_manager.images.get(result.image_path)
+            
             if not image:
                 continue
             
@@ -235,8 +248,8 @@ class GachaAnimationState(GameState):
                 image = pygame.transform.scale(image, (new_size, new_size))
             
             # Apply the same animation effects as single pull (rotation, shake, tint)
-            # Use item_progress so each Pokemon animates independently
-            image = self._apply_animation_effects(image, pokemon.rarity, item_progress)
+            # Use item_progress so each result animates independently
+            image = self._apply_animation_effects(image, result.rarity, item_progress)
             
             x = center_x - image.get_width() // 2
             y = center_y - image.get_height() // 2

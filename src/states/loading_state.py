@@ -4,7 +4,7 @@ Loading screen state - loads all game assets
 import pygame
 from .base_state import GameState
 from config import (COLOR_WHITE, COLOR_BLACK, LOGO_PATH, GACHA_RED_PATH, 
-                    GACHA_BLUE_PATH, GACHA_YELLOW_PATH, POKEDOLLAR_ICON_PATH, RAYS_PATH, SOUNDS_PATH, LOADING_TIME)
+                    GACHA_BLUE_PATH, GACHA_YELLOW_PATH, GACHA_ITEM_PATH, POKEDOLLAR_ICON_PATH, RAYS_PATH, SOUNDS_PATH, LOADING_TIME)
 
 
 class LoadingState(GameState):
@@ -72,7 +72,7 @@ class LoadingState(GameState):
         # Stage 1: Load UI images
         self.current_stage_text = self.load_stages[0]
         self.resource_manager.load_ui_images(
-            LOGO_PATH, GACHA_RED_PATH, GACHA_BLUE_PATH, GACHA_YELLOW_PATH, POKEDOLLAR_ICON_PATH, RAYS_PATH
+            LOGO_PATH, GACHA_RED_PATH, GACHA_BLUE_PATH, GACHA_YELLOW_PATH, GACHA_ITEM_PATH, POKEDOLLAR_ICON_PATH, RAYS_PATH
         )
         self.progress = 1 / total_stages
         pygame.display.flip()  # Update display to show progress

@@ -77,6 +77,7 @@ class Game:
             self.resource_manager.types_dict = CSVLoader.load_types(TYPES_CSV)
             self.resource_manager.rarities_dict = CSVLoader.load_rarities(RARITY_CSV)
             self.resource_manager.gacha_machines_dict = CSVLoader.load_gacha_machines(GACHA_MACHINES_CSV)
+            self.resource_manager.items_list = CSVLoader.load_items(ITEMS_CSV)
             
             # Validate data integrity
             CSVLoader.validate_data_integrity(

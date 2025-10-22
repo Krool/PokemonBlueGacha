@@ -18,8 +18,9 @@ class SaveManager:
         """Create saves directory if it doesn't exist"""
         Path(self.save_path).parent.mkdir(parents=True, exist_ok=True)
     
-    def save_game(self, gold: int, pokemon_owned: Dict[str, int], 
-                  newly_acquired: list, stats: dict, collection_complete_sound_played: bool = False, 
+    def save_game(self, gold: int, pokemon_owned: Dict[str, int], items_owned: Dict[str, int],
+                  newly_acquired: list, newly_acquired_items: list, stats: dict, 
+                  collection_complete_sound_played: bool = False, 
                   music_muted: bool = False) -> bool:
         """
         Save game state to JSON
@@ -27,7 +28,9 @@ class SaveManager:
         Args:
             gold: Current gold balance
             pokemon_owned: Dict mapping pokemon number to count
+            items_owned: Dict mapping item number to count
             newly_acquired: List of pokemon numbers newly acquired
+            newly_acquired_items: List of item numbers newly acquired
             stats: Game statistics
             collection_complete_sound_played: Whether the collection complete sound has been played
             music_muted: Whether background music is muted
@@ -39,7 +42,9 @@ class SaveManager:
             "version": "1.0",
             "gold": gold,
             "pokemon_owned": pokemon_owned,
+            "items_owned": items_owned,
             "newly_acquired": newly_acquired,
+            "newly_acquired_items": newly_acquired_items,
             "stats": stats,
             "collection_complete_sound_played": collection_complete_sound_played,
             "music_muted": music_muted
@@ -84,10 +89,13 @@ class SaveManager:
             "version": "1.0",
             "gold": 0,
             "pokemon_owned": {},
+            "items_owned": {},
             "newly_acquired": [],
+            "newly_acquired_items": [],
             "stats": {
                 "total_pulls": 0,
-                "total_spent": 0
+                "total_spent": 0,
+                "pulls_by_version": {"Red": 0, "Blue": 0, "Yellow": 0, "Items": 0}
             },
             "collection_complete_sound_played": False,
             "music_muted": False

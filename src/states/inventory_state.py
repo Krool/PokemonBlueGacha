@@ -33,6 +33,7 @@ class InventoryState(GameState):
         self.sort_buttons = {}
         self.scrollable_grid = None
         self.currency_rect = None  # Clickable currency area
+        self.title_rect = None  # Clickable title area for music randomization
         self.stats_popup = None  # Stats popup
         
         # Currency click hold tracking
@@ -359,6 +360,14 @@ class InventoryState(GameState):
             # Pass scroll events to grid
             self.scrollable_grid.handle_event(event)
             
+            # Check for title click (randomize music)
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if self.title_rect and self.title_rect.collidepoint(event.pos):
+                    # Randomize background music if not muted
+                    if not self.game_data.music_muted:
+                        self.audio_manager.play_random_background_music()
+                    continue
+            
             # Check for currency click start
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if self.currency_rect and self.currency_rect.collidepoint(event.pos):
@@ -368,9 +377,6 @@ class InventoryState(GameState):
                     self.game_data.gold += 10000
                     self.game_data.save()
                     print(f"Added 10000 gold! Total: {self.game_data.gold}")
-                    # Change to random background music if not muted
-                    if not self.game_data.music_muted:
-                        self.audio_manager.play_random_background_music()
                     continue
             
             # Check for currency click release
@@ -402,11 +408,16 @@ class InventoryState(GameState):
         """Render inventory"""
         self.screen.fill(COLOR_BLACK)
         
-        # Draw title
+        # Draw title (clickable to randomize music)
         if self.font_manager:
             title = "POKÉDEX"
             title_surface = self.font_manager.render_text(title, 48, COLOR_WHITE, is_title=True)
-            self.screen.blit(title_surface, (20, 15))
+            title_x = 20
+            title_y = 15
+            self.screen.blit(title_surface, (title_x, title_y))
+            
+            # Store clickable rect for title
+            self.title_rect = title_surface.get_rect(topleft=(title_x, title_y))
             
             # Draw progress (gold color when collection is complete)
             owned_count = self.game_data.get_total_owned_count()

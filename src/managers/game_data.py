@@ -15,7 +15,9 @@ class GameData:
         # Load saved data
         self.gold: int = save_data['gold']
         self.pokemon_owned: Dict[str, int] = save_data['pokemon_owned']
+        self.items_owned: Dict[str, int] = save_data.get('items_owned', {})
         self.newly_acquired: list = save_data['newly_acquired']
+        self.newly_acquired_items: list = save_data.get('newly_acquired_items', [])
         self.stats: dict = save_data['stats']
         self.collection_complete_sound_played: bool = save_data.get('collection_complete_sound_played', False)
         self.music_muted: bool = save_data.get('music_muted', False)
@@ -29,8 +31,10 @@ class GameData:
         """
         return self.save_manager.save_game(
             self.gold, 
-            self.pokemon_owned, 
-            self.newly_acquired, 
+            self.pokemon_owned,
+            self.items_owned,
+            self.newly_acquired,
+            self.newly_acquired_items,
             self.stats,
             self.collection_complete_sound_played,
             self.music_muted
@@ -95,14 +99,17 @@ class GameData:
     def clear_newly_acquired(self):
         """Clear the newly acquired list (called when viewing outcome)"""
         self.newly_acquired = []
+        self.newly_acquired_items = []
     
     def reset_inventory(self):
         """Reset all owned Pokemon and pull statistics (for reset button)"""
         self.pokemon_owned = {}
+        self.items_owned = {}
         self.newly_acquired = []
+        self.newly_acquired_items = []
         # Reset pull statistics
         self.stats['total_pulls'] = 0
-        self.stats['pulls_by_version'] = {'Red': 0, 'Blue': 0, 'Yellow': 0}
+        self.stats['pulls_by_version'] = {'Red': 0, 'Blue': 0, 'Yellow': 0, 'Items': 0}
         # Reset collection complete sound flag
         self.collection_complete_sound_played = False
         print("Inventory and pull statistics reset")
@@ -142,4 +149,45 @@ class GameData:
         if 'pulls_by_version' not in self.stats:
             return 0
         return self.stats.get('pulls_by_version', {}).get(version, 0)
+    
+    # Item Management Methods
+    def add_item(self, item_number: str) -> bool:
+        """
+        Add an item to inventory
+        
+        Args:
+            item_number: Item number (e.g., "001")
+            
+        Returns:
+            True if this is a new item, False if already owned
+        """
+        is_new = item_number not in self.items_owned
+        
+        if is_new:
+            self.items_owned[item_number] = 1
+            self.newly_acquired_items.append(item_number)
+        else:
+            self.items_owned[item_number] += 1
+        
+        return is_new
+    
+    def get_item_count(self, item_number: str) -> int:
+        """Get count of owned items"""
+        return self.items_owned.get(item_number, 0)
+    
+    def has_item(self, item_number: str) -> bool:
+        """Check if player owns this item"""
+        return item_number in self.items_owned
+    
+    def is_newly_acquired_item(self, item_number: str) -> bool:
+        """Check if item is newly acquired (for NEW badge)"""
+        return item_number in self.newly_acquired_items
+    
+    def get_total_items_count(self) -> int:
+        """Get total number of unique items owned"""
+        return len(self.items_owned)
+    
+    def get_total_items_quantity(self) -> int:
+        """Get total number of items including duplicates"""
+        return sum(self.items_owned.values())
 

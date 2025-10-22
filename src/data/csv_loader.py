@@ -8,6 +8,7 @@ from .pokemon_data import Pokemon
 from .type_data import PokemonType
 from .rarity_data import Rarity
 from .gacha_machine_data import GachaMachine
+from .item_data import Item
 
 
 class CSVLoadError(Exception):
@@ -146,7 +147,7 @@ class CSVLoader:
                 reader = csv.DictReader(f)
                 
                 # Validate headers
-                expected_headers = ['Rarity', 'Red_Weight', 'Blue_Weight', 'Yellow_Weight', 'Color']
+                expected_headers = ['Rarity', 'Red_Weight', 'Blue_Weight', 'Yellow_Weight', 'Items_Weight', 'Color']
                 if not all(header in reader.fieldnames for header in expected_headers):
                     raise CSVLoadError(f"Rarities CSV missing required headers. Expected: {expected_headers}")
                 
@@ -157,6 +158,7 @@ class CSVLoader:
                             red_weight=int(row['Red_Weight']),
                             blue_weight=int(row['Blue_Weight']),
                             yellow_weight=int(row['Yellow_Weight']),
+                            items_weight=int(row['Items_Weight']),
                             color_hex=row['Color'].strip()
                         )
                         rarities_dict[rarity.name] = rarity
@@ -255,4 +257,58 @@ class CSVLoader:
         
         print(f"✓ Loaded {len(machines_dict)} gacha machines")
         return machines_dict
+    
+    @staticmethod
+    def load_items(filepath: str) -> List[Item]:
+        """
+        Load all items from CSV
+        
+        Args:
+            filepath: Path to items CSV file
+            
+        Returns:
+            List of Item objects
+            
+        Raises:
+            CSVLoadError: If file not found or data invalid
+        """
+        if not os.path.exists(filepath):
+            raise CSVLoadError(f"Items CSV not found: {filepath}")
+        
+        items_list = []
+        
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                
+                # Validate headers
+                expected_headers = ['Number', 'Name', 'Index', 'Category', 'Value', 'Rarity', 'Weight', 'Icon']
+                if not all(header in reader.fieldnames for header in expected_headers):
+                    raise CSVLoadError(f"Items CSV missing required headers. Expected: {expected_headers}")
+                
+                for row_num, row in enumerate(reader, start=2):
+                    try:
+                        item = Item(
+                            number=row['Number'].strip(),
+                            name=row['Name'].strip(),
+                            index=int(row['Index']),
+                            category=row['Category'].strip(),
+                            value=int(row['Value']),
+                            rarity=row['Rarity'].strip(),
+                            weight=int(row['Weight']),
+                            icon=row['Icon'].strip()
+                        )
+                        items_list.append(item)
+                    except (KeyError, ValueError) as e:
+                        print(f"Warning: Skipping invalid row {row_num} in {filepath}: {e}")
+                        continue
+        
+        except Exception as e:
+            raise CSVLoadError(f"Error reading Items CSV: {e}")
+        
+        if len(items_list) == 0:
+            raise CSVLoadError("No valid items data loaded")
+        
+        print(f"✓ Loaded {len(items_list)} items")
+        return items_list
 

@@ -8,7 +8,9 @@ from config import COLOR_WHITE, COLOR_BLACK, COLOR_GRAY, SCREEN_WIDTH, SCREEN_HE
 from ui.button import Button
 from ui.currency_display import CurrencyDisplay
 from ui.gacha_info_popup import GachaInfoPopup
+from ui.items_info_popup import ItemsInfoPopup
 from utils.gacha_stats import GachaStats
+from logic.items_gacha import perform_items_gacha, calculate_new_item_chance
 
 
 class GachaBuyState(GameState):
@@ -26,7 +28,8 @@ class GachaBuyState(GameState):
         self.machines = {
             "Red": self.resource_manager.get_gacha_machine("Red"),
             "Blue": self.resource_manager.get_gacha_machine("Blue"),
-            "Yellow": self.resource_manager.get_gacha_machine("Yellow")
+            "Yellow": self.resource_manager.get_gacha_machine("Yellow"),
+            "Items": self.resource_manager.get_gacha_machine("Items")
         }
         
         # Calculate recommended machine (needs most pulls)
@@ -61,19 +64,20 @@ class GachaBuyState(GameState):
     
     def _create_ui_elements(self):
         """Create all UI buttons and elements"""
-        # Machine selection buttons (tabs at top)
-        button_width = 200
+        # Machine selection buttons (tabs at top) - now 4 machines
+        button_width = 180
         button_height = 50
         button_y = 50
-        spacing = 20
-        total_width = (button_width * 3) + (spacing * 2)
+        spacing = 15
+        total_width = (button_width * 4) + (spacing * 3)
         start_x = (SCREEN_WIDTH - total_width) // 2
         
         # Store button positions for rendering RECOMMENDED badge
         self.button_positions = {
             "Red": (start_x, button_y),
             "Blue": (start_x + button_width + spacing, button_y),
-            "Yellow": (start_x + (button_width + spacing) * 2, button_y)
+            "Yellow": (start_x + (button_width + spacing) * 2, button_y),
+            "Items": (start_x + (button_width + spacing) * 3, button_y)
         }
         
         self.machine_buttons = {
@@ -106,6 +110,16 @@ class GachaBuyState(GameState):
                 hover_color=(220, 220, 70),
                 use_title_font=True,
                 callback=lambda: self._select_machine("Yellow")
+            ),
+            "Items": Button(
+                start_x + (button_width + spacing) * 3, button_y, button_width, button_height,
+                "ITEMS MACHINE",
+                self.font_manager,
+                font_size=20,
+                bg_color=(100, 150, 100),
+                hover_color=(130, 180, 130),
+                use_title_font=True,
+                callback=lambda: self._select_machine("Items")
             )
         }
         
@@ -179,8 +193,9 @@ class GachaBuyState(GameState):
         print(f"Selected {machine_name} machine")
     
     def _select_featured_pokemon(self):
-        """Select 3 Pokemon to feature for each gacha machine"""
+        """Select 3 Pokemon/Items to feature for each gacha machine"""
         self.featured_pokemon = {}
+        self.featured_items = {}
         
         # RED: Show version exclusives (Pokemon with Blue_Weight=0 and Red_Weight>0)
         red_exclusives = [p for p in self.resource_manager.pokemon_list 
@@ -215,6 +230,17 @@ class GachaBuyState(GameState):
                     if p.rarity == "Epic" and p.yellow_weight > 0]
             all_featured = legendaries + random.sample(epics, min(3 - len(legendaries), len(epics)))
             self.featured_pokemon["Yellow"] = all_featured[:3]
+        
+        # ITEMS: Show high-value items (Legendary and Epic)
+        high_value_items = [i for i in self.resource_manager.items_list 
+                           if i.rarity in ["Legendary", "Epic"]]
+        if len(high_value_items) >= 3:
+            self.featured_items["Items"] = random.sample(high_value_items, 3)
+        else:
+            # Show all high-value + some rare
+            rare_items = [i for i in self.resource_manager.items_list if i.rarity == "Rare"]
+            all_featured = high_value_items + random.sample(rare_items, min(3 - len(high_value_items), len(rare_items)))
+            self.featured_items["Items"] = all_featured[:3]
     
     def _calculate_new_pokemon_chance(self, version: str) -> float:
         """Calculate % chance of getting a new (unowned) Pokemon"""
@@ -240,19 +266,42 @@ class GachaBuyState(GameState):
             self.game_data.record_pull(self.selected_machine, count=1)
             self.game_data.save()
             
-            # Store count before adding Pokemon
-            count_before = self.game_data.get_total_owned_count()
-            
-            # Perform gacha roll
-            result = self.gacha_system.roll_single(self.selected_machine)
-            print(f"Single pull from {self.selected_machine} machine! Got {result.name} ({result.rarity})! Gold: {self.game_data.gold}")
-            
-            # Add to inventory
-            self.game_data.add_pokemon(result.number)
-            self.game_data.save()
-            
-            # Transition to animation
-            self.state_manager.change_state('gacha_animation', results=[result], is_ten_pull=False, machine=self.selected_machine, owned_before=count_before)
+            # Check if this is Items gacha
+            if self.selected_machine == "Items":
+                # Perform items gacha
+                item_numbers = perform_items_gacha(
+                    self.resource_manager.items_list,
+                    self.resource_manager.rarities_dict,
+                    count=1
+                )
+                
+                # Get item objects
+                results = [self.resource_manager.get_item_by_number(num) for num in item_numbers]
+                results = [r for r in results if r is not None]  # Filter None
+                
+                print(f"Single pull from Items machine! Got {results[0].name} ({results[0].rarity})! Gold: {self.game_data.gold}")
+                
+                # Add to inventory
+                for item in results:
+                    self.game_data.add_item(item.number)
+                self.game_data.save()
+                
+                # Transition to animation
+                self.state_manager.change_state('gacha_animation', results=results, is_ten_pull=False, machine=self.selected_machine, owned_before=0, is_items_gacha=True)
+            else:
+                # Store count before adding Pokemon
+                count_before = self.game_data.get_total_owned_count()
+                
+                # Perform gacha roll
+                result = self.gacha_system.roll_single(self.selected_machine)
+                print(f"Single pull from {self.selected_machine} machine! Got {result.name} ({result.rarity})! Gold: {self.game_data.gold}")
+                
+                # Add to inventory
+                self.game_data.add_pokemon(result.number)
+                self.game_data.save()
+                
+                # Transition to animation
+                self.state_manager.change_state('gacha_animation', results=[result], is_ten_pull=False, machine=self.selected_machine, owned_before=count_before, is_items_gacha=False)
         else:
             from ui.popup import Popup
             machine = self.machines[self.selected_machine]
@@ -281,19 +330,41 @@ class GachaBuyState(GameState):
             self.game_data.record_pull(self.selected_machine, count=10)
             self.game_data.save()
             
-            # Store count before adding Pokemon
-            count_before = self.game_data.get_total_owned_count()
-            
-            # Perform gacha rolls
-            results = self.gacha_system.roll_ten(self.selected_machine)
-            print(f"10-pull from {self.selected_machine} machine! Gold: {self.game_data.gold}")
-            for result in results:
-                print(f"  - {result.name} ({result.rarity})")
-                self.game_data.add_pokemon(result.number)
-            self.game_data.save()
-            
-            # Transition to animation
-            self.state_manager.change_state('gacha_animation', results=results, is_ten_pull=True, machine=self.selected_machine, owned_before=count_before)
+            # Check if this is Items gacha
+            if self.selected_machine == "Items":
+                # Perform items gacha
+                item_numbers = perform_items_gacha(
+                    self.resource_manager.items_list,
+                    self.resource_manager.rarities_dict,
+                    count=10
+                )
+                
+                # Get item objects
+                results = [self.resource_manager.get_item_by_number(num) for num in item_numbers]
+                results = [r for r in results if r is not None]  # Filter None
+                
+                print(f"10-pull from Items machine! Gold: {self.game_data.gold}")
+                for item in results:
+                    print(f"  - {item.name} ({item.rarity})")
+                    self.game_data.add_item(item.number)
+                self.game_data.save()
+                
+                # Transition to animation
+                self.state_manager.change_state('gacha_animation', results=results, is_ten_pull=True, machine=self.selected_machine, owned_before=0, is_items_gacha=True)
+            else:
+                # Store count before adding Pokemon
+                count_before = self.game_data.get_total_owned_count()
+                
+                # Perform gacha rolls
+                results = self.gacha_system.roll_ten(self.selected_machine)
+                print(f"10-pull from {self.selected_machine} machine! Gold: {self.game_data.gold}")
+                for result in results:
+                    print(f"  - {result.name} ({result.rarity})")
+                    self.game_data.add_pokemon(result.number)
+                self.game_data.save()
+                
+                # Transition to animation
+                self.state_manager.change_state('gacha_animation', results=results, is_ten_pull=True, machine=self.selected_machine, owned_before=count_before, is_items_gacha=False)
         else:
             from ui.popup import Popup
             machine = self.machines[self.selected_machine]
@@ -319,17 +390,31 @@ class GachaBuyState(GameState):
     
     def _show_info(self):
         """Show drop rates popup for selected machine"""
-        self.info_popup = GachaInfoPopup(
-            SCREEN_WIDTH // 2,
-            SCREEN_HEIGHT // 2,
-            700,
-            600,
-            self.selected_machine,
-            self.resource_manager.pokemon_list,
-            self.resource_manager.rarities_dict,
-            self.font_manager,
-            callback=None
-        )
+        if self.selected_machine == "Items":
+            # Show items info popup
+            self.info_popup = ItemsInfoPopup(
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT // 2,
+                700,
+                600,
+                self.resource_manager.items_list,
+                self.resource_manager.rarities_dict,
+                self.font_manager,
+                callback=None
+            )
+        else:
+            # Show Pokemon info popup
+            self.info_popup = GachaInfoPopup(
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT // 2,
+                700,
+                600,
+                self.selected_machine,
+                self.resource_manager.pokemon_list,
+                self.resource_manager.rarities_dict,
+                self.font_manager,
+                callback=None
+            )
     
     def exit(self):
         """Clean up gacha buy state"""
@@ -411,6 +496,8 @@ class GachaBuyState(GameState):
             machine_image = self.resource_manager.gacha_blue
         elif self.selected_machine == "Yellow":
             machine_image = self.resource_manager.gacha_yellow
+        elif self.selected_machine == "Items":
+            machine_image = self.resource_manager.gacha_item
         
         if machine_image:
             # Scale machine image to fit screen (max 400x400)
@@ -455,8 +542,10 @@ class GachaBuyState(GameState):
                 rec_rect = rec_text.get_rect(center=badge_rect.center)
                 self.screen.blit(rec_text, rec_rect)
         
-        # Draw featured Pokemon sprites (3 random Pokemon for this machine)
-        if hasattr(self, 'featured_pokemon') and self.selected_machine in self.featured_pokemon:
+        # Draw featured Pokemon sprites (3 random for this machine)
+        # Don't show featured items for Items machine
+        if self.selected_machine != "Items" and hasattr(self, 'featured_pokemon') and self.selected_machine in self.featured_pokemon:
+            # Draw featured Pokemon
             featured = self.featured_pokemon[self.selected_machine]
             sprite_size = 80
             sprite_spacing = 20
@@ -483,9 +572,17 @@ class GachaBuyState(GameState):
                     img_rect = scaled_image.get_rect(center=box_rect.center)
                     self.screen.blit(scaled_image, img_rect)
         
-        # Draw % chance for new Pokemon
-        new_chance = self._calculate_new_pokemon_chance(self.selected_machine)
-        chance_text = f"New Pokémon Chance: {new_chance:.1f}%"
+        # Draw % chance for new Pokemon/Items
+        if self.selected_machine == "Items":
+            new_chance = calculate_new_item_chance(
+                self.resource_manager.items_list,
+                self.resource_manager.rarities_dict,
+                self.game_data.items_owned
+            )
+            chance_text = f"New Item Chance: {new_chance:.1f}%"
+        else:
+            new_chance = self._calculate_new_pokemon_chance(self.selected_machine)
+            chance_text = f"New Pokémon Chance: {new_chance:.1f}%"
         chance_surface = self.font_manager.render_text(chance_text, 22, COLOR_WHITE, is_title=True)
         chance_rect = chance_surface.get_rect(center=(SCREEN_WIDTH // 2, 495))
         self.screen.blit(chance_surface, chance_rect)

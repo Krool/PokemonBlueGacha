@@ -1,12 +1,14 @@
 """
-Gacha Outcome State - Shows results with Pokemon tiles
+Gacha Outcome State - Shows results with Pokemon/Item tiles
 """
 import pygame
 from states.base_state import GameState
 from config import COLOR_WHITE, COLOR_BLACK, SCREEN_WIDTH, SCREEN_HEIGHT
 from ui.button import Button
 from ui.pokemon_tile import PokemonTile
+from ui.item_tile import ItemTile
 from ui.currency_display import CurrencyDisplay
+from logic.items_gacha import perform_items_gacha
 
 class GachaOutcomeState(GameState):
     """State for displaying gacha pull results"""
@@ -15,7 +17,9 @@ class GachaOutcomeState(GameState):
         super().__init__(state_manager, game_data, resource_manager, audio_manager, font_manager, gacha_system)
         self.results = []
         self.is_ten_pull = False
+        self.is_items_gacha = False
         self.pokemon_tiles = []
+        self.item_tiles = []
         self.gacha_button = None
         self.roll_same_button = None
         self.back_button = None
@@ -28,15 +32,16 @@ class GachaOutcomeState(GameState):
         self.currency_hold_timer = 0.0
         self.currency_add_interval = 0.1  # Add gold every 0.1 seconds while held
     
-    def enter(self, results=None, is_ten_pull=False, machine=None, owned_before=0):
+    def enter(self, results=None, is_ten_pull=False, machine=None, owned_before=0, is_items_gacha=False):
         """
         Enter the outcome state
         
         Args:
-            results: List of Pokemon objects from gacha roll
+            results: List of Pokemon/Item objects from gacha roll
             is_ten_pull: Whether this was a 10-pull or single pull
-            machine: Which gacha machine was used (Red, Blue, Yellow)
-            owned_before: Number of unique Pokemon owned before this pull
+            machine: Which gacha machine was used (Red, Blue, Yellow, Items)
+            owned_before: Number of unique Pokemon owned before this pull (0 for items)
+            is_items_gacha: Whether this is an items gacha
         """
         print("Entered GachaOutcomeState")
         if results is None:
@@ -44,10 +49,11 @@ class GachaOutcomeState(GameState):
         
         self.results = results
         self.is_ten_pull = is_ten_pull
+        self.is_items_gacha = is_items_gacha
         self.last_machine = machine if machine else "Red"
         self.owned_count_before_pull = owned_before
         
-        # Create Pokemon tiles
+        # Create Pokemon/Item tiles
         self._create_pokemon_tiles()
         
         # Check if collection is now complete (151 Pokemon)
@@ -117,31 +123,105 @@ class GachaOutcomeState(GameState):
         print("Exited GachaOutcomeState")
     
     def _create_pokemon_tiles(self):
-        """Create Pokemon tile components"""
+        """Create Pokemon/Item tile components"""
         self.pokemon_tiles = []
+        self.item_tiles = []
         
         if not self.results:
             return
         
-        if self.is_ten_pull:
-            # 10-pull: 2 rows of 5
-            tile_width = 140
-            tile_height = 160
-            spacing_x = 20
-            spacing_y = 20
-            
-            total_width = tile_width * 5 + spacing_x * 4
-            start_x = (SCREEN_WIDTH - total_width) // 2
-            start_y = 100
-            
-            for i, pokemon in enumerate(self.results):
-                col = i % 5
-                row = i // 5
+        if self.is_items_gacha:
+            # Create item tiles
+            if self.is_ten_pull:
+                # 10-pull: 2 rows of 5
+                tile_width = 140
+                tile_height = 160
+                spacing_x = 20
+                spacing_y = 20
                 
-                x = start_x + col * (tile_width + spacing_x)
-                y = start_y + row * (tile_height + spacing_y)
+                total_width = tile_width * 5 + spacing_x * 4
+                start_x = (SCREEN_WIDTH - total_width) // 2
+                start_y = 100
                 
-                # Check if new
+                for i, item in enumerate(self.results):
+                    col = i % 5
+                    row = i // 5
+                    
+                    x = start_x + col * (tile_width + spacing_x)
+                    y = start_y + row * (tile_height + spacing_y)
+                    
+                    # Check if new
+                    is_new = self._is_new_item(item.number)
+                    
+                    tile = ItemTile(
+                        x, y, tile_width, tile_height,
+                        item,
+                        self.resource_manager,
+                        self.font_manager,
+                        show_new_badge=is_new,
+                        show_count=False
+                    )
+                    self.item_tiles.append(tile)
+            else:
+                # Single pull: large centered tile
+                tile_width = 300
+                tile_height = 350
+                x = (SCREEN_WIDTH - tile_width) // 2
+                y = 120
+                
+                item = self.results[0]
+                is_new = self._is_new_item(item.number)
+                
+                tile = ItemTile(
+                    x, y, tile_width, tile_height,
+                    item,
+                    self.resource_manager,
+                    self.font_manager,
+                    show_new_badge=is_new,
+                    show_count=True,
+                    count=self.game_data.items_owned.get(item.number, 0)
+                )
+                self.item_tiles.append(tile)
+        else:
+            # Create Pokemon tiles
+            if self.is_ten_pull:
+                # 10-pull: 2 rows of 5
+                tile_width = 140
+                tile_height = 160
+                spacing_x = 20
+                spacing_y = 20
+                
+                total_width = tile_width * 5 + spacing_x * 4
+                start_x = (SCREEN_WIDTH - total_width) // 2
+                start_y = 100
+                
+                for i, pokemon in enumerate(self.results):
+                    col = i % 5
+                    row = i // 5
+                    
+                    x = start_x + col * (tile_width + spacing_x)
+                    y = start_y + row * (tile_height + spacing_y)
+                    
+                    # Check if new
+                    is_new = self._is_new_pokemon(pokemon.number)
+                    
+                    tile = PokemonTile(
+                        x, y, tile_width, tile_height,
+                        pokemon,
+                        self.resource_manager,
+                        self.font_manager,
+                        show_new_badge=is_new,
+                        show_count=False
+                    )
+                    self.pokemon_tiles.append(tile)
+            else:
+                # Single pull: large centered tile
+                tile_width = 300
+                tile_height = 350
+                x = (SCREEN_WIDTH - tile_width) // 2
+                y = 120
+                
+                pokemon = self.results[0]
                 is_new = self._is_new_pokemon(pokemon.number)
                 
                 tile = PokemonTile(
@@ -150,34 +230,20 @@ class GachaOutcomeState(GameState):
                     self.resource_manager,
                     self.font_manager,
                     show_new_badge=is_new,
-                    show_count=False
+                    show_count=True,
+                    count=self.game_data.pokemon_owned.get(pokemon.number, 0)
                 )
                 self.pokemon_tiles.append(tile)
-        else:
-            # Single pull: large centered tile
-            tile_width = 300
-            tile_height = 350
-            x = (SCREEN_WIDTH - tile_width) // 2
-            y = 120
-            
-            pokemon = self.results[0]
-            is_new = self._is_new_pokemon(pokemon.number)
-            
-            tile = PokemonTile(
-                x, y, tile_width, tile_height,
-                pokemon,
-                self.resource_manager,
-                self.font_manager,
-                show_new_badge=is_new,
-                show_count=True,
-                count=self.game_data.pokemon_owned.get(pokemon.number, 0)
-            )
-            self.pokemon_tiles.append(tile)
     
     def _is_new_pokemon(self, pokemon_number: str) -> bool:
         """Check if this Pokemon was just caught for the first time"""
         # If count is exactly 1, it's new (just added)
         return self.game_data.pokemon_owned.get(pokemon_number, 0) == 1
+    
+    def _is_new_item(self, item_number: str) -> bool:
+        """Check if this Item was just acquired for the first time"""
+        # If count is exactly 1, it's new (just added)
+        return self.game_data.items_owned.get(item_number, 0) == 1
     
     def _roll_same(self):
         """Roll the same machine and pull type again"""
@@ -211,23 +277,52 @@ class GachaOutcomeState(GameState):
         pull_count = 10 if self.is_ten_pull else 1
         self.game_data.record_pull(self.last_machine, count=pull_count)
         
-        # Perform roll
-        if self.is_ten_pull:
-            results = self.gacha_system.roll_ten(self.last_machine)
-            print(f"10-pull from {self.last_machine} machine! Gold: {self.game_data.gold}")
-            for result in results:
-                print(f"  - {result.name} ({result.rarity})")
-                self.game_data.add_pokemon(result.number)
+        # Check if this is Items gacha
+        if self.is_items_gacha:
+            # Perform items gacha
+            item_numbers = perform_items_gacha(
+                self.resource_manager.items_list,
+                self.resource_manager.rarities_dict,
+                count=pull_count
+            )
+            
+            # Get item objects
+            results = [self.resource_manager.get_item_by_number(num) for num in item_numbers]
+            results = [r for r in results if r is not None]  # Filter None
+            
+            print(f"{pull_count}-pull from Items machine! Gold: {self.game_data.gold}")
+            for item in results:
+                print(f"  - {item.name} ({item.rarity})")
+                self.game_data.add_item(item.number)
+            
+            self.game_data.save()
+            
+            # Go to animation with same machine
+            self.state_manager.change_state('gacha_animation', results=results, is_ten_pull=self.is_ten_pull, machine=self.last_machine, owned_before=0, is_items_gacha=True)
         else:
-            result = self.gacha_system.roll_single(self.last_machine)
-            print(f"Single pull from {self.last_machine} machine! Got {result.name} ({result.rarity})! Gold: {self.game_data.gold}")
-            results = [result]
-            self.game_data.add_pokemon(result.number)
-        
-        self.game_data.save()
-        
-        # Go to animation with same machine
-        self.state_manager.change_state('gacha_animation', results=results, is_ten_pull=self.is_ten_pull, machine=self.last_machine)
+            # Perform Pokemon gacha
+            if self.is_ten_pull:
+                # Store count before adding Pokemon
+                count_before = self.game_data.get_total_owned_count()
+                
+                results = self.gacha_system.roll_ten(self.last_machine)
+                print(f"10-pull from {self.last_machine} machine! Gold: {self.game_data.gold}")
+                for result in results:
+                    print(f"  - {result.name} ({result.rarity})")
+                    self.game_data.add_pokemon(result.number)
+            else:
+                # Store count before adding Pokemon
+                count_before = self.game_data.get_total_owned_count()
+                
+                result = self.gacha_system.roll_single(self.last_machine)
+                print(f"Single pull from {self.last_machine} machine! Got {result.name} ({result.rarity})! Gold: {self.game_data.gold}")
+                results = [result]
+                self.game_data.add_pokemon(result.number)
+            
+            self.game_data.save()
+            
+            # Go to animation with same machine
+            self.state_manager.change_state('gacha_animation', results=results, is_ten_pull=self.is_ten_pull, machine=self.last_machine, owned_before=count_before, is_items_gacha=False)
     
     def _go_to_gacha(self):
         """Return to gacha buy screen with last machine selected"""
@@ -361,8 +456,10 @@ class GachaOutcomeState(GameState):
             title_rect = title_surface.get_rect(center=(SCREEN_WIDTH // 2, 50))
             self.screen.blit(title_surface, title_rect)
         
-        # Draw Pokemon tiles
+        # Draw Pokemon/Item tiles
         for tile in self.pokemon_tiles:
+            tile.render(self.screen)
+        for tile in self.item_tiles:
             tile.render(self.screen)
         
         # Draw buttons
