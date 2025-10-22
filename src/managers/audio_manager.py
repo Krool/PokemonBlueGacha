@@ -8,6 +8,9 @@ import time
 from typing import Optional, List
 from config import IS_WEB
 
+if IS_WEB:
+    import platform
+
 
 class AudioManager:
     """Manages game audio (music and sound effects)"""
@@ -22,6 +25,7 @@ class AudioManager:
         self.user_interacted = False  # Track if user has interacted (for web autoplay)
         self.pending_music = None  # Store music to play after user interaction
         self.audio_errors_logged = set()  # Track logged errors to avoid spam
+        self.web_audio_initialized = False  # Track if Web Audio API is initialized
         
         # Try to initialize pygame mixer with web-compatible settings
         try:
@@ -40,6 +44,40 @@ class AudioManager:
         except Exception as e:
             print(f"Audio initialization failed: {e}")
             self.enabled = False
+        
+        # Initialize Web Audio API for sound effects on web
+        if IS_WEB:
+            self._init_web_audio()
+    
+    def _init_web_audio(self):
+        """Initialize Web Audio API using Tone.js for simultaneous sound effects"""
+        if self.web_audio_initialized:
+            return
+        
+        try:
+            # Inject Tone.js if not already loaded
+            platform.window.eval("""
+                if (typeof Tone === 'undefined') {
+                    var script = document.createElement('script');
+                    script.src = 'https://unpkg.com/tone@14.8.49/build/Tone.js';
+                    script.onload = function() {
+                        console.log('[AudioManager] Tone.js loaded successfully');
+                        window.toneJsLoaded = true;
+                    };
+                    document.head.appendChild(script);
+                } else {
+                    window.toneJsLoaded = true;
+                }
+                
+                // Create players object for sound effects
+                if (!window.gameSounds) {
+                    window.gameSounds = {};
+                }
+            """)
+            self.web_audio_initialized = True
+            print("[OK] Web Audio API initialization started")
+        except Exception as e:
+            print(f"[WARN] Web Audio API initialization failed: {e}")
     
     def load_sound(self, path: str, name: str):
         """
@@ -57,23 +95,43 @@ class AudioManager:
             return
         
         try:
-            # Load sound using pygame.mixer.Sound (works on both desktop and web)
-            sound = pygame.mixer.Sound(path)
-            sound.set_volume(self.sfx_volume)
-            self.sounds[name] = sound
-            print(f"  [OK] Loaded sound: {name}")
+            if IS_WEB:
+                # On web, load sound into Tone.js for simultaneous playback
+                self.sounds[name] = path
+                try:
+                    # Register sound with Tone.js
+                    js_code = f"""
+                        if (typeof Tone !== 'undefined' && window.gameSounds) {{
+                            window.gameSounds['{name}'] = new Tone.Player({{
+                                url: '{path}',
+                                volume: {20 * (self.sfx_volume - 1)}  // Convert 0-1 to decibels
+                            }}).toDestination();
+                            console.log('[AudioManager] Loaded sound: {name}');
+                        }}
+                    """
+                    platform.window.eval(js_code)
+                except:
+                    pass  # Tone.js may not be loaded yet, that's okay
+                print(f"  [OK] Registered sound for web: {name}")
+            else:
+                # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
+                sound = pygame.mixer.Sound(path)
+                sound.set_volume(self.sfx_volume)
+                self.sounds[name] = sound
+                print(f"  [OK] Loaded sound: {name}")
         except Exception as e:
             print(f"  [ERROR] Error loading sound {name}: {e}")
     
     def play_sound(self, name: str, priority: bool = False):
         """
-        Play a sound effect using pygame channels
+        Play a sound effect
         
         Args:
             name: Name of sound to play
-            priority: Currently unused with channel system (kept for compatibility)
+            priority: Unused (kept for backwards compatibility)
         
-        Note: Uses pygame.mixer.Channel() to allow simultaneous sounds with background music
+        Note: On web, sound effects will briefly interrupt background music
+        due to Pygbag limitations (single audio channel).
         """
         if not self.enabled:
             return
@@ -88,21 +146,27 @@ class AudioManager:
         try:
             sound = self.sounds[name]
             
-            # Use channel-based playback (works on both desktop and web)
-            # This allows sound effects to play simultaneously with background music
-            try:
-                # Find an available channel and play the sound
-                channel = pygame.mixer.find_channel()
-                if channel:
-                    channel.play(sound)
-                else:
-                    # All 64 channels busy - play on channel 0 (will interrupt oldest sound)
-                    pygame.mixer.Channel(0).play(sound)
-            except Exception as e:
-                if IS_WEB:
-                    # On web, silently ignore errors
-                    pass
-                else:
+            if IS_WEB:
+                # On web, use Tone.js for simultaneous sound effects
+                try:
+                    js_code = f"""
+                        if (typeof Tone !== 'undefined' && window.gameSounds && window.gameSounds['{name}']) {{
+                            window.gameSounds['{name}'].start();
+                        }}
+                    """
+                    platform.window.eval(js_code)
+                except:
+                    pass  # Silently ignore errors
+            else:
+                # Desktop: use channel-based playback for simultaneous sounds
+                try:
+                    channel = pygame.mixer.find_channel()
+                    if channel:
+                        channel.play(sound)
+                    else:
+                        # All channels busy - play on channel 0
+                        pygame.mixer.Channel(0).play(sound)
+                except Exception as e:
                     print(f"[ERROR] Error playing sound {name}: {e}")
         except Exception:
             # Catch any other errors silently
@@ -241,14 +305,16 @@ class AudioManager:
     def set_sfx_volume(self, volume: float):
         """Set sound effects volume (0.0 to 1.0)"""
         self.sfx_volume = max(0.0, min(1.0, volume))
-        try:
-            for sound in self.sounds.values():
-                try:
-                    sound.set_volume(self.sfx_volume)
-                except:
-                    pass  # Silently ignore errors
-        except:
-            pass  # Silently ignore all errors
+        if not IS_WEB:
+            # Only set volume on desktop (web stores paths, not Sound objects)
+            try:
+                for sound in self.sounds.values():
+                    try:
+                        sound.set_volume(self.sfx_volume)
+                    except:
+                        pass  # Silently ignore errors
+            except:
+                pass  # Silently ignore all errors
     
     def play_random_click_sound(self):
         """
