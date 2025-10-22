@@ -5,6 +5,7 @@ import pygame
 import os
 import random
 from typing import Optional, List
+from config import IS_WEB
 
 
 class AudioManager:
@@ -16,14 +17,21 @@ class AudioManager:
         self.sfx_volume = 0.50    # Sound effects at 50%
         self.current_music: Optional[str] = None
         self.sounds = {}
+        self.sound_paths = {}  # Store paths for web playback
         self.background_tracks: List[str] = []  # List of available background music tracks
+        self.sfx_channels = []  # Additional channels for sound effects on web
         
         # Try to initialize pygame mixer with web-compatible settings
         try:
             if not pygame.mixer.get_init():
                 # Use settings that work better on web
-                pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
+                pygame.mixer.init(frequency=22050, size=-16, channels=8, buffer=512)
                 print("✓ Audio mixer initialized")
+                
+                # Set up multiple channels for sound effects (web workaround)
+                if IS_WEB:
+                    pygame.mixer.set_num_channels(8)
+                    print("  Set up 8 audio channels for web compatibility")
         except Exception as e:
             print(f"Audio initialization failed: {e}")
             self.enabled = False
@@ -44,9 +52,15 @@ class AudioManager:
             return
         
         try:
-            sound = pygame.mixer.Sound(path)
-            sound.set_volume(self.sfx_volume)
-            self.sounds[name] = sound
+            # Store path for web-based playback
+            self.sound_paths[name] = path
+            
+            # Try to load as Sound for desktop
+            if not IS_WEB:
+                sound = pygame.mixer.Sound(path)
+                sound.set_volume(self.sfx_volume)
+                self.sounds[name] = sound
+            
             print(f"  ✓ Loaded sound: {name} from {os.path.basename(path)}")
         except Exception as e:
             print(f"  ✗ Error loading sound {name} from {path}: {e}")
@@ -61,12 +75,23 @@ class AudioManager:
         if not self.enabled:
             return
             
-        if name not in self.sounds:
+        if name not in self.sound_paths:
             print(f"Warning: Sound '{name}' not loaded")
             return
         
         try:
-            self.sounds[name].play()
+            # On web, use a free channel to play the sound
+            if IS_WEB:
+                channel = pygame.mixer.find_channel()
+                if channel:
+                    sound = pygame.mixer.Sound(self.sound_paths[name])
+                    sound.set_volume(self.sfx_volume)
+                    channel.play(sound)
+                    print(f"  🔊 Playing {name} on channel {channel}")
+            else:
+                # Desktop: use pre-loaded sounds
+                if name in self.sounds:
+                    self.sounds[name].play()
         except Exception as e:
             print(f"Error playing sound {name}: {e}")
     
