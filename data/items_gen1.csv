@@ -1,7 +1,7 @@
 Number,Name,Index,Category,Value,Rarity,Weight,Icon
-1,Master Ball,1,ball,50000,Legendary,10,ball/master.png
-2,Ultra Ball,2,ball,1200,Common,10,ball/ultra.png
-3,Great Ball,3,ball,600,Common,10,ball/great.png
+1,Master Ball,1,ball,50000,Legendary,1,ball/master.png
+2,Ultra Ball,2,ball,1200,Rare,10,ball/ultra.png
+3,Great Ball,3,ball,600,Uncommon,10,ball/great.png
 4,Poké Ball,4,ball,200,Common,10,ball/poke.png
 5,Safari Ball,8,ball,1000,Common,10,ball/safari.png
 6,Moon Stone,10,evo-stone,3000,Uncommon,10,evo-stone/moon-stone.png
@@ -20,15 +20,15 @@ Number,Name,Index,Category,Value,Rarity,Weight,Icon
 19,Fire Stone,32,evo-stone,3000,Uncommon,10,evo-stone/fire-stone.png
 20,Thunder Stone,33,evo-stone,3000,Uncommon,10,evo-stone/thunder-stone.png
 21,Water Stone,34,evo-stone,3000,Uncommon,10,evo-stone/water-stone.png
-22,HP Up,35,vitamin,9800,Epic,10,hold-item/hp-up.png
-23,Protein,36,vitamin,9800,Epic,10,hold-item/protein.png
-24,Iron,37,vitamin,9800,Epic,10,hold-item/iron.png
-25,Carbos,38,vitamin,9800,Epic,10,hold-item/carbos.png
-26,Calcium,39,vitamin,9800,Epic,10,hold-item/calcium.png
-27,Rare Candy,40,vitamin,10000,Legendary,10,hold-item/rare-candy.png
+22,HP Up,35,vitamin,9800,Epic,5,hold-item/hp-up.png
+23,Protein,36,vitamin,9800,Epic,5,hold-item/protein.png
+24,Iron,37,vitamin,9800,Epic,5,hold-item/iron.png
+25,Carbos,38,vitamin,9800,Epic,5,hold-item/carbos.png
+26,Calcium,39,vitamin,9800,Epic,5,hold-item/calcium.png
+27,Rare Candy,40,vitamin,10000,Legendary,5,hold-item/rare-candy.png
 28,X Accuracy,46,battle,950,Common,10,hold-item/x-accuracy.png
 29,Leaf Stone,47,evo-stone,3000,Uncommon,10,evo-stone/leaf-stone.png
-30,Nugget,49,valuable,5000,Rare,10,hold-item/nugget.png
+30,Nugget,49,valuable,5000,Legendary,10,hold-item/nugget.png
 31,Poké Doll,51,other,1000,Common,10,hold-item/poke-doll.png
 32,Full Heal,52,medicine,600,Common,10,medicine/full-heal.png
 33,Revive,53,medicine,1500,Uncommon,10,medicine/revive.png
@@ -37,7 +37,6 @@ Number,Name,Index,Category,Value,Rarity,Weight,Icon
 36,Super Repel,56,other,500,Common,10,hold-item/super-repel.png
 37,Max Repel,57,other,700,Common,10,hold-item/max-repel.png
 38,Dire Hit,58,battle,650,Common,10,hold-item/dire-hit.png
-39,Coin,59,valuable,10,Common,0,other/coin.png
 40,X Attack,60,battle,500,Common,10,hold-item/x-attack.png
 41,X Defend,61,battle,550,Common,10,hold-item/x-defense.png
 42,X Speed,62,battle,350,Common,10,hold-item/x-speed.png
@@ -45,7 +44,7 @@ Number,Name,Index,Category,Value,Rarity,Weight,Icon
 44,Fresh Water,84,other,200,Common,10,hold-item/fresh-water.png
 45,Soda Pop,85,other,300,Common,10,hold-item/soda-pop.png
 46,Lemonade,86,other,350,Common,10,hold-item/lemonade.png
-47,Gold Teeth,103,valuable,5000,Rare,10,hold-item/gold-teeth.png
+47,Gold Teeth,103,valuable,5000,Legendary,10,hold-item/gold-teeth.png
 48,TM01,193,tm,3000,Uncommon,10,tm/normal.png
 49,TM02,194,tm,2000,Uncommon,10,tm/normal.png
 50,TM05,197,tm,3000,Uncommon,10,tm/normal.png
