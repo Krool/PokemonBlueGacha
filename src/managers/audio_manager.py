@@ -82,6 +82,8 @@ class AudioManager:
         
         Args:
             name: Name of sound to play
+        
+        Note: On web, sound effects can only play when music channel is idle
         """
         if not self.enabled:
             return
@@ -97,35 +99,26 @@ class AudioManager:
             sound = self.sounds[name]
             
             if IS_WEB:
-                # On web, skip sound effects entirely if background music is playing
-                # This prevents "interrupted by pause" browser errors
-                # Sound effects and background music share the same pygame.mixer.music channel on web
-                if self.current_music is not None:
-                    return  # Silently skip to avoid conflicts
+                # On web, check if pygame.mixer.music is busy
+                # If it is, skip sound to avoid "interrupted" errors
+                try:
+                    is_busy = pygame.mixer.music.get_busy()
+                    if is_busy:
+                        # Music is currently playing/loading - skip sound effect
+                        return
+                except:
+                    # If get_busy fails, assume it's safe to play
+                    pass
                 
                 # On web, pygame.mixer.Sound() doesn't work, so self.sounds[name] is a file path
                 sound_path = sound  # It's actually a path, not a Sound object
                 
                 try:
-                    # Just load and play - no stop/pause calls to avoid browser errors
-                    try:
-                        pygame.mixer.music.load(sound_path)
-                    except:
-                        pass  # Silently ignore load errors
-                    
-                    try:
-                        pygame.mixer.music.set_volume(self.sfx_volume)
-                    except:
-                        pass  # Silently ignore volume errors
-                    
-                    try:
-                        pygame.mixer.music.play()
-                    except:
-                        pass  # Silently ignore play errors
-                        
-                except Exception:
-                    # Silently handle all web audio errors
-                    pass
+                    pygame.mixer.music.load(sound_path)
+                    pygame.mixer.music.set_volume(self.sfx_volume)
+                    pygame.mixer.music.play()
+                except:
+                    pass  # Silently ignore all errors
             else:
                 # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
                 sound.play()
