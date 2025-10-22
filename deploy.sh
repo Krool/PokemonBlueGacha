@@ -25,10 +25,10 @@ git checkout gh-pages || git checkout -b gh-pages
 
 # Copy build files
 echo "📋 Copying build files..."
-cp -r build/web/* .
+cp -r src/build/web/* .
 
 # Clean up
-rm -rf build
+rm -rf src/build
 
 # Commit
 echo "💾 Committing changes..."

@@ -28,10 +28,10 @@ if %errorlevel% neq 0 (
 
 REM Copy build files
 echo 📋 Copying build files...
-xcopy /E /I /Y build\web\* .
+xcopy /E /I /Y src\build\web\* .
 
 REM Clean up
-rmdir /S /Q build
+rmdir /S /Q src\build
 
 REM Commit
 echo 💾 Committing changes...
