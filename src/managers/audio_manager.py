@@ -55,18 +55,20 @@ class AudioManager:
             return
         
         try:
-            # Store path for web-based playback
+            # Store path for reference
             self.sound_paths[name] = path
             
-            # Try to load as Sound for desktop
-            if not IS_WEB:
-                sound = pygame.mixer.Sound(path)
-                sound.set_volume(self.sfx_volume)
-                self.sounds[name] = sound
+            # Load as Sound for both desktop and web
+            # Pygbag handles loading files properly on web
+            sound = pygame.mixer.Sound(path)
+            sound.set_volume(self.sfx_volume)
+            self.sounds[name] = sound
             
             print(f"  ✓ Loaded sound: {name} from {os.path.basename(path)}")
         except Exception as e:
             print(f"  ✗ Error loading sound {name} from {path}: {e}")
+            import traceback
+            traceback.print_exc()
     
     def play_sound(self, name: str):
         """
@@ -77,26 +79,24 @@ class AudioManager:
         """
         if not self.enabled:
             return
+        
+        # Check if user has interacted (required for web)
+        if IS_WEB and not self.user_interacted:
+            print(f"  ⏸ Sound '{name}' queued (waiting for user interaction)")
+            return
             
-        if name not in self.sound_paths:
-            print(f"Warning: Sound '{name}' not loaded")
+        if name not in self.sounds:
+            print(f"Warning: Sound '{name}' not loaded (available: {list(self.sounds.keys())})")
             return
         
         try:
-            # On web, use a free channel to play the sound
-            if IS_WEB:
-                channel = pygame.mixer.find_channel()
-                if channel:
-                    sound = pygame.mixer.Sound(self.sound_paths[name])
-                    sound.set_volume(self.sfx_volume)
-                    channel.play(sound)
-                    print(f"  🔊 Playing {name} on channel {channel}")
-            else:
-                # Desktop: use pre-loaded sounds
-                if name in self.sounds:
-                    self.sounds[name].play()
+            # Use pre-loaded sound for both desktop and web
+            self.sounds[name].play()
+            print(f"  🔊 Playing sound: {name}")
         except Exception as e:
             print(f"Error playing sound {name}: {e}")
+            import traceback
+            traceback.print_exc()
     
     def enable_audio_after_interaction(self):
         """
@@ -220,27 +220,32 @@ class AudioManager:
         """
         import os
         
-        # Define sound files to load
+        # Define sound files to load - CHECK FILE EXTENSIONS IN Assets/Sounds FOLDER!
         sound_files = {
-            'roll1': 'roll1.wav',  # or .mp3, .ogg depending on what files exist
-            'roll2': 'roll2.wav',
-            'roll3': 'roll3.wav',
-            'legendary': 'legendary.wav',
-            'chaching': 'chaching.wav',  # Special sound for legendary pulls
-            'gotemall': 'gotemall.wav',  # Sound for completing the collection
-            'background': 'background.wav'  # This will be loaded as music, not sound
+            'roll1': 'roll1.mp3',  # Changed to match actual files
+            'roll2': 'roll2.mp3',
+            'roll3': 'roll3.mp3',
+            'legendary': 'legendary.mp3',
+            'chaching': 'chaching.mp3',  # Special sound for legendary pulls
+            'gotemall': 'gotemall.mp3',  # Sound for completing the collection
+            'background': 'background.mp3'  # This will be loaded as music, not sound
         }
         
         print("Loading sound effects...")
         
         for sound_name, filename in sound_files.items():
-            # Try different extensions if file doesn't exist
-            for ext in ['.wav', '.mp3', '.ogg']:
-                full_path = os.path.join(sounds_path, filename.replace('.wav', ext))
-                if os.path.exists(full_path):
-                    if sound_name != 'background':  # Background is music, not sound effect
-                        self.load_sound(full_path, sound_name)
-                    break
+            full_path = os.path.join(sounds_path, filename)
+            if os.path.exists(full_path):
+                if sound_name != 'background':  # Background is music, not sound effect
+                    self.load_sound(full_path, sound_name)
+            else:
+                # Try alternative extensions if primary doesn't exist
+                for ext in ['.wav', '.ogg']:
+                    alt_path = os.path.join(sounds_path, filename.replace('.mp3', ext))
+                    if os.path.exists(alt_path):
+                        if sound_name != 'background':
+                            self.load_sound(alt_path, sound_name)
+                        break
         
         print(f"✓ Loaded {len(self.sounds)} sound effects")
 
