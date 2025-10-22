@@ -57,7 +57,8 @@ class InventoryState(GameState):
             use_title_font=True,
             bg_color=(0, 100, 200),
             hover_color=(0, 150, 255),
-            callback=self._open_gacha
+            callback=self._open_gacha,
+            audio_manager=self.audio_manager
         )
         
         # Calculate button positions to center INFO between MUTE and RESET
@@ -83,7 +84,8 @@ class InventoryState(GameState):
             font_size=16,
             bg_color=(100, 100, 100),
             hover_color=(130, 130, 130),
-            callback=self._toggle_mute
+            callback=self._toggle_mute,
+            audio_manager=self.audio_manager
         )
         
         # Info button (centered between mute and reset)
@@ -95,7 +97,8 @@ class InventoryState(GameState):
             font_size=16,
             bg_color=(50, 100, 150),
             hover_color=(70, 130, 180),
-            callback=self._show_stats
+            callback=self._show_stats,
+            audio_manager=self.audio_manager
         )
         
         # Reset button (rightmost)
@@ -107,7 +110,8 @@ class InventoryState(GameState):
             font_size=18,
             bg_color=(150, 0, 0),
             hover_color=(200, 0, 0),
-            callback=self._reset_collection
+            callback=self._reset_collection,
+            audio_manager=self.audio_manager
         )
         
         # Sort buttons (below title)
@@ -116,17 +120,20 @@ class InventoryState(GameState):
             "number": SortButton(
                 20, sort_y, 70, 40, "NUM",
                 self.font_manager, font_size=18,
-                callback=lambda order: self._on_sort_clicked("number", order)
+                callback=lambda order: self._on_sort_clicked("number", order),
+                audio_manager=self.audio_manager
             ),
             "rarity": SortButton(
                 100, sort_y, 70, 40, "RAR",
                 self.font_manager, font_size=18,
-                callback=lambda order: self._on_sort_clicked("rarity", order)
+                callback=lambda order: self._on_sort_clicked("rarity", order),
+                audio_manager=self.audio_manager
             ),
             "count": SortButton(
                 180, sort_y, 70, 40, "AMT",
                 self.font_manager, font_size=18,
-                callback=lambda order: self._on_sort_clicked("count", order)
+                callback=lambda order: self._on_sort_clicked("count", order),
+                audio_manager=self.audio_manager
             )
         }
         
@@ -138,7 +145,8 @@ class InventoryState(GameState):
             270, sort_y + 10, 20, "Owned",
             self.font_manager, font_size=18,
             checked=False,
-            callback=self._on_filter_changed
+            callback=self._on_filter_changed,
+            audio_manager=self.audio_manager
         )
         
         # Scrollable grid (main display area)
@@ -162,9 +170,12 @@ class InventoryState(GameState):
         print(f"Gold: {self.game_data.gold}")
         print(f"Pokemon owned: {self.game_data.get_total_owned_count()}/151")
         
-        # Apply mute state
+        # Start or stop music based on mute state
         if self.game_data.music_muted:
             self.audio_manager.stop_music()
+        else:
+            # Start playing background music when entering Pokédex
+            self.audio_manager.play_random_background_music()
         
         # Update mute button text
         self.mute_button.text = "UNMUTE" if self.game_data.music_muted else "MUTE"
@@ -321,7 +332,8 @@ class InventoryState(GameState):
             optimal_cost,
             self.font_manager,
             game_data=self.game_data,  # Pass game_data for setting gold
-            callback=None  # Don't use callback, we handle cleanup in handle_events
+            callback=None,  # Don't use callback, we handle cleanup in handle_events
+            audio_manager=self.audio_manager
         )
     
     def handle_events(self, events):
