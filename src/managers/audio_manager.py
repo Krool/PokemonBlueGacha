@@ -106,7 +106,7 @@ class AudioManager:
                         channel.set_volume(self.sfx_volume)
                         channel.play(sound)
                         channel_found = True
-                        print(f"  [AUDIO] ✓ Playing sound: {name} on channel {i}")
+                        print(f"  [AUDIO] Playing sound: {name} on channel {i}")
                         break
                 
                 if not channel_found:
@@ -114,7 +114,7 @@ class AudioManager:
                     channel = pygame.mixer.Channel(0)
                     channel.set_volume(self.sfx_volume)
                     channel.play(sound)
-                    print(f"  [AUDIO] ⚠ Playing sound: {name} on channel 0 (all channels busy)")
+                    print(f"  [AUDIO] [WARN] Playing sound: {name} on channel 0 (all channels busy)")
             else:
                 # Desktop: simpler playback
                 sound.play()
