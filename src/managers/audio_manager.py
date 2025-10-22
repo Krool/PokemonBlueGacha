@@ -13,8 +13,8 @@ class AudioManager:
     
     def __init__(self):
         self.enabled = True
-        self.music_volume = 0.25  # Background music at 25%
-        self.sfx_volume = 0.50    # Sound effects at 50%
+        self.music_volume = 0.046875  # Background music at ~4.7% (reduced by 81% total)
+        self.sfx_volume = 0.125       # Sound effects at 12.5% (reduced by 75% total)
         self.current_music: Optional[str] = None
         self.sounds = {}
         self.sound_paths = {}  # Store paths for web playback
@@ -22,6 +22,7 @@ class AudioManager:
         self.sfx_channels = []  # Additional channels for sound effects on web
         self.user_interacted = False  # Track if user has interacted (for web autoplay)
         self.pending_music = None  # Store music to play after user interaction
+        self.audio_errors_logged = set()  # Track logged errors to avoid spam
         
         # Try to initialize pygame mixer with web-compatible settings
         try:
@@ -107,12 +108,21 @@ class AudioManager:
                     pygame.mixer.music.set_volume(self.sfx_volume)
                     pygame.mixer.music.play()
                 except Exception as e:
-                    print(f"  [ERROR] Error playing sound {name}: {e}")
+                    # Silently handle web audio errors (common in browsers, doesn't affect gameplay)
+                    # Only log unique errors once to avoid console spam
+                    error_key = f"{name}:{type(e).__name__}"
+                    if error_key not in self.audio_errors_logged:
+                        self.audio_errors_logged.add(error_key)
+                        print(f"  [AUDIO] Web audio limitation: {name} (suppressing future errors)")
             else:
                 # Desktop: use pygame.mixer.Sound (works perfectly, allows multiple sounds)
                 sound.play()
         except Exception as e:
-            print(f"  [ERROR] Error playing sound {name}: {e}")
+            # Catch any other errors silently
+            error_key = f"{name}:{type(e).__name__}"
+            if error_key not in self.audio_errors_logged:
+                self.audio_errors_logged.add(error_key)
+                print(f"  [AUDIO] Sound error: {name} - {e}")
     
     def enable_audio_after_interaction(self, allow_music_start: bool = True):
         """
@@ -164,7 +174,11 @@ class AudioManager:
             pygame.mixer.music.play(loops)
             self.current_music = path
         except Exception as e:
-            print(f"Error playing music {path}: {e}")
+            # Silently handle web audio errors
+            error_key = f"music:{os.path.basename(path)}:{type(e).__name__}"
+            if error_key not in self.audio_errors_logged:
+                self.audio_errors_logged.add(error_key)
+                print(f"  [AUDIO] Music playback issue: {os.path.basename(path)} (suppressing future errors)")
     
     def stop_music(self):
         """Stop background music"""
@@ -175,7 +189,8 @@ class AudioManager:
             pygame.mixer.music.stop()
             self.current_music = None
         except Exception as e:
-            print(f"Error stopping music: {e}")
+            # Silently handle errors
+            pass
     
     def play_random_background_music(self):
         """Play a random background track from available tracks"""
@@ -231,6 +246,25 @@ class AudioManager:
         for sound in self.sounds.values():
             sound.set_volume(self.sfx_volume)
     
+    def play_random_click_sound(self):
+        """
+        Play a random UI click sound (click1, click2, or click3)
+        """
+        if not self.enabled:
+            return
+        
+        # Check if user has interacted (required for web)
+        if IS_WEB and not self.user_interacted:
+            return
+        
+        # Choose a random click sound
+        click_sounds = ['click1', 'click2', 'click3']
+        available_clicks = [s for s in click_sounds if s in self.sounds]
+        
+        if available_clicks:
+            click_name = random.choice(available_clicks)
+            self.play_sound(click_name)
+    
     def load_game_sounds(self, sounds_path: str):
         """
         Load all game sound effects
@@ -248,7 +282,10 @@ class AudioManager:
             'legendary': 'legendary.mp3',
             'chaching': 'chaching.mp3',
             'gotemall': 'gotemall.mp3',
-            'background': 'background.mp3'  # This will be loaded as music, not sound
+            'background': 'background.mp3',  # This will be loaded as music, not sound
+            'click1': 'click1.mp3',
+            'click2': 'click2.mp3',
+            'click3': 'click3.mp3'
         }
         
         print("Loading sound effects...")
