@@ -92,5 +92,6 @@ class Item:
     
     def get_icon_path(self) -> str:
         """Get full path to item icon"""
-        return f"Assets/Sprites/Items/{self.icon.split('/')[-1]}"
+        # Return the icon path as-is (already resolved by CSV loader)
+        return self.icon
 
