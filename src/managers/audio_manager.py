@@ -78,15 +78,16 @@ class AudioManager:
         except Exception as e:
             print(f"  [ERROR] Error loading sound {name}: {e}")
     
-    def play_sound(self, name: str):
+    def play_sound(self, name: str, priority: bool = False):
         """
         Play a sound effect
         
         Args:
             name: Name of sound to play
+            priority: If True, bypasses cooldown and busy checks (for important sounds)
         
         Note: On web, sound effects can only play when music channel is idle
-        and requires 200ms cooldown between plays
+        and requires 200ms cooldown between plays (unless priority=True)
         """
         if not self.enabled:
             return
@@ -102,27 +103,35 @@ class AudioManager:
             sound = self.sounds[name]
             
             if IS_WEB:
-                # Check cooldown - require 200ms between sound effects
+                # Check cooldown - require 200ms between sound effects (unless priority)
                 current_time = time.time()
-                if current_time - self.last_sfx_time < 0.2:
+                if not priority and current_time - self.last_sfx_time < 0.2:
                     # Too soon after last sound - skip to avoid browser conflicts
                     return
                 
-                # On web, check if pygame.mixer.music is busy
+                # On web, check if pygame.mixer.music is busy (unless priority)
                 # If it is, skip sound to avoid "interrupted" errors
-                try:
-                    is_busy = pygame.mixer.music.get_busy()
-                    if is_busy:
-                        # Music is currently playing/loading - skip sound effect
-                        return
-                except:
-                    # If get_busy fails, assume it's safe to play
-                    pass
+                if not priority:
+                    try:
+                        is_busy = pygame.mixer.music.get_busy()
+                        if is_busy:
+                            # Music is currently playing/loading - skip sound effect
+                            return
+                    except:
+                        # If get_busy fails, assume it's safe to play
+                        pass
                 
                 # On web, pygame.mixer.Sound() doesn't work, so self.sounds[name] is a file path
                 sound_path = sound  # It's actually a path, not a Sound object
                 
                 try:
+                    # Priority sounds should stop any currently playing sound
+                    if priority:
+                        try:
+                            pygame.mixer.music.stop()
+                        except:
+                            pass
+                    
                     pygame.mixer.music.load(sound_path)
                     pygame.mixer.music.set_volume(self.sfx_volume)
                     pygame.mixer.music.play()

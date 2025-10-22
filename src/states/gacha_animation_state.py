@@ -103,12 +103,12 @@ class GachaAnimationState(GameState):
     def _play_rarity_sound(self, rarity: str):
         """Play sound effect based on rarity"""
         if rarity == "Legendary":
-            # Just play chaching for legendary pulls
-            self.audio_manager.play_sound("chaching")
+            # Just play chaching for legendary pulls (priority=True to always play)
+            self.audio_manager.play_sound("chaching", priority=True)
         else:
-            # Randomly pick roll1, roll2, or roll3
+            # Randomly pick roll1, roll2, or roll3 (priority=True to always play)
             roll_sfx = random.choice(["roll1", "roll2", "roll3"])
-            self.audio_manager.play_sound(roll_sfx)
+            self.audio_manager.play_sound(roll_sfx, priority=True)
     
     def handle_events(self, events):
         """Handle input events"""

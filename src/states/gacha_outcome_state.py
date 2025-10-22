@@ -84,7 +84,8 @@ class GachaOutcomeState(GameState):
             self.font_manager,
             font_size=22,
             use_title_font=True,
-            callback=self._go_to_inventory
+            callback=self._go_to_inventory,
+            audio_manager=self.audio_manager
         )
         
         # Middle button: Gacha (return to machine select)
@@ -99,7 +100,8 @@ class GachaOutcomeState(GameState):
             use_title_font=True,
             bg_color=(0, 100, 200),
             hover_color=(0, 150, 255),
-            callback=self._go_to_gacha
+            callback=self._go_to_gacha,
+            audio_manager=self.audio_manager
         )
         
         # Right button: Roll Same (with cost inside)
@@ -114,7 +116,8 @@ class GachaOutcomeState(GameState):
             use_title_font=True,
             bg_color=(0, 150, 0),
             hover_color=(0, 200, 0),
-            callback=self._roll_same
+            callback=self._roll_same,
+            audio_manager=self.audio_manager
         )
         self.roll_same_cost = roll_cost
     
@@ -266,7 +269,8 @@ class GachaOutcomeState(GameState):
                 f"You need {cost:,} Pokédollars but only have {self.game_data.gold:,}.",
                 self.font_manager,
                 add_gold_callback=add_gold,
-                pokedollar_icon=self.resource_manager.pokedollar_icon
+                pokedollar_icon=self.resource_manager.pokedollar_icon,
+                audio_manager=self.audio_manager
             )
             return
         
@@ -292,7 +296,10 @@ class GachaOutcomeState(GameState):
             
             print(f"{pull_count}-pull from Items machine! Gold: {self.game_data.gold}")
             for item in results:
-                print(f"  - {item.name} ({item.rarity})")
+                try:
+                    print(f"  - {item.name} ({item.rarity})")
+                except UnicodeEncodeError:
+                    print(f"  - {item.name.encode('ascii', errors='ignore').decode('ascii')} ({item.rarity})")
                 self.game_data.add_item(item.number)
             
             self.game_data.save()
@@ -308,14 +315,20 @@ class GachaOutcomeState(GameState):
                 results = self.gacha_system.roll_ten(self.last_machine)
                 print(f"10-pull from {self.last_machine} machine! Gold: {self.game_data.gold}")
                 for result in results:
-                    print(f"  - {result.name} ({result.rarity})")
+                    try:
+                        print(f"  - {result.name} ({result.rarity})")
+                    except UnicodeEncodeError:
+                        print(f"  - {result.name.encode('ascii', errors='ignore').decode('ascii')} ({result.rarity})")
                     self.game_data.add_pokemon(result.number)
             else:
                 # Store count before adding Pokemon
                 count_before = self.game_data.get_total_owned_count()
                 
                 result = self.gacha_system.roll_single(self.last_machine)
-                print(f"Single pull from {self.last_machine} machine! Got {result.name} ({result.rarity})! Gold: {self.game_data.gold}")
+                try:
+                    print(f"Single pull from {self.last_machine} machine! Got {result.name} ({result.rarity})! Gold: {self.game_data.gold}")
+                except UnicodeEncodeError:
+                    print(f"Single pull from {self.last_machine} machine! Got {result.name.encode('ascii', errors='ignore').decode('ascii')} ({result.rarity})! Gold: {self.game_data.gold}")
                 results = [result]
                 self.game_data.add_pokemon(result.number)
             
@@ -343,8 +356,11 @@ class GachaOutcomeState(GameState):
             owned_count == total_pokemon and 
             not self.game_data.collection_complete_sound_played):
             
-            print(f"🎉 COLLECTION COMPLETE! All {total_pokemon} Pokémon caught!")
-            self.audio_manager.play_sound("gotemall")
+            try:
+                print(f"🎉 COLLECTION COMPLETE! All {total_pokemon} Pokémon caught!")
+            except UnicodeEncodeError:
+                print(f"COLLECTION COMPLETE! All {total_pokemon} Pokemon caught!")
+            self.audio_manager.play_sound("gotemall", priority=True)  # Highest priority!
             
             # Set flag and save immediately
             self.game_data.collection_complete_sound_played = True
